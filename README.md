@@ -1,7 +1,21 @@
-# FullBlast Academy
+# StressedBrains
+## Vim Adventure Game
 
-Let's build a game!
+## Overview
+Build an adventure game that teaches players how to use the popular text editor Vim. Create an engaging storyline that slowly introduces players to increasingly complex vim commands. 
 
-1. 🍴 Fork this repo to your own GitHub account (if you haven't done so already)
-2. 🐑 After cloning to your local machine, install the dependencies: `npm install`
-3. 🚀 Start it up! `npm start` will start a server running at http://localhost:8080. Head on over there in your browser, and navigate to the 'public/' directory, which is where the Phaser application is served.
+## MVP
+The game should consist of multiple levels that walk users through the most basic vim commands.
+
+## Stretch Goals
+* More advanced Vim bindings
+* Timed challenges
+* Multiplayer support
+
+## Technical Challenges
+* Docker containers
+* Security
+* Handling complex user input
+
+## Examples and Inspiration
+* [Vim City](https://www.youtube.com/watch?v=-kkfkaAJX9I)
