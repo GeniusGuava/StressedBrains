@@ -8,10 +8,6 @@ export default class FgScene extends Phaser.Scene {
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
-    this.load.spritesheet('josh', 'assets/spriteSheets/josh.png', {
-      frameWidth: 340,
-      frameHeight: 460
-    })
 
     // Preload Sounds
     // << LOAD SOUNDS HERE >>
@@ -20,7 +16,7 @@ export default class FgScene extends Phaser.Scene {
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
-    this.player = new Player(this, 50, 100, 'josh').setScale(0.25)
+    this.player = new Player(this, 50, 100, null)
 
     this.keyboard = this.input.keyboard
 
