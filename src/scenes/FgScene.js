@@ -1,4 +1,13 @@
 import Player from "../entity/Player";
+import { GridPhysics } from "../physics/GridPhysics"
+
+export const Direction = {
+  NONE: "none",
+  LEFT: "left",
+  UP: "up",
+  RIGHT: "right",
+  DOWN: "down",
+}
 
 export default class FgScene extends Phaser.Scene {
   constructor() {
@@ -18,31 +27,33 @@ export default class FgScene extends Phaser.Scene {
     // << CREATE GAME ENTITIES HERE >>
     this.player = new Player(this, 10, 5, null)
 
+    this.gridPhysics = new GridPhysics()
+
     this.keyboard = this.input.keyboard
 
     this.allKeys = {
       "h": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
         "function": () => {
-          console.log('h is pressed!')
+          this.gridPhysics.movePlayer(Direction.LEFT)
         }
       },
       "j": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
         "function": () => {
-          console.log('j is pressed!')
+          this.gridPhysics.movePlayer(Direction.DOWN)
         }
       },
       "k": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
         "function": () => {
-          console.log('k is pressed!')
+          this.gridPhysics.movePlayer(Direction.UP)
         }
       },
       "l": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
         "function": () => {
-          console.log('l is pressed!')
+          this.gridPhysics.movePlayer(Direction.RIGHT)
         }
       },
     }
