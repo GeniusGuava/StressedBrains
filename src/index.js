@@ -19,7 +19,8 @@ import config from './config/config';
 
 // Bring in all the scenes
 import 'phaser';
-import config from './config/config';
+
+
 
 class Game extends Phaser.Game {
   constructor() {
@@ -28,9 +29,11 @@ class Game extends Phaser.Game {
 
     // Add all the scenes
     // << ADD ALL SCENES HERE >>
+
     this.scene.add('BgScene', BgScene);
     this.scene.add('FgScene', FgScene);
     this.scene.add('MainScene', MainScene);
+
     // Start the game with the mainscene
     // << START GAME WITH MAIN SCENE HERE >>
     this.scene.start('MainScene');
