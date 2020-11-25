@@ -16,7 +16,7 @@ export default class FgScene extends Phaser.Scene {
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
-    this.player = new Player(this, 50, 100, null)
+    this.player = new Player(this, 10, 5, null)
 
     this.keyboard = this.input.keyboard
 
