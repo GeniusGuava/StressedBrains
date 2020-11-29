@@ -22,8 +22,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       y * TILE_SIZE + this.playerOffsetY()
     )
 
-    this.moveDelay = 200
+    this.moveDelay = 0
     this.lastMoved = 0
+  }
+
+  getPosition(){
+    return this.getCenter();
+  }
+
+  resetPosition(position){
+    this.setPosition(position.x, position.y)
   }
 
   // Check which controller button is being pushed and execute movement & animation

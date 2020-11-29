@@ -27,7 +27,7 @@ export default class FgScene extends Phaser.Scene {
     // << CREATE GAME ENTITIES HERE >>
     this.player = new Player(this, 10, 5, null)
 
-    this.gridPhysics = new GridPhysics()
+    this.gridPhysics = new GridPhysics(this.player)
 
     this.keyboard = this.input.keyboard
 
@@ -69,6 +69,7 @@ export default class FgScene extends Phaser.Scene {
   // delta: time elapsed (ms) since last update() call. 16.666 ms @ 60fps
   update(time, delta) {
     this.player.update(time, this.allKeys)
+    this.gridPhysics.update(delta)
   }
 
 }
