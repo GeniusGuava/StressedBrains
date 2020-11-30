@@ -1,6 +1,8 @@
 import 'phaser';
 import Phaser from 'phaser';
 
+export const TILE_SIZE = 32
+
 export default class BgScene extends Phaser.Scene {
   constructor() {
     super('BgScene');
