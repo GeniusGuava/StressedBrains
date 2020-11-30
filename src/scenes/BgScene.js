@@ -55,7 +55,7 @@ export default class BgScene extends Phaser.Scene {
     const tileset = map.addTilesetImage('castle', 'tiles');
     const grassLayer = map.createStaticLayer('grass', tileset);
     const pathLayer = map.createStaticLayer('path', tileset);
-    const stageLayer = map.createStaticLayer('stage_entry', tileset);
+    const gateLayer = map.createStaticLayer('gate', tileset);
     grassLayer.setCollisionByProperty({ collides: true });
 
     //debug func to show tiles that can collide with character
