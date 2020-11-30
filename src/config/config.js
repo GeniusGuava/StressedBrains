@@ -3,8 +3,8 @@ import Player from '../entity/Player';
 export default {
   type: Phaser.AUTO, // Specify the underlying browser rendering engine (AUTO, CANVAS, WEBGL)
   // AUTO will attempt to use WEBGL, but if not available it'll default to CANVAS
-  width: 400, // Game width in pixels
-  height: 400, // Game height in pixels
+  width: 800, // Game width in pixels
+  height: 600, // Game height in pixels
   physics: {
     default: 'arcade',
     arcade: {
@@ -13,9 +13,6 @@ export default {
   },
   render: {
     pixelArt: true,
-  },
-  scale: {
-    zoom: 3,
   },
   backgroundColor: '#5f2a55',
 };
