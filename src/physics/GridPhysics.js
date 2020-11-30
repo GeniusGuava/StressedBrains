@@ -59,7 +59,10 @@ export class GridPhysics {
   movePlayer(direction, time, collideSound){
     if (this.isMoving()) return
     if (this.isBlockingDirection(direction)){
-      //this.player.setStandingFrame(direction);
+      if (time > this.lastBeeped){
+        collideSound.play()
+        this.lastBeeped = time + this.beepDelay
+      }
     } else {
       this.startMoving(direction);
     }
