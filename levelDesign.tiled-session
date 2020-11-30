@@ -7,6 +7,9 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 0.7656
+        },
         "/Users/Ariel/GHP2009/senior_phase/Capstone/Level_Design.json": {
             "scale": 0.7915,
             "selectedLayer": 0,
@@ -16,11 +19,11 @@
             }
         },
         "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json": {
-            "scale": 2.0167,
+            "scale": 0.9734,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 159.17092279466453,
-                "y": 152.7247483512669
+                "x": 296.8974727758373,
+                "y": 311.28004931169096
             }
         },
         "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json#castle": {
@@ -30,12 +33,13 @@
             "scale": 0.92,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 291.304347826087,
-                "y": 298.9130434782609
+                "x": 341.304347826087,
+                "y": 321.73913043478257
             }
         },
         "level1.json#castle": {
-            "scaleInDock": 0.55
+            "scaleInDock": 0.55,
+            "scaleInEditor": 1
         }
     },
     "lastUsedTilesetExportFilter": "JSON tileset files (*.json)",
@@ -43,8 +47,8 @@
     "map.lastUsedExportFilter": "JSON map files (*.json)",
     "map.lastUsedFormat": "json",
     "map.layerDataFormat": null,
-    "map.tileHeight": 16,
-    "map.tileWidth": 16,
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
     "map.width": 20,
     "openFiles": [
         "level1.json"
@@ -53,12 +57,13 @@
     "property.type": "bool",
     "recentFiles": [
         "level1.json",
+        "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json",
         "/Users/Ariel/GHP2009/senior_phase/Capstone/Level_Design.json"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFilter": "All Files (*)",
     "tileset.tileSize": {
-        "height": 16,
-        "width": 16
+        "height": 32,
+        "width": 32
     }
 }
