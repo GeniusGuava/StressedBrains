@@ -1,5 +1,7 @@
 import 'phaser';
 
+export const TILE_SIZE = 32
+
 export default class BgScene extends Phaser.Scene {
   constructor() {
     super('BgScene');
@@ -39,8 +41,8 @@ export default class BgScene extends Phaser.Scene {
 
     const map = this.make.tilemap({
       data: grid,
-      tileWidth: 32,
-      tileHeight: 32,
+      tileWidth: TILE_SIZE,
+      tileHeight: TILE_SIZE,
     });
     const tiles = map.addTilesetImage('ground');
     const layer = map.createStaticLayer(0, tiles, 0, 0);
