@@ -1,6 +1,8 @@
 import 'phaser';
 import {TILE_SIZE} from '../scenes/BgScene'
 
+const Vector2 = Phaser.Math.Vector2
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   playerOffsetX() {
@@ -32,6 +34,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   resetPosition(position){
     this.setPosition(position.x, position.y)
+  }
+
+  getTilePos(){
+    const x = (this.getCenter().x - this.playerOffsetX())/TILE_SIZE
+    const y = (this.getCenter().y - this.playerOffsetY())/TILE_SIZE
+    return new Vector2(Math.floor(x), Math.floor(y))
   }
 
   // Check which controller button is being pushed and execute movement & animation

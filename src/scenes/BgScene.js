@@ -1,4 +1,5 @@
 import 'phaser';
+import Phaser from 'phaser';
 
 export const TILE_SIZE = 16
 
@@ -55,6 +56,7 @@ export default class BgScene extends Phaser.Scene {
     const groundLayer = map.createStaticLayer('Ground', tileset);
     const wallLayer = map.createStaticLayer('Walls', tileset);
     wallLayer.setCollisionByProperty({ collides: true });
+
 
     //debug func to show tiles that can collide with character
     const debugGraphics = this.add.graphics().setAlpha(0.75);

@@ -41,7 +41,7 @@ export default class MainScene extends Phaser.Scene {
 
     /*Character*/
     this.player = new Player(this, 10, 5, null)
-    this.gridPhysics = new GridPhysics(this.player)
+    this.gridPhysics = new GridPhysics(this.player, map)
 
     this.keyboard = this.input.keyboard
     this.allKeys = {

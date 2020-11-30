@@ -6,10 +6,10 @@ import 'phaser';
 const Vector2 = Phaser.Math.Vector2
 
 export class GridPhysics {
-  constructor(player){
+  constructor(player, map){
 
     this.movementDirection = Direction.NONE;
-    this.speedPixelsPerSecond = TILE_SIZE * 4;
+    this.speedPixelsPerSecond = TILE_SIZE * 8;
     this.tileSizePixelsWalked = 0;
     this.decimalPlacesLeft = 0
     this.player = player
@@ -19,6 +19,31 @@ export class GridPhysics {
       [Direction.LEFT]: new Vector2(-1,0),
       [Direction.RIGHT]: new Vector2(1,0)
     }
+    this.map = map
+  }
+
+  tilePosInDirection(direction){
+    return this.player.getTilePos().add(this.movementDirectVectors[direction])
+  }
+
+  isBlockingDirection(direction){
+    return this.hasBlockingTile(this.tilePosInDirection(direction))
+  }
+
+  hasNoTile(pos){
+    return !this.map.layers.some((layer)=>{
+      if(this.map.hasTileAt(pos.x, pos.y, layer.name)){
+        return true
+      } else return false
+    })
+  }
+
+  hasBlockingTile(pos){
+    if (this.hasNoTile(pos)) return true
+    return this.map.layers.some((layer)=> {
+      const tile = this.map.getTileAt(pos.x, pos.y, false, layer.name)
+      return tile && tile.properties.collides
+    })
   }
 
   startMoving(direction){
@@ -26,7 +51,10 @@ export class GridPhysics {
   }
 
   movePlayer(direction){
-    if (!this.isMoving()){
+    if (this.isMoving()) return
+    if (this.isBlockingDirection(direction)){
+      //this.player.setStandingFrame(direction);
+    } else {
       this.startMoving(direction);
     }
   }
