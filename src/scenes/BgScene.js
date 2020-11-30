@@ -12,8 +12,8 @@ export default class BgScene extends Phaser.Scene {
     // Preload Sprites
     // << LOAD SPRITE HERE >>
     // this.load.image('ground', 'assets/sprites/tilefaded.png');
-    this.load.image('tiles', 'assets/backgrounds/tiles.png');
-    this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
+    this.load.image('tiles', 'assets/backgrounds/Castle2.png');
+    this.load.tilemapTiledJSON('map', 'assets/backgrounds/levelOne.json');
   }
 
   create() {
@@ -52,14 +52,15 @@ export default class BgScene extends Phaser.Scene {
     const map = this.make.tilemap({
       key: 'map',
     });
-    const tileset = map.addTilesetImage('field-tileset', 'tiles');
-    const groundLayer = map.createStaticLayer('Ground', tileset);
-    const wallLayer = map.createStaticLayer('Walls', tileset);
-    wallLayer.setCollisionByProperty({ collides: true });
+    const tileset = map.addTilesetImage('castle', 'tiles');
+    const grassLayer = map.createStaticLayer('grass', tileset);
+    const pathLayer = map.createStaticLayer('path', tileset);
+    const stageLayer = map.createStaticLayer('stage_entry', tileset);
+    grassLayer.setCollisionByProperty({ collides: true });
 
     //debug func to show tiles that can collide with character
     const debugGraphics = this.add.graphics().setAlpha(0.75);
-    wallLayer.renderDebug(debugGraphics, {
+    grassLayer.renderDebug(debugGraphics, {
       tileColor: null,
       collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
       faceColor: new Phaser.Display.Color(40, 39, 37, 255),
