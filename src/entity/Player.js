@@ -49,7 +49,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       Object.keys(allKeys).map(key=>{
         keyButton = allKeys[key]["key"]
         if (keyButton.isDown && !keyButton.shiftKey){
-          allKeys[key]["function"]()
+          allKeys[key]["function"](time)
           this.lastMoved = time + this.moveDelay;
         }
       })

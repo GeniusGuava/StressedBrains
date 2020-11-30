@@ -20,6 +20,9 @@ export class GridPhysics {
       [Direction.RIGHT]: new Vector2(1,0)
     }
     this.map = map
+
+    this.beepDelay = 500;
+    this.lastBeeped = 0;
   }
 
   tilePosInDirection(direction){
@@ -39,10 +42,13 @@ export class GridPhysics {
   }
 
   hasBlockingTile(pos){
-    if (this.hasNoTile(pos)) return true
+    if (this.hasNoTile(pos)) {
+      return true
+    }
     return this.map.layers.some((layer)=> {
+
       const tile = this.map.getTileAt(pos.x, pos.y, false, layer.name)
-      return tile && tile.properties.collides
+      return tile && tile.layer.properties.collides
     })
   }
 
@@ -50,7 +56,7 @@ export class GridPhysics {
     this.movementDirection = direction;
   }
 
-  movePlayer(direction){
+  movePlayer(direction, time, collideSound){
     if (this.isMoving()) return
     if (this.isBlockingDirection(direction)){
       //this.player.setStandingFrame(direction);
@@ -71,6 +77,7 @@ export class GridPhysics {
   }
 
   update(delta){
+
     if (this.isMoving()){
       this.updatePlayerPosition(delta)
     }

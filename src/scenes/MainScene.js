@@ -19,8 +19,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('tiles', 'assets/backgrounds/tiles.png');
-    this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
+    //this.load.image('tiles', 'assets/backgrounds/tiles.png');
+    //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
+    this.load.image('tiles', 'assets/backgrounds/Castle2.png')
+    this.load.tilemapTiledJSON('map', 'assets/backgrounds/levelOne.json')
+    this.load.audio('collide', 'assets/audio/jump.wav')
   }
   create() {
 
@@ -28,6 +31,7 @@ export default class MainScene extends Phaser.Scene {
     const map = this.make.tilemap({
       key: 'map',
     });
+    /*
     const tileset = map.addTilesetImage('field-tileset', 'tiles');
     const groundLayer = map.createStaticLayer('Ground', tileset);
     const wallLayer = map.createStaticLayer('Walls', tileset);
@@ -38,35 +42,49 @@ export default class MainScene extends Phaser.Scene {
       collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
       faceColor: new Phaser.Display.Color(40, 39, 37, 255),
     });
+    */
+    const tileset = map.addTilesetImage('castle', 'tiles');
+    const grassLayer = map.createStaticLayer('grass', tileset);
+    const pathLayer = map.createStaticLayer('path', tileset);
+    const gateLayer = map.createStaticLayer('gate', tileset);
 
+    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    grassLayer.renderDebug(debugGraphics, {
+      tileColor: null,
+      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    });
     /*Character*/
-    this.player = new Player(this, 10, 5, null)
+    this.player = new Player(this, 11, 6, null)
     this.gridPhysics = new GridPhysics(this.player, map)
 
     this.keyboard = this.input.keyboard
+
+    this.collideSound = this.sound.add('collide')
+
     this.allKeys = {
       "h": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        "function": () => {
-          this.gridPhysics.movePlayer(Direction.LEFT)
+        "function": (time) => {
+          this.gridPhysics.movePlayer(Direction.LEFT, time, this.collideSound)
         }
       },
       "j": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        "function": () => {
-          this.gridPhysics.movePlayer(Direction.DOWN)
+        "function": (time) => {
+          this.gridPhysics.movePlayer(Direction.DOWN, time, this.collideSound)
         }
       },
       "k": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        "function": () => {
-          this.gridPhysics.movePlayer(Direction.UP)
+        "function": (time) => {
+          this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound)
         }
       },
       "l": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        "function": () => {
-          this.gridPhysics.movePlayer(Direction.RIGHT)
+        "function": (time) => {
+          this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound)
         }
       },
     }
