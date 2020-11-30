@@ -15,22 +15,36 @@
                 "y": 325.9633607075174
             }
         },
-        "level1.json": {
-            "scale": 0.9287946428571427,
-            "selectedLayer": 0,
+        "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json": {
+            "scale": 2.0167,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 348.8392213410238,
-                "y": 320.8459504926701
+                "x": 159.17092279466453,
+                "y": 152.7247483512669
+            }
+        },
+        "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json#castle": {
+            "scaleInDock": 0.7656
+        },
+        "level1.json": {
+            "scale": 0.92,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 291.304347826087,
+                "y": 298.9130434782609
             }
         },
         "level1.json#castle": {
-            "scaleInDock": 1.18
+            "scaleInDock": 0.55
         }
     },
     "lastUsedTilesetExportFilter": "JSON tileset files (*.json)",
     "map.height": 20,
     "map.lastUsedExportFilter": "JSON map files (*.json)",
     "map.lastUsedFormat": "json",
+    "map.layerDataFormat": null,
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
     "map.width": 20,
     "openFiles": [
         "level1.json"
@@ -42,5 +56,9 @@
         "/Users/Ariel/GHP2009/senior_phase/Capstone/Level_Design.json"
     ],
     "tileset.embedInMap": true,
-    "tileset.lastUsedFilter": "All Files (*)"
+    "tileset.lastUsedFilter": "All Files (*)",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
 }
