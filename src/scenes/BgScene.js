@@ -1,7 +1,7 @@
 import 'phaser';
 import Phaser from 'phaser';
 
-export const TILE_SIZE = 32
+export const TILE_SIZE = 32;
 
 export default class BgScene extends Phaser.Scene {
   constructor() {
@@ -60,10 +60,10 @@ export default class BgScene extends Phaser.Scene {
 
     //debug func to show tiles that can collide with character
     const debugGraphics = this.add.graphics().setAlpha(0.75);
-    grassLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    });
+    // grassLayer.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255),
+    // });
   }
 }
