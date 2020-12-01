@@ -1,6 +1,6 @@
 import {Direction} from '../scenes/FgScene'
 import {Player} from '../entity/Player'
-import {TILE_SIZE} from '../scenes/BgScene'
+import {TILE_SIZE} from '../scenes/MapScene'
 import 'phaser';
 
 const Vector2 = Phaser.Math.Vector2
