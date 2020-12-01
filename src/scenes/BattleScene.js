@@ -1,7 +1,7 @@
 import Player from "../entity/Player"
 import Enemy from "../entity/Enemy"
 import { GridPhysics } from "../physics/GridPhysics"
-import {Direction} from './FgScene'
+import { Direction } from './FgScene'
 
 
 export default class BattleScene extends Phaser.Scene {
@@ -11,6 +11,11 @@ export default class BattleScene extends Phaser.Scene {
     this.createGroups = this.createGroups.bind(this)
     this.createWeapon = this.createWeapon.bind(this)
     this.playerAttack = this.playerAttack.bind(this)
+  }
+
+  exitBattle() {
+    this.scene.sleep('BattleScene');
+    this.scene.switch('MainScene');
   }
 
   preload() {
@@ -108,6 +113,9 @@ export default class BattleScene extends Phaser.Scene {
     // << CREATE COLLISIONS HERE >>
     this.physics.add.overlap(this.player, this.enemy, this.onMeetEnemy, null, this)
     this.physics.add.overlap(this.player, this.weapons, this.playerAttack, null, this)
+
+    this.timeEvent = this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});
+    // this.sys.events.on('wake', this.wake, this);
 
   }
 
