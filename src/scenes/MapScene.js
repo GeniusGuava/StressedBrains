@@ -54,7 +54,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.keyboard = this.input.keyboard
 
-    this.collideSound = this.sound.add('collide')
+    this.collideSound = this.sound.add('collide', {volume:0.25})
 
     this.allKeys = {
       "h": {
