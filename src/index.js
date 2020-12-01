@@ -38,8 +38,10 @@ class Game extends Phaser.Game {
   }
 }
 // Create new instance of game
-if (typeof window !== 'undefined') {
-  window.onload = function () {
-    window.game = new Game();
-  };
-}
+// if (typeof window !== 'undefined') {
+//   window.onload = function () {
+//     window.game = new Game();
+//   };
+// }
+
+const game = new Game();
