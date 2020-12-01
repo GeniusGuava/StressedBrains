@@ -1,5 +1,5 @@
-
 import 'phaser';
+import {TILE_SIZE} from '../scenes/MapScene'
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey) {
