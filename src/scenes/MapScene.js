@@ -61,7 +61,7 @@ export default class MapScene extends Phaser.Scene {
     this.player = new Player(this, 11, 6, null)
     this.gridPhysics = new GridPhysics(this.player, map)
 
-    this.padlock = new Padlock(this, 4.5*TILE_SIZE, 7.7*TILE_SIZE, 'padlock').setScale(0.08)
+    this.padlock = new Padlock(this, 4.5*TILE_SIZE, 7.6*TILE_SIZE, 'padlock').setScale(0.08)
     this.keyboard = this.input.keyboard
 
     this.collideSound = this.sound.add('collide')
@@ -80,9 +80,7 @@ export default class MapScene extends Phaser.Scene {
       this.mapKeys.create(coords.x, coords.y, 'key')
     })
 
-    this.physics.add.collider(this.player, this.mapKeys)
-
-    //this.physics.add.overlap(this.player, this.mapKeys, this.getKey, null, this)
+    this.physics.add.overlap(this.player, this.mapKeys, this.getKey, null, this)
 
     this.allKeys = {
       "h": {
@@ -118,7 +116,9 @@ export default class MapScene extends Phaser.Scene {
 
   getKey(player, mapKey){
     this.keyCount++
-    console.log(this.keyCount)
     mapKey.disableBody(true, true)
+    if (this.keyCount>=3){
+      this.padlock.disableBody(true, true)
+    }
   }
 }
