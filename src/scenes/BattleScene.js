@@ -11,6 +11,7 @@ export default class BattleScene extends Phaser.Scene {
     this.createGroups = this.createGroups.bind(this)
     this.createWeapon = this.createWeapon.bind(this)
     this.playerAttack = this.playerAttack.bind(this)
+    this.createEnemy = this.createEnemy.bind(this)
   }
 
   preload() {
@@ -24,6 +25,15 @@ export default class BattleScene extends Phaser.Scene {
     frameHeight: 32,
     frameWidth: 32
   })
+  this.load.spritesheet('enemy', 'assets/backgrounds/enemy.png', {
+    frameWidth: 32,
+    frameHeight: 32
+  })
+  this.load.spritesheet('sword', 'assets/backgrounds/sword.png', {
+  frameHeight: 32,
+  frameWidth: 32
+})
+
     // this.load.spritesheet('player', 'assets/spriteSheets/basicIdle.png', {
     // })
     // this.load.spritesheet('enemy', 'assets/spriteSheets/enemy.png', {})
@@ -61,18 +71,16 @@ export default class BattleScene extends Phaser.Scene {
     const map = this.make.tilemap({ data: level, tileHeight: 32, tileWidth: 32 });
     const tiles = map.addTilesetImage("letters");
     const ground = map.createStaticLayer(0, tiles, 0, 0)
-    this.enemy = new Enemy(this, 0, 0, 'battle').setScale(2)
     this.player = new Player(this, 16, 16, 'battle')
     this.player.setFrame(4)
-    this.enemy.setFrame(12)
     this.player.hp = 3
-    this.enemy.hp = 3
+
     this.player.startPosition = this.player.getPosition()
     // this.weapon = new Enemy(this, 336, 50, null)
     this.gridPhysics = new GridPhysics(this.player, map)
     this.keyboard = this.input.keyboard
     this.createGroups()
-
+    this.enemies.hp = 3
     this.allKeys = {
       "h": {
         "key": this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
@@ -106,7 +114,7 @@ export default class BattleScene extends Phaser.Scene {
 
     // Create collisions for all entities
     // << CREATE COLLISIONS HERE >>
-    this.physics.add.overlap(this.player, this.enemy, this.onMeetEnemy, null, this)
+    this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, null, this)
     this.physics.add.overlap(this.player, this.weapons, this.playerAttack, null, this)
 
   }
@@ -117,6 +125,7 @@ export default class BattleScene extends Phaser.Scene {
     // << DO UPDATE LOGIC HERE >>
     this.player.update(time, this.allKeys)
     this.gridPhysics.update(delta)
+
     // if(!this.player.alive){
     //   this.player.play('playerDeath', true)
     // }
@@ -152,22 +161,45 @@ export default class BattleScene extends Phaser.Scene {
     this.gridPhysics.stopMoving()
     this.gridPhysics.tileSizePixelsWalked = 0
     this.player.resetPosition(this.player.startPosition)
-    this.enemy.hp --
-    if(this.enemy.hp <=0){
-      this.enemy.disableBody(true, true)
+    console.log(this.enemies.hp)
+    this.enemies.hp --
+    this.weapons.remove(this.weapons.getLast(true), true)
+    if(this.enemies.hp <=0){
+      this.enemies.clear(true, false)
     }
   }
   createWeapon(x, y) {
-    this.weapons.create(x, y, 'weapon');
+    this.weapons.create(x, y, 'sword');
     }
+
+  createEnemy(x, y) {
+    this.enemies.create(x, y, 'enemy')
+  }
 
   createGroups () {
     this.weapons = this.physics.add.group({
       classType: Enemy
     })
-    this.createWeapon(64, 64)
+    this.enemies = this.physics.add.group({
+      classType: Enemy
+    })
+    this.createWeapon(32, 32)
     this.createWeapon(55, 500)
     this.createWeapon(600, 300)
+    this.createEnemy(32, 32)
+    this.createEnemy(80, 62)
+    this.createEnemy(700, 32)
+    this.createEnemy(600, 62)
+    this.createEnemy(650, 300)
+    this.createEnemy(550, 300)
+    this.createEnemy(32, 500)
+    this.createEnemy(400, 400)
+    this.createEnemy(340, 32)
+    this.createEnemy(320, 330)
+    this.createEnemy(600, 550)
+    this.createEnemy(400, 560)
+    this.createEnemy(92, 85)
+    this.createEnemy(92, 580)
   }
 
 }
