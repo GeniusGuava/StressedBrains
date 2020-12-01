@@ -34,11 +34,12 @@ export default class BattleScene extends Phaser.Scene {
   frameWidth: 32
 })
 
-    // this.load.spritesheet('player', 'assets/spriteSheets/basicIdle.png', {
-    // })
-    // this.load.spritesheet('enemy', 'assets/spriteSheets/enemy.png', {})
     // Preload Sounds
     // << LOAD SOUNDS HERE >>
+    this.load.audio('enemy', 'assets/audio/enemy.wav')
+    this.load.audio('attack', 'assets/audio/attack.wav')
+    this.load.audio('lose', 'assets/audio/loseBattle.wav')
+    this.load.audio('win', 'assets/audio/winBattle.wav')
   }
 
   create() {
@@ -74,6 +75,10 @@ export default class BattleScene extends Phaser.Scene {
     this.player = new Player(this, 16, 16, 'battle')
     this.player.setFrame(4)
     this.player.hp = 3
+    this.enemySound = this.sound.add('enemy')
+    this.attackSound = this.sound.add('attack')
+    this.loseSound = this.sound.add('lose')
+    this.winSound = this.sound.add('win')
 
     this.player.startPosition = this.player.getPosition()
     // this.weapon = new Enemy(this, 336, 50, null)
@@ -108,6 +113,16 @@ export default class BattleScene extends Phaser.Scene {
       },
     }
 
+    this.playerBar=this.makeBar(8,8,0x2ecc71);
+        this.setValue(this.playerBar,100);
+
+    this.enemyBar=this.makeBar(250, 8,0xe74c3c);
+        this.setValue(this.enemyBar,100);
+
+        this.add.text(8, 8, 'You', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,', color: 'black', fontSize: '3000px' })
+
+        this.add.text(250, 8, 'Enemy', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,', color: 'black', fontSize: '3000px' })
+
     // // Create sounds
 
     // << CREATE SOUNDS HERE >>
@@ -125,47 +140,37 @@ export default class BattleScene extends Phaser.Scene {
     // << DO UPDATE LOGIC HERE >>
     this.player.update(time, this.allKeys)
     this.gridPhysics.update(delta)
-
-    // if(!this.player.alive){
-    //   this.player.play('playerDeath', true)
-    // }
-
   }
-  // createAnimations(){
-  //   this.anims.create({
-  //     key: 'playerAttack',
-  //     frame: this.anims.generateFrameNumbers(player, {
-  //       start: #, end: # }),
-  //       fameRate: 10,
-  //       repeat: -1
-  //     }),
-  //     this.anims.create({
-  //       key: 'enemyAttack',
-  //       frame: this.anims.generateFrameNumbers(enemy, {
-  //         start: #, end: # }),
-  //         fameRate: 10,
-  //         repeat: -1
-  //       })
-  //   }
+
   onMeetEnemy(player, enemy){
+    this.enemySound.play()
     this.gridPhysics.stopMoving()
     this.gridPhysics.tileSizePixelsWalked = 0
     this.player.resetPosition(this.player.startPosition)
     player.hp --
+    const third = (this.playerBar.scaleX - .33)*100
+    this.setValue(this.playerBar, third)
     if(player.hp <=0){
       player.disableBody(true, true)
+      this.loseSound.play()
+      this.setValue(this.playerBar, 0)
     }
   }
 
-  playerAttack(){
+  playerAttack(player, weapon){
+    this.attackSound.play()
     this.gridPhysics.stopMoving()
     this.gridPhysics.tileSizePixelsWalked = 0
     this.player.resetPosition(this.player.startPosition)
-    console.log(this.enemies.hp)
     this.enemies.hp --
-    this.weapons.remove(this.weapons.getLast(true), true)
+    this.weapons.killAndHide(weapon)
+    weapon.body.enable = false
+    const third = (this.enemyBar.scaleX - .33)*100
+    this.setValue(this.enemyBar, third)
     if(this.enemies.hp <=0){
       this.enemies.clear(true, false)
+      this.winSound.play()
+      this.setValue(this.enemyBar, 0)
     }
   }
   createWeapon(x, y) {
@@ -201,5 +206,26 @@ export default class BattleScene extends Phaser.Scene {
     this.createEnemy(112, 80)
     this.createEnemy(80, 560)
   }
+  makeBar(x, y,color) {
+    //draw the bar
+    let bar = this.add.graphics();
+
+    //color the bar
+    bar.fillStyle(color, 1);
+
+    //fill the bar with a rectangle
+    bar.fillRect(0, 0, 200, 50);
+
+    //position the bar
+    bar.x = x;
+    bar.y = y;
+
+    //return the bar
+    return bar;
+}
+setValue(bar,percentage) {
+    //scale the bar
+    bar.scaleX = percentage/100;
+}
 
 }
