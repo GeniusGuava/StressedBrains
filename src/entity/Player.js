@@ -1,5 +1,5 @@
 import 'phaser';
-import {TILE_SIZE} from '../scenes/BgScene'
+import {TILE_SIZE} from '../scenes/MapScene'
 
 const Vector2 = Phaser.Math.Vector2
 
