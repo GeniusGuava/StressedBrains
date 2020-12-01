@@ -22,6 +22,16 @@ export default class MapScene extends Phaser.Scene {
     this.getKey = this.getKey.bind(this)
   }
 
+  onMeetEnemy(player, zone) {
+    zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+    zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+    this.cameras.main.shake(300);
+
+    // switch to BattleScene
+    this.scene.switch("BattleScene");
+  }
+
+
   preload() {
     //this.load.image('tiles', 'assets/backgrounds/tiles.png');
     //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
@@ -108,7 +118,26 @@ export default class MapScene extends Phaser.Scene {
         }
       },
     }
+
+    // invisible triggers
+    this.spawns = this.physics.add.group({
+      classType: Phaser.GameObjects.Zone,
+    });
+    for (let i = 0; i < 5; i++) {
+      let x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+      let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+      // parameters are x, y, width, height
+      this.spawns.create(x, y, 20, 20);
+    }
+    this.physics.add.overlap(
+      this.player,
+      this.spawns,
+      this.onMeetEnemy,
+      false,
+      this
+    );
   }
+
   update(time, delta) {
     this.player.update(time, this.allKeys)
     this.gridPhysics.update(delta)
