@@ -6,7 +6,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    //this.scene.launch('MapScene')
-    this.scene.launch('BattleScene')
+    this.scene.launch('MapScene')
+    //this.scene.launch('BattleScene')
   }
 }
