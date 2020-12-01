@@ -139,6 +139,8 @@ export default class BattleScene extends Phaser.Scene {
   //       })
   //   }
   onMeetEnemy(player, enemy){
+    this.gridPhysics.stopMoving()
+    this.gridPhysics.tileSizePixelsWalked = 0
     this.player.resetPosition(this.player.startPosition)
     player.hp --
     if(player.hp <=0){
@@ -147,6 +149,8 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   playerAttack(){
+    this.gridPhysics.stopMoving()
+    this.gridPhysics.tileSizePixelsWalked = 0
     this.player.resetPosition(this.player.startPosition)
     this.enemy.hp --
     if(this.enemy.hp <=0){
