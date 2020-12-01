@@ -69,7 +69,7 @@ export default class BattleScene extends Phaser.Scene {
     this.enemy.hp = 3
     this.player.startPosition = this.player.getPosition()
     // this.weapon = new Enemy(this, 336, 50, null)
-    this.gridPhysics = new GridPhysics(this.player)
+    this.gridPhysics = new GridPhysics(this.player, map)
     this.keyboard = this.input.keyboard
     this.createGroups()
 

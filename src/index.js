@@ -13,8 +13,7 @@ But this hasn't happened yet!
 */
 
 import MainScene from './scenes/MainScene';
-import BgScene from './scenes/BgScene';
-import FgScene from './scenes/FgScene';
+import MapScene from './scenes/MapScene';
 import config from './config/config';
 import BattleScene from './scenes/BattleScene'
 
@@ -32,6 +31,7 @@ class Game extends Phaser.Game {
     // this.scene.add('BgScene', BgScene);
     // this.scene.add('FgScene', FgScene);
     this.scene.add('BattleScene', BattleScene)
+    this.scene.add('MapScene', MapScene)
     this.scene.add('MainScene', MainScene);
 
     // Start the game with the mainscene
