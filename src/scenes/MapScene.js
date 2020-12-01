@@ -99,7 +99,7 @@ export default class MapScene extends Phaser.Scene {
     this.spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
     });
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       let x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
       let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
       // parameters are x, y, width, height

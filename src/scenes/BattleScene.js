@@ -3,6 +3,22 @@ import Enemy from "../entity/Enemy"
 import { GridPhysics } from "../physics/GridPhysics"
 import { Direction } from './FgScene'
 
+class UIScene extends Phaser.Scene {
+  constructor() {
+    super('UIScene')
+  }
+  create () {       
+      this.graphics = this.add.graphics();
+      this.graphics.lineStyle(1, 0xffffff);
+      this.graphics.fillStyle(0x031f4c, 1);        
+      this.graphics.strokeRect(2, 150, 90, 100);
+      this.graphics.fillRect(2, 150, 90, 100);
+      this.graphics.strokeRect(95, 150, 90, 100);
+      this.graphics.fillRect(95, 150, 90, 100);
+      this.graphics.strokeRect(188, 150, 130, 100);
+      this.graphics.fillRect(188, 150, 130, 100);
+  }
+}
 
 export default class BattleScene extends Phaser.Scene {
   constructor() {
@@ -17,6 +33,11 @@ export default class BattleScene extends Phaser.Scene {
   exitBattle() {
     this.scene.sleep('BattleScene');
     this.scene.switch('MainScene');
+  }
+
+  wake() {
+    this.scene.run('UIScene');  
+    this.time.addEvent({delay: 3000, callback: this.exitBattle, callbackScope: this});        
   }
 
   preload() {
@@ -123,7 +144,7 @@ export default class BattleScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.weapons, this.playerAttack, null, this)
 
     this.timeEvent = this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});
-    // this.sys.events.on('wake', this.wake, this);
+    this.sys.events.on('wake', this.wake, this);
 
   }
 
