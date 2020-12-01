@@ -4,7 +4,7 @@
   "description": "A workshop for getting started with Phaser",
   "main": "src/index.js",
   "scripts": {
-    "start": "node public/bundle.js",
+    "start": "node server.js",
     "start-dev": "webpack-dev-server",
     "deploy": "script/deploy"
   },
