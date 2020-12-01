@@ -58,6 +58,7 @@ export default class BgScene extends Phaser.Scene {
     const gateLayer = map.createStaticLayer('gate', tileset);
     grassLayer.setCollisionByProperty({ collides: true });
 
+
     //debug func to show tiles that can collide with character
     const debugGraphics = this.add.graphics().setAlpha(0.75);
     // grassLayer.renderDebug(debugGraphics, {

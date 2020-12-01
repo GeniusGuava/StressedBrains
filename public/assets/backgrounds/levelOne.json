@@ -17,6 +17,9 @@
          "id":2,
          "name":"grass",
          "opacity":1,
+         "properties": {
+                "collides": true
+         },
          "type":"tilelayer",
          "visible":true,
          "width":20,
