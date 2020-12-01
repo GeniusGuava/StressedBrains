@@ -15,14 +15,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, spriteKey);
     // << INITIALIZE PLAYER ATTRIBUTES HERE >>
     this.scene = scene;
+    this.scene.physics.world.enable(this)
     this.scene.add.existing(this);
+    this.setCollideWorldBounds(true)
 
     this.setPosition(
       x * TILE_SIZE + this.playerOffsetX(),
       y * TILE_SIZE + this.playerOffsetY()
     )
 
-    this.moveDelay = 0
+    this.moveDelay = 100
     this.lastMoved = 0
   }
 
