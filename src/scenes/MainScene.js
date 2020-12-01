@@ -27,6 +27,7 @@ export default class MainScene extends Phaser.Scene {
   }
   create() {
 
+
     /* Background map */
     const map = this.make.tilemap({
       key: 'map',
@@ -47,6 +48,11 @@ export default class MainScene extends Phaser.Scene {
     const grassLayer = map.createStaticLayer('grass', tileset);
     const pathLayer = map.createStaticLayer('path', tileset);
     const gateLayer = map.createStaticLayer('gate', tileset);
+
+    // << LOAD BACKGROUND AND FOREGROUND SCENES IN PARALLEL HERE >>
+   // this.scene.launch('BattleScene');
+    // this.scene.launch('FgScene');
+
 
     const debugGraphics = this.add.graphics().setAlpha(0.75);
     grassLayer.renderDebug(debugGraphics, {

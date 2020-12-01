@@ -16,11 +16,10 @@ import MainScene from './scenes/MainScene';
 import BgScene from './scenes/BgScene';
 import FgScene from './scenes/FgScene';
 import config from './config/config';
+import BattleScene from './scenes/BattleScene'
 
 // Bring in all the scenes
 import 'phaser';
-
-
 
 class Game extends Phaser.Game {
   constructor() {
@@ -30,8 +29,9 @@ class Game extends Phaser.Game {
     // Add all the scenes
     // << ADD ALL SCENES HERE >>
 
-    this.scene.add('BgScene', BgScene);
-    this.scene.add('FgScene', FgScene);
+    // this.scene.add('BgScene', BgScene);
+    // this.scene.add('FgScene', FgScene);
+    this.scene.add('BattleScene', BattleScene)
     this.scene.add('MainScene', MainScene);
 
     // Start the game with the mainscene
@@ -40,6 +40,10 @@ class Game extends Phaser.Game {
   }
 }
 // Create new instance of game
-window.onload = function () {
-  window.game = new Game();
-};
+// if (typeof window !== 'undefined') {
+//   window.onload = function () {
+//     window.game = new Game();
+//   };
+// }
+
+const game = new Game();
