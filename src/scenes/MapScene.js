@@ -19,11 +19,8 @@ export default class MapScene extends Phaser.Scene {
   }
 
   onMeetEnemy(player, zone) {
-    // we move the zone to some other location
     zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
     zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
-
-    // shake the world
     this.cameras.main.shake(300);
 
     // switch to BattleScene
@@ -96,6 +93,7 @@ export default class MapScene extends Phaser.Scene {
       },
     }
 
+    // invisible triggers
     this.spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
     });
@@ -113,6 +111,7 @@ export default class MapScene extends Phaser.Scene {
       this
     );
   }
+
   update(time, delta) {
     this.player.update(time, this.allKeys)
     this.gridPhysics.update(delta)

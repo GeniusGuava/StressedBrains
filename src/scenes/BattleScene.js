@@ -31,13 +31,13 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   exitBattle() {
-    this.scene.sleep('BattleScene');
+    this.scene.sleep('UIScene');
     this.scene.switch('MainScene');
   }
 
   wake() {
     this.scene.run('UIScene');  
-    this.time.addEvent({delay: 3000, callback: this.exitBattle, callbackScope: this});        
+    this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});        
   }
 
   preload() {
@@ -143,6 +143,7 @@ export default class BattleScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, null, this)
     this.physics.add.overlap(this.player, this.weapons, this.playerAttack, null, this)
 
+    // switch between battle scenes
     this.timeEvent = this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});
     this.sys.events.on('wake', this.wake, this);
 
