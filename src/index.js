@@ -21,8 +21,6 @@ import BattleScene from './scenes/BattleScene'
 // Bring in all the scenes
 import 'phaser';
 
-
-
 class Game extends Phaser.Game {
   constructor() {
     // Add the config file to the game
@@ -42,6 +40,10 @@ class Game extends Phaser.Game {
   }
 }
 // Create new instance of game
-window.onload = function () {
-  window.game = new Game();
-};
+// if (typeof window !== 'undefined') {
+//   window.onload = function () {
+//     window.game = new Game();
+//   };
+// }
+
+const game = new Game();
