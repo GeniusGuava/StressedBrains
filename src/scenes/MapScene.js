@@ -23,8 +23,8 @@ export default class MapScene extends Phaser.Scene {
   }
 
   onMeetEnemy(player, zone) {
-    zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
-    zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+    zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width - 2);
+    zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height - 2);
     this.cameras.main.shake(300);
 
     // switch to BattleScene
@@ -34,7 +34,6 @@ export default class MapScene extends Phaser.Scene {
       this.allKeys[key]["key"].isDown = false
     })
     this.scene.switch("BattleScene");
-
   }
 
   preload() {
@@ -75,7 +74,7 @@ export default class MapScene extends Phaser.Scene {
     });
 
     /*Character*/
-    this.player = new Player(this, 11, 6, 'Ariadne').setScale(1.25);
+    this.player = new Player(this, 11, 6, 'Ariadne').setScale(0.65);
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
 
@@ -142,12 +141,20 @@ export default class MapScene extends Phaser.Scene {
     this.spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
     });
-    for (let i = 0; i < 5; i++) {
+
+    for (let i = 0; i < 15; i++) {
       let x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
       let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
-      // parameters are x, y, width, height
-      this.spawns.create(x, y, 20, 20);
+
+      this.player.beforeBattle = this.player.getPosition();
+      
+      if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
+        x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+        y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+      }
+      this.spawns.create(x, y, 32, 32);
     }
+    
     this.physics.add.overlap(
       this.player,
       this.spawns,
