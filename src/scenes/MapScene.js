@@ -4,7 +4,7 @@ import Player from '../entity/Player';
 import { GridPhysics } from '../physics/GridPhysics';
 import Key from '../entity/Key';
 import Padlock from '../entity/Padlock';
-import {tileMaps, padlockLocation, keyLocations} from '../MapInfo'
+import {tileMaps, padlockLocation, keyLocations, playerStartPosition} from '../MapInfo'
 
 export const TILE_SIZE = 32;
 
@@ -79,7 +79,7 @@ export default class MapScene extends Phaser.Scene {
     keyLocations[this.level].map((coords) => {
       this.mapKeys.create(coords.x, coords.y, 'key');
     });
-    this.player = new Player(this, 11, 6, 'Ariadne').setScale(1.25);
+    this.player = new Player(this, playerStartPosition[this.level].x, playerStartPosition[this.level].y, 'Ariadne').setScale(1.25);
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
 

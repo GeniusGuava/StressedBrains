@@ -5,10 +5,7 @@ export const tileMaps = [
 ]
 
 export const padlockLocation = [
-  {
-    x: 4.5,
-    y: 7.6
-  }
+  { x: 4.5, y: 7.6 }
 ]
 
 export const keyLocations = [
@@ -17,4 +14,9 @@ export const keyLocations = [
     { x: 18.5 * TILE_SIZE, y: 18.5 * TILE_SIZE },
     { x: 4.5 * TILE_SIZE, y: 15.5 * TILE_SIZE },
   ],
+]
+
+export const playerStartPosition = [
+  {x: 11, y:6},
+
 ]
