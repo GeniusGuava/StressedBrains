@@ -47,9 +47,9 @@ export default class MapScene extends Phaser.Scene {
       frameHeight: 32,
     });
     this.load.image('padlock', 'assets/sprites/padlock.png');
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george.png', {
-      frameWidth: 48,
-      frameHeight: 48,
+    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
+      frameWidth: 32,
+      frameHeight: 32,
     });
   }
   create() {
@@ -74,7 +74,7 @@ export default class MapScene extends Phaser.Scene {
     });
 
     /*Character*/
-    this.player = new Player(this, 11, 6, 'Ariadne').setScale(1.25);
+    this.player = new Player(this, 11, 6, 'Ariadne').setScale(1);
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
 
