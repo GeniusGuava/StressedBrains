@@ -28,6 +28,11 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.shake(300);
 
     // switch to BattleScene
+
+    this.input.keyboard.enabled = false;
+    Object.keys(this.allKeys).map((key) => {
+      this.allKeys[key]['key'].isDown = false;
+    });
     this.scene.switch('BattleScene');
   }
 
@@ -150,21 +155,11 @@ export default class MapScene extends Phaser.Scene {
       this
     );
 
-    //text
-    let clickCount = 0;
-    this.clickCountText = this.add.text(100, 150, '');
-    const clickButton = this.add
-      .text(100, 100, 'Click me!', {
-        fill: '#0f0',
-        backgroundColor: '#000',
-      })
-      .setInteractive()
-      .on('pointerdown', () => this.updateClickCountText(++clickCount));
-    this.updateClickCountText(clickCount);
-  }
-
-  updateClickCountText(clickCount) {
-    this.clickCountText.setText(`Button has been clicked ${clickCount} times`);
+    this.sys.events.on(
+      'wake',
+      () => (this.input.keyboard.enabled = true),
+      this
+    );
   }
 
   update(time, delta) {
