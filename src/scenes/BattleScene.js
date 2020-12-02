@@ -144,7 +144,7 @@ export default class BattleScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.weapons, this.playerAttack, null, this)
 
     // switch between battle scenes
-    this.timeEvent = this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});
+    this.timeEvent = this.time.addEvent({delay: 8000, callback: this.exitBattle, callbackScope: this});
     this.sys.events.on('wake', this.wake, this);
 
   }
