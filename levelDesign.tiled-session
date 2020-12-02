@@ -3,9 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.json",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 0.7656
@@ -51,7 +52,6 @@
     "map.tileWidth": 32,
     "map.width": 20,
     "openFiles": [
-        "level1.json"
     ],
     "project": "levelDesign.tiled-project",
     "property.type": "bool",
