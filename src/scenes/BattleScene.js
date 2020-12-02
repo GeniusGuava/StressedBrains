@@ -31,11 +31,16 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   exitBattle() {
+    this.input.keyboard.enabled=false
+    Object.keys(this.allKeys).map(key=>{
+      this.allKeys[key]["key"].isDown = false
+    })
     this.scene.sleep('UIScene');
-    this.scene.switch('MainScene');
+    this.scene.switch('MapScene');
   }
 
   wake() {
+    this.input.keyboard.enabled = true
     this.scene.run('UIScene');  
     this.time.addEvent({delay: 5000, callback: this.exitBattle, callbackScope: this});        
   }
