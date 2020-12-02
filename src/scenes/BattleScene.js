@@ -2,15 +2,17 @@ import Player from "../entity/Player"
 import Enemy from "../entity/Enemy"
 import { GridPhysics } from "../physics/GridPhysics"
 import { Direction } from './FgScene'
+import { enemySprite, weaponSprite, level, playerStartPosition, weapons, enemies} from '../BattleInfo'
 
 class UIScene extends Phaser.Scene {
   constructor() {
     super('UIScene')
+
   }
-  create () {       
+  create () {
       this.graphics = this.add.graphics();
       this.graphics.lineStyle(1, 0xffffff);
-      this.graphics.fillStyle(0x031f4c, 1);        
+      this.graphics.fillStyle(0x031f4c, 1);
       this.graphics.strokeRect(2, 150, 90, 100);
       this.graphics.fillRect(2, 150, 90, 100);
       this.graphics.strokeRect(95, 150, 90, 100);
@@ -23,6 +25,7 @@ class UIScene extends Phaser.Scene {
 export default class BattleScene extends Phaser.Scene {
   constructor() {
     super('BattleScene');
+    this.level = 0
     this.onMeetEnemy = this.onMeetEnemy.bind(this)
     this.createGroups = this.createGroups.bind(this)
     this.createWeapon = this.createWeapon.bind(this)
@@ -56,11 +59,11 @@ export default class BattleScene extends Phaser.Scene {
     frameHeight: 32,
     frameWidth: 32
   })
-  this.load.spritesheet('enemy', 'assets/backgrounds/enemy.png', {
+  this.load.spritesheet('enemy', enemySprite[this.level], {
     frameWidth: 32,
     frameHeight: 32
   })
-  this.load.spritesheet('sword', 'assets/backgrounds/sword.png', {
+  this.load.spritesheet('sword', weaponSprite[this.level], {
   frameHeight: 32,
   frameWidth: 32
 })
@@ -77,33 +80,10 @@ export default class BattleScene extends Phaser.Scene {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
 
-    const level = [
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
-      [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0]
-
-    ]
-    const map = this.make.tilemap({ data: level, tileHeight: 32, tileWidth: 32 });
+    const map = this.make.tilemap({ data: level[this.level], tileHeight: 32, tileWidth: 32 });
     const tiles = map.addTilesetImage("letters");
     const ground = map.createStaticLayer(0, tiles, 0, 0)
-    this.player = new Player(this, 16, 16, 'battle')
+    this.player = new Player(this, playerStartPosition[this.level].x, playerStartPosition[this.level].y, 'battle')
     this.player.setFrame(4)
     this.player.hp = 3
     this.enemySound = this.sound.add('enemy')
@@ -223,23 +203,15 @@ export default class BattleScene extends Phaser.Scene {
     this.enemies = this.physics.add.group({
       classType: Enemy
     })
-    this.createWeapon(16, 16)
-    this.createWeapon(48, 496)
-    this.createWeapon(592, 304)
-    this.createEnemy(48, 48)
-    this.createEnemy(80, 48)
-    this.createEnemy(592, 16)
-    this.createEnemy(400, 208)
-    this.createEnemy(624, 304)
-    this.createEnemy(560, 304)
-    this.createEnemy(16, 496)
-    this.createEnemy(400, 400)
-    this.createEnemy(336, 16)
-    this.createEnemy(336, 336)
-    this.createEnemy(592, 528)
-    this.createEnemy(400, 560)
-    this.createEnemy(112, 80)
-    this.createEnemy(80, 560)
+
+    weapons[this.level].map((coords) => {
+      this.createWeapon(coords.x, coords.y)
+    })
+
+    enemies[this.level].map((coords) => {
+      this.createEnemy(coords.x, coords.y)
+    })
+
   }
   makeBar(x, y,color) {
     //draw the bar
