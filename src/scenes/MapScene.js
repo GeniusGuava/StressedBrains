@@ -28,6 +28,10 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.shake(300);
 
     // switch to BattleScene
+    this.input.keyboard.enabled=false
+    Object.keys(this.allKeys).map(key=>{
+      this.allKeys[key]["key"].isDown = false
+    })
     this.scene.switch("BattleScene");
   }
 
@@ -136,6 +140,8 @@ export default class MapScene extends Phaser.Scene {
       false,
       this
     );
+
+    this.sys.events.on('wake', ()=>this.input.keyboard.enabled=true,this)
   }
 
   update(time, delta) {
