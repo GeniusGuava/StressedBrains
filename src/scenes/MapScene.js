@@ -160,6 +160,24 @@ export default class MapScene extends Phaser.Scene {
       () => (this.input.keyboard.enabled = true),
       this
     );
+
+    //text
+    this.help = this.add.text(800, 20, ':help', { backgroundColor: '#000' });
+    this.label = this.add
+      .text(675, 100, '')
+      .setWordWrapWidth(260)
+      .setInteractive()
+      .on('pointerdown', () => this.updateClickCountText(this.label.destroy()));
+
+    this.typewriteText(
+      `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
+    );
+    let clickCount = 0;
+    this.clickCountText = this.add.text(675, 250, '', {
+      backgroundColor: '#000',
+    });
+
+    this.updateClickCountText(clickCount);
   }
 
   update(time, delta) {
@@ -225,5 +243,29 @@ export default class MapScene extends Phaser.Scene {
       frames: [{ key: 'Ariadne', frame: 0 }],
       frameRate: 2,
     });
+  }
+
+  typewriteText(text) {
+    const length = text.length;
+    let i = 0;
+    this.time.addEvent({
+      callback: () => {
+        this.label.text += text[i];
+        ++i;
+      },
+      repeat: length - 1,
+      delay: 50,
+    });
+  }
+
+  typewriteTextWrapped(text) {
+    const lines = this.label.getWrappedText(text);
+    const wrappedText = lines.join('\n');
+
+    this.typewriteText(wrappedText);
+  }
+
+  updateClickCountText(clickCount) {
+    this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
   }
 }
