@@ -9,6 +9,7 @@ import {
   playerStartPosition,
   weapons,
   enemies,
+  enemySize,
 } from '../BattleInfo';
 
 class UIScene extends Phaser.Scene {
@@ -70,8 +71,8 @@ export default class BattleScene extends Phaser.Scene {
       frameWidth: 32,
     });
     this.load.spritesheet('enemy', enemySprite[this.level], {
-      frameWidth: 32,
-      frameHeight: 32,
+      frameWidth: enemySize[this.level].w,
+      frameHeight: enemySize[this.level].h,
     });
     this.load.spritesheet('sword', weaponSprite[this.level], {
       frameHeight: 32,
@@ -81,6 +82,10 @@ export default class BattleScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet('warning', 'assets/spriteSheets/warning.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
     // Preload Sounds
     // << LOAD SOUNDS HERE >>
     this.load.audio('enemy', 'assets/audio/enemy.wav');
@@ -106,15 +111,19 @@ export default class BattleScene extends Phaser.Scene {
       playerStartPosition[this.level].y,
       'Ariadne'
     );
+    this.enemySprite = new Enemy(
+      this,
+      900, 200, 'enemy'
+    )
     this.player.setFrame(4);
     this.player.hp = 3;
-    this.enemySound = this.sound.add('enemy');
-    this.attackSound = this.sound.add('attack');
-    this.loseSound = this.sound.add('lose');
-    this.winSound = this.sound.add('win');
+    this.enemySound = this.sound.add('enemy', { volume: 0.25 });
+    this.attackSound = this.sound.add('attack', { volume: 0.25 });
+    this.loseSound = this.sound.add('lose', { volume: 0.25 });
+    this.winSound = this.sound.add('win', { volume: 0.25 });
+    this.createAnimations()
 
     this.player.startPosition = this.player.getPosition();
-    // this.weapon = new Enemy(this, 336, 50, null)
     this.gridPhysics = new GridPhysics(this.player, map);
     this.keyboard = this.input.keyboard;
     this.createGroups();
@@ -204,6 +213,7 @@ export default class BattleScene extends Phaser.Scene {
 
   onMeetEnemy(player, enemy) {
     this.enemySound.play();
+    this.enemySprite.play('enemyAttack')
     this.gridPhysics.stopMoving();
     this.gridPhysics.tileSizePixelsWalked = 0;
     this.player.resetPosition(this.player.startPosition);
@@ -221,13 +231,13 @@ export default class BattleScene extends Phaser.Scene {
     this.attackSound.play();
     this.gridPhysics.stopMoving();
     this.gridPhysics.tileSizePixelsWalked = 0;
-    this.player.resetPosition(this.player.startPosition);
     this.enemies.hp--;
     this.weapons.killAndHide(weapon);
     weapon.body.enable = false;
     const third = (this.enemyBar.scaleX - 0.33) * 100;
     this.setValue(this.enemyBar, third);
     if (this.enemies.hp <= 0) {
+      this.enemySprite.play('enemyDeath')
       this.enemies.clear(true, false);
       this.winSound.play();
       this.setValue(this.enemyBar, 0);
@@ -238,7 +248,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   createEnemy(x, y) {
-    this.enemies.create(x, y, 'enemy');
+    this.enemies.create(x, y, 'warning');
   }
 
   createGroups() {
@@ -277,5 +287,23 @@ export default class BattleScene extends Phaser.Scene {
   setValue(bar, percentage) {
     //scale the bar
     bar.scaleX = percentage / 100;
+  }
+  createAnimations() {
+    this.anims.create({
+      key: 'enemyIdle',
+      frames: this.anims.generateFrameNumbers('enemy', { start: 1, end: 5 }),
+      frameRate: 2,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'enemyAttack',
+      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 10 }),
+      frameRate: 2,
+    });
+    this.anims.create({
+      key: 'enemyDeath',
+      frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
+      frameRate: 2,
+    })
   }
 }
