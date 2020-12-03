@@ -44,6 +44,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
+    this.load.audio('locked', 'assets/audio/locked.wav')
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -96,10 +97,19 @@ export default class MapScene extends Phaser.Scene {
     ).setScale(0.08);
     this.keyboard = this.input.keyboard;
 
+    this.exit = new Phaser.GameObjects.Zone(this, padlockLocation[this.level].x, padlockLocation[this.level].y * TILE_SIZE)
+
 
     this.collideSound = this.sound.add('collide', { volume: 0.25 });
+    this.lockedSound = this.sound.add('locked')
 
-
+    this.physics.add.overlap(
+      this.player,
+      this.exit,
+      this.exitLevel,
+      null,
+      this
+    )
 
     this.physics.add.overlap(
       this.player,
@@ -146,14 +156,14 @@ export default class MapScene extends Phaser.Scene {
       let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
       this.player.beforeBattle = this.player.getPosition();
-      
+
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
         x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
         y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
       }
       this.spawns.create(x, y, 32, 32);
     }
-    
+
     this.physics.add.overlap(
       this.player,
       this.spawns,
@@ -175,6 +185,15 @@ export default class MapScene extends Phaser.Scene {
     mapKey.disableBody(true, true);
     if (this.keyCount >= 3) {
       this.padlock.disableBody(true, true);
+    }
+  }
+
+  exitLevel(player, exit) {
+    if(this.keyCount >=3){
+      this.level ++
+      this.scene.restart()
+    }else{
+      this.lockedSound.play()
     }
   }
 

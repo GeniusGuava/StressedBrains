@@ -2,6 +2,7 @@ const TILE_SIZE = 32;
 
 export const tileMaps = [
   'assets/backgrounds/levelOne.json',
+  'assets/backgrounds/testing-map2.json'
 ]
 
 export const padlockLocation = [
