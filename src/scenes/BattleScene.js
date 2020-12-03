@@ -104,7 +104,7 @@ export default class BattleScene extends Phaser.Scene {
       this,
       playerStartPosition[this.level].x,
       playerStartPosition[this.level].y,
-      'battle'
+      'Ariadne'
     );
     this.player.setFrame(4);
     this.player.hp = 3;

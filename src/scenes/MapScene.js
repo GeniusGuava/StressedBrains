@@ -93,7 +93,7 @@ export default class MapScene extends Phaser.Scene {
       playerStartPosition[this.level].x,
       playerStartPosition[this.level].y,
       'Ariadne'
-    ).setScale(0.65);
+    ).setScale(1);
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
@@ -178,23 +178,34 @@ export default class MapScene extends Phaser.Scene {
       this
     );
 
-    //text
-    this.help = this.add.text(800, 20, ':help', { backgroundColor: '#000' });
-    this.label = this.add
-      .text(675, 100, '')
-      .setWordWrapWidth(260)
+    //help button
+    let helpVisible = true;
+    this.help = this.add
+      .text(750, 20, ':help', { backgroundColor: '#000' })
       .setInteractive()
-      .on('pointerdown', () => this.updateClickCountText(this.label.destroy()));
+      .on('pointerdown', () => {
+        if (!helpVisible) {
+          // this.helpText.alpha = 0;
+          this.helpText.setVisible(false);
+          helpVisible = !helpVisible;
+        } else {
+          // this.helpText.alpha = 1;
+          this.helpText.setVisible(true);
+          helpVisible = !helpVisible;
+        }
+      });
+    this.helpText = this.add
+      .text(
+        665,
+        50,
+        `power given by the God of VIM: \n h: left \n l: right \n j: down \n k: up`
+      )
+      .setVisible(false);
 
+    this.label = this.add.text(675, 450, '').setWordWrapWidth(260);
     this.typewriteText(
       `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
     );
-    let clickCount = 0;
-    this.clickCountText = this.add.text(675, 250, '', {
-      backgroundColor: '#000',
-    });
-
-    this.updateClickCountText(clickCount);
   }
 
   update(time, delta) {
@@ -282,7 +293,7 @@ export default class MapScene extends Phaser.Scene {
     this.typewriteText(wrappedText);
   }
 
-  updateClickCountText(clickCount) {
-    this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
-  }
+  // updateClickCountText(clickCount) {
+  //   this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
+  // }
 }
