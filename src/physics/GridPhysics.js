@@ -48,7 +48,7 @@ export class GridPhysics {
     return this.map.layers.some((layer)=> {
 
       const tile = this.map.getTileAt(pos.x, pos.y, false, layer.name)
-      return tile && tile.layer.properties.collides
+      return tile && tile.properties.collides
     })
   }
 

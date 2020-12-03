@@ -4,7 +4,12 @@ import Player from '../entity/Player';
 import { GridPhysics } from '../physics/GridPhysics';
 import Key from '../entity/Key';
 import Padlock from '../entity/Padlock';
-import {tileMaps, padlockLocation, keyLocations, playerStartPosition} from '../MapInfo'
+import {
+  tileMaps,
+  padlockLocation,
+  keyLocations,
+  playerStartPosition,
+} from '../MapInfo';
 
 export const TILE_SIZE = 32;
 
@@ -21,7 +26,7 @@ export default class MapScene extends Phaser.Scene {
     super('MapScene');
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
-    this.level = 0
+    this.level = 0;
   }
 
   onMeetEnemy(player, zone) {
@@ -31,11 +36,11 @@ export default class MapScene extends Phaser.Scene {
 
     // switch to BattleScene
 
-    this.input.keyboard.enabled=false
-    Object.keys(this.allKeys).map(key=>{
-      this.allKeys[key]["key"].isDown = false
-    })
-    this.scene.switch("BattleScene");
+    this.input.keyboard.enabled = false;
+    Object.keys(this.allKeys).map((key) => {
+      this.allKeys[key]['key'].isDown = false;
+    });
+    this.scene.switch('BattleScene');
   }
 
   preload() {
@@ -50,9 +55,9 @@ export default class MapScene extends Phaser.Scene {
       frameHeight: 32,
     });
     this.load.image('padlock', 'assets/sprites/padlock.png');
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george.png', {
-      frameWidth: 48,
-      frameHeight: 48,
+    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
+      frameWidth: 32,
+      frameHeight: 32,
     });
   }
   create() {
@@ -84,7 +89,12 @@ export default class MapScene extends Phaser.Scene {
     keyLocations[this.level].map((coords) => {
       this.mapKeys.create(coords.x, coords.y, 'key');
     });
-    this.player = new Player(this, playerStartPosition[this.level].x, playerStartPosition[this.level].y, 'Ariadne').setScale(0.65);
+    this.player = new Player(
+      this,
+      playerStartPosition[this.level].x,
+      playerStartPosition[this.level].y,
+      'Ariadne'
+    ).setScale(1);
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
@@ -97,19 +107,10 @@ export default class MapScene extends Phaser.Scene {
     ).setScale(0.08);
     this.keyboard = this.input.keyboard;
 
-    this.exit = new Phaser.GameObjects.Zone(this, padlockLocation[this.level].x, padlockLocation[this.level].y * TILE_SIZE)
-
-
     this.collideSound = this.sound.add('collide', { volume: 0.25 });
     this.lockedSound = this.sound.add('locked')
 
-    this.physics.add.overlap(
-      this.player,
-      this.exit,
-      this.exitLevel,
-      null,
-      this
-    )
+
 
     this.physics.add.overlap(
       this.player,
@@ -144,7 +145,7 @@ export default class MapScene extends Phaser.Scene {
           this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound);
         },
       },
-    }
+    };
 
     // invisible triggers
     this.spawns = this.physics.add.group({
@@ -157,12 +158,20 @@ export default class MapScene extends Phaser.Scene {
 
       this.player.beforeBattle = this.player.getPosition();
 
+
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
         x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
         y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
       }
       this.spawns.create(x, y, 32, 32);
     }
+
+    this.exit = this.physics.add.group({
+      classType: Phaser.GameObjects.Zone,
+    })
+
+    this.exit.create(padlockLocation[this.level].x * TILE_SIZE,
+      padlockLocation[this.level].y * TILE_SIZE, 32, 32)
 
     this.physics.add.overlap(
       this.player,
@@ -172,7 +181,48 @@ export default class MapScene extends Phaser.Scene {
       this
     );
 
-    this.sys.events.on('wake', ()=>this.input.keyboard.enabled=true,this)
+    this.physics.add.overlap(
+      this.player,
+      this.exit,
+      this.exitLevel,
+      null,
+      this
+    )
+
+    this.sys.events.on(
+      'wake',
+      () => (this.input.keyboard.enabled = true),
+      this
+    );
+
+    //help button
+    let helpVisible = true;
+    this.help = this.add
+      .text(750, 20, ':help', { backgroundColor: '#000' })
+      .setInteractive()
+      .on('pointerdown', () => {
+        if (!helpVisible) {
+          // this.helpText.alpha = 0;
+          this.helpText.setVisible(false);
+          helpVisible = !helpVisible;
+        } else {
+          // this.helpText.alpha = 1;
+          this.helpText.setVisible(true);
+          helpVisible = !helpVisible;
+        }
+      });
+    this.helpText = this.add
+      .text(
+        665,
+        50,
+        `power given by the God of VIM: \n h: left \n l: right \n j: down \n k: up`
+      )
+      .setVisible(false);
+
+    this.label = this.add.text(675, 450, '').setWordWrapWidth(260);
+    this.typewriteText(
+      `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
+    );
   }
 
   update(time, delta) {
@@ -248,4 +298,28 @@ export default class MapScene extends Phaser.Scene {
       frameRate: 2,
     });
   }
+
+  typewriteText(text) {
+    const length = text.length;
+    let i = 0;
+    this.time.addEvent({
+      callback: () => {
+        this.label.text += text[i];
+        ++i;
+      },
+      repeat: length - 1,
+      delay: 50,
+    });
+  }
+
+  typewriteTextWrapped(text) {
+    const lines = this.label.getWrappedText(text);
+    const wrappedText = lines.join('\n');
+
+    this.typewriteText(wrappedText);
+  }
+
+  // updateClickCountText(clickCount) {
+  //   this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
+  // }
 }
