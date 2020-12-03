@@ -1,5 +1,9 @@
 export const enemySprite = [
-  'assets/backgrounds/enemy.png'
+  'assets/spriteSheets/minotaur.png'
+]
+
+export const enemySize = [
+  {w: 96, h: 96}
 ]
 
 export const weaponSprite = [

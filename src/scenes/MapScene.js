@@ -21,6 +21,8 @@ export const Direction = {
   DOWN: 'down',
 };
 
+let content = `Ariadne: \n I'm bored. Where are the knights that are going to get me out of here? \n Maybe I can escape this labyrinth by myself. God of VIM, please give me power! \n Looks like I can use 'h', 'j', 'k', & 'l' to walk around. I need to find keys to unlock the door.`;
+
 export default class MapScene extends Phaser.Scene {
   constructor() {
     super('MapScene');
@@ -49,6 +51,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
+    this.load.audio('locked', 'assets/audio/locked.wav')
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -58,6 +61,20 @@ export default class MapScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.scenePlugin({
+      key: 'rexuiplugin',
+      url:
+        'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+      sceneKey: 'rexUI',
+    });
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    );
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    );
   }
   create() {
     /* Background map */
@@ -107,6 +124,9 @@ export default class MapScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard;
 
     this.collideSound = this.sound.add('collide', { volume: 0.25 });
+    this.lockedSound = this.sound.add('locked', { volume: 0.25 } )
+
+
 
     this.physics.add.overlap(
       this.player,
@@ -153,13 +173,22 @@ export default class MapScene extends Phaser.Scene {
       let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
       this.player.beforeBattle = this.player.getPosition();
+
       
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
         x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
         y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
+
       }
       this.spawns.create(x, y, 32, 32);
     }
+
+    this.exit = this.physics.add.group({
+      classType: Phaser.GameObjects.Zone,
+    })
+
+    this.exit.create(padlockLocation[this.level].x * TILE_SIZE,
+      padlockLocation[this.level].y * TILE_SIZE, 32, 32)
 
     this.physics.add.overlap(
       this.player,
@@ -168,6 +197,14 @@ export default class MapScene extends Phaser.Scene {
       false,
       this
     );
+
+    this.physics.add.overlap(
+      this.player,
+      this.exit,
+      this.exitLevel,
+      null,
+      this
+    )
 
     this.sys.events.on(
       'wake',
@@ -199,10 +236,14 @@ export default class MapScene extends Phaser.Scene {
       )
       .setVisible(false);
 
-    this.label = this.add.text(675, 450, '').setWordWrapWidth(260);
-    this.typewriteText(
-      `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
-    );
+    // this.label = this.add.text(675, 450, '').setWordWrapWidth(260);
+    // this.typewriteText(
+    //   `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
+    // );
+
+    createTextBox(this, 665, 300, {
+      wrapWidth: 200,
+    }).start(content, 50);
   }
 
   update(time, delta) {
@@ -215,6 +256,15 @@ export default class MapScene extends Phaser.Scene {
     mapKey.disableBody(true, true);
     if (this.keyCount >= 3) {
       this.padlock.disableBody(true, true);
+    }
+  }
+
+  exitLevel(player, exit) {
+    if(this.keyCount >=3){
+      this.level ++
+      this.scene.restart()
+    }else{
+      this.lockedSound.play()
     }
   }
 
@@ -269,28 +319,110 @@ export default class MapScene extends Phaser.Scene {
       frameRate: 2,
     });
   }
-
-  typewriteText(text) {
-    const length = text.length;
-    let i = 0;
-    this.time.addEvent({
-      callback: () => {
-        this.label.text += text[i];
-        ++i;
-      },
-      repeat: length - 1,
-      delay: 50,
-    });
-  }
-
-  typewriteTextWrapped(text) {
-    const lines = this.label.getWrappedText(text);
-    const wrappedText = lines.join('\n');
-
-    this.typewriteText(wrappedText);
-  }
-
-  // updateClickCountText(clickCount) {
-  //   this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
-  // }
 }
+
+const COLOR_PRIMARY = 0x4e342e;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
+
+const GetValue = Phaser.Utils.Objects.GetValue;
+var createTextBox = function (scene, x, y, config) {
+  var wrapWidth = GetValue(config, 'wrapWidth', 0);
+  var fixedWidth = GetValue(config, 'fixedWidth', 0);
+  var fixedHeight = GetValue(config, 'fixedHeight', 0);
+  var textBox = scene.rexUI.add
+    .textBox({
+      x: x,
+      y: y,
+
+      background: scene.rexUI.add
+        .roundRectangle(0, 0, 2, 2, 20, COLOR_PRIMARY)
+        .setStrokeStyle(2, COLOR_LIGHT),
+
+      // text: getBuiltInText(scene, wrapWidth, fixedWidth, fixedHeight),
+      text: getBBcodeText(scene, wrapWidth, fixedWidth, fixedHeight),
+
+      action: scene.add
+        .image(0, 0, 'nextPage')
+        .setTint(COLOR_LIGHT)
+        .setVisible(false),
+
+      space: {
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20,
+        icon: 10,
+        text: 10,
+      },
+    })
+    .setOrigin(0)
+    .layout();
+
+  textBox
+    .setInteractive()
+    .on(
+      'pointerdown',
+      function () {
+        var icon = this.getElement('action').setVisible(false);
+        this.resetChildVisibleState(icon);
+        if (this.isTyping) {
+          this.stop(true);
+        } else {
+          this.typeNextPage();
+        }
+      },
+      textBox
+    )
+    .on(
+      'pageend',
+      function () {
+        if (this.isLastPage) {
+          return;
+        }
+
+        var icon = this.getElement('action').setVisible(true);
+        this.resetChildVisibleState(icon);
+        icon.y -= 30;
+        var tween = scene.tweens.add({
+          targets: icon,
+          y: '+=30', // '+=100'
+          ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+          duration: 500,
+          repeat: 0, // -1: infinity
+          yoyo: false,
+        });
+      },
+      textBox
+    );
+  //.on('type', function () {
+  //})
+
+  return textBox;
+};
+
+var getBuiltInText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+  return scene.add
+    .text(0, 0, '', {
+      fontSize: '12px',
+      wordWrap: {
+        width: wrapWidth,
+      },
+      maxLines: 3,
+    })
+    .setFixedSize(fixedWidth, fixedHeight);
+};
+
+var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+  return scene.rexUI.add.BBCodeText(0, 0, '', {
+    fixedWidth: fixedWidth,
+    fixedHeight: fixedHeight,
+
+    fontSize: '12px',
+    wrap: {
+      mode: 'word',
+      width: wrapWidth,
+    },
+    maxLines: 4,
+  });
+};
