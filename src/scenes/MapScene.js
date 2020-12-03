@@ -148,7 +148,7 @@ export default class MapScene extends Phaser.Scene {
       this.player.beforeBattle = this.player.getPosition();
       
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
-        x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+        x = Phaser.Math.RND.between(0, 640);
         y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
       }
       this.spawns.create(x, y, 32, 32);

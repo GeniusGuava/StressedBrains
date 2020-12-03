@@ -58,14 +58,14 @@ export default class BattleScene extends Phaser.Scene {
     this.load.spritesheet('battle', 'assets/backgrounds/tiles.png', {
     frameHeight: 32,
     frameWidth: 32
-  })
-  this.load.spritesheet('enemy', enemySprite[this.level], {
-    frameWidth: 32,
-    frameHeight: 32
-  })
-  this.load.spritesheet('sword', weaponSprite[this.level], {
-  frameHeight: 32,
-  frameWidth: 32
+    })
+    this.load.spritesheet('enemy', enemySprite[this.level], {
+      frameWidth: 32,
+      frameHeight: 32
+    })
+    this.load.spritesheet('sword', weaponSprite[this.level], {
+    frameHeight: 32,
+    frameWidth: 32
 })
 
     // Preload Sounds
