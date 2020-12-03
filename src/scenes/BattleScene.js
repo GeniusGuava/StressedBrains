@@ -40,25 +40,6 @@ export default class BattleScene extends Phaser.Scene {
     this.createEnemy = this.createEnemy.bind(this);
   }
 
-  exitBattle() {
-    this.input.keyboard.enabled = false;
-    Object.keys(this.allKeys).map((key) => {
-      this.allKeys[key]['key'].isDown = false;
-    });
-    this.scene.sleep('UIScene');
-    this.scene.switch('MapScene');
-  }
-
-  wake() {
-    this.input.keyboard.enabled = true;
-    this.scene.run('UIScene');
-    this.time.addEvent({
-      delay: 5000,
-      callback: this.exitBattle,
-      callbackScope: this,
-    });
-  }
-
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
@@ -97,7 +78,6 @@ export default class BattleScene extends Phaser.Scene {
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
-
     const map = this.make.tilemap({
       data: level[this.level],
       tileHeight: 32,
@@ -194,13 +174,23 @@ export default class BattleScene extends Phaser.Scene {
       this
     );
 
-    // switch between battle scenes
-    this.timeEvent = this.time.addEvent({
-      delay: 8000,
-      callback: this.exitBattle,
-      callbackScope: this,
-    });
-    this.sys.events.on('wake', this.wake, this);
+    // wake() {
+    //   this.input.keyboard.enabled = true;
+    //   this.scene.run('UIScene');
+    //   this.time.addEvent({
+    //     delay: 5000,
+    //     callback: this.exitBattle,
+    //     callbackScope: this,
+    //   });
+    // }
+
+    // auto switch between battle scenes
+    // this.timeEvent = this.time.addEvent({
+    //   delay: 8000,
+    //   callback: this.exitBattle,
+    //   callbackScope: this,
+    // });
+    // this.sys.events.on('wake', this.wake, this);
   }
 
   // time: total time elapsed (ms)
@@ -211,38 +201,70 @@ export default class BattleScene extends Phaser.Scene {
     this.gridPhysics.update(delta);
   }
 
-  onMeetEnemy(player, enemy) {
+  onMeetEnemy(player, enemies, x, y) {
     this.enemySound.play();
     this.enemySprite.play('enemyAttack')
     this.gridPhysics.stopMoving();
     this.gridPhysics.tileSizePixelsWalked = 0;
     this.player.resetPosition(this.player.startPosition);
-    player.hp--;
-    const third = (this.playerBar.scaleX - 0.33) * 100;
+    this.player.hp--;
+    const third = (this.playerBar.scaleX - 0.30) * 100;
     this.setValue(this.playerBar, third);
-    if (player.hp <= 0) {
-      player.disableBody(true, true);
+    if (this.player.hp <= 0) {
+      this.player.resetPosition(this.player.startPosition);
       this.loseSound.play();
-      this.setValue(this.playerBar, 0);
+      this.setValue(this.playerBar, 100);
+      this.setValue(this.enemyBar, 100);
+      this.createWeapon(x, y);
+      this.createEnemy(x, y);
+      this.player.hp = 3
+      this.enemies.hp = 3
+      this.endBattle();
+      this.sys.events.on('wake', this.wake, this);
     }
   }
 
-  playerAttack(player, weapon) {
+  playerAttack(player, weapon, x, y) {
     this.attackSound.play();
     this.gridPhysics.stopMoving();
     this.gridPhysics.tileSizePixelsWalked = 0;
     this.enemies.hp--;
     this.weapons.killAndHide(weapon);
     weapon.body.enable = false;
-    const third = (this.enemyBar.scaleX - 0.33) * 100;
+    const third = (this.enemyBar.scaleX - 0.30) * 100;
     this.setValue(this.enemyBar, third);
+
     if (this.enemies.hp <= 0) {
-      this.enemySprite.play('enemyDeath')
-      this.enemies.clear(true, false);
+      // this.enemies.clear(true, false);
+
       this.winSound.play();
-      this.setValue(this.enemyBar, 0);
+      this.setValue(this.playerBar, 100);
+      this.setValue(this.enemyBar, 100);
+      this.createEnemy(x, y);
+      this.createWeapon(x, y);
+      this.player.hp = 3
+      this.enemies.hp = 3
+      this.endBattle();
+      this.sys.events.on('wake', this.wake, this);
     }
   }
+
+  endBattle() {       
+    // this.weapons.length = 0;
+    // this.enemies.length = 0;
+    this.input.keyboard.enabled = false;
+    Object.keys(this.allKeys).map((key) => {
+      this.allKeys[key]['key'].isDown = false;
+    });
+    this.scene.sleep('UIScene')
+    this.scene.switch('MapScene')
+  }
+
+  wake() {
+    this.input.keyboard.enabled = true;
+    this.scene.run('UIScene');
+  }
+
   createWeapon(x, y) {
     this.weapons.create(x, y, 'sword');
   }
@@ -267,6 +289,7 @@ export default class BattleScene extends Phaser.Scene {
       this.createEnemy(coords.x, coords.y);
     });
   }
+
   makeBar(x, y, color) {
     //draw the bar
     let bar = this.add.graphics();
@@ -284,6 +307,7 @@ export default class BattleScene extends Phaser.Scene {
     //return the bar
     return bar;
   }
+
   setValue(bar, percentage) {
     //scale the bar
     bar.scaleX = percentage / 100;

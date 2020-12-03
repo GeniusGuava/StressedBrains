@@ -169,15 +169,16 @@ export default class MapScene extends Phaser.Scene {
     });
 
     for (let i = 0; i < 15; i++) {
-      let x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+      let x = Phaser.Math.RND.between(0, 640);
       let y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
       this.player.beforeBattle = this.player.getPosition();
 
-
+      
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
-        x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
-        y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+        x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
+        y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
+
       }
       this.spawns.create(x, y, 32, 32);
     }
