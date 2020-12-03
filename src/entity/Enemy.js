@@ -10,10 +10,4 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
   }
-  update(enemySound) {
-    if (this.collide = true) {
-      this.playedSound = true;
-      enemySound.play();
-    }
-}
 }
