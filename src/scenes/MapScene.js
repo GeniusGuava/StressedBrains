@@ -26,7 +26,7 @@ let content = `Ariadne: \n I'm bored. Where are the knights that are going to ge
 export default class MapScene extends Phaser.Scene {
   constructor() {
     super('MapScene');
-    this.keyCount = 3;
+    this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
     this.level = 0;
   }
@@ -42,7 +42,11 @@ export default class MapScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-    this.scene.switch('BattleScene');
+    this.time.addEvent({
+      delay: 500,
+      callback: () => this.scene.switch('BattleScene'),
+      callbackScope: this
+    })
   }
 
   preload() {
@@ -175,8 +179,8 @@ export default class MapScene extends Phaser.Scene {
         x === this.player.beforeBattle.x ||
         y === this.player.beforeBattle.y
       ) {
-        x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
-        y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
+        x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 5);
+        y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 5);
       }
       this.spawns.create(x, y, 32, 32);
     }
@@ -210,7 +214,15 @@ export default class MapScene extends Phaser.Scene {
 
     this.sys.events.on(
       'wake',
-      () => (this.input.keyboard.enabled = true),
+      (test) => {
+        if (!this.game.playerAlive){
+          this.player.setPosition(
+            playerStartPosition[this.level].x*TILE_SIZE + TILE_SIZE/2,
+            playerStartPosition[this.level].y*TILE_SIZE + TILE_SIZE/2
+          )
+        }
+        this.input.keyboard.enabled = true
+      },
       this
     );
 

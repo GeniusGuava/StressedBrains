@@ -190,6 +190,7 @@ export default class BattleScene extends Phaser.Scene {
     this.setValue(this.playerBar, third);
     if (this.player.hp <= 0) {
       this.loseSound.play();
+      this.game.playerAlive = false
       this.endBattle();
       this.sys.events.on('wake', this.wake, this);
     }
@@ -218,11 +219,12 @@ export default class BattleScene extends Phaser.Scene {
     });
     this.scene.restart()
     this.scene.sleep('UIScene')
-    this.scene.switch('MapScene')
+    this.scene.switch('MapScene', {"test": 3})
   }
 
   wake() {
     this.scene.restart()
+    this.game.playerAlive = true
     this.scene.run('UIScene');
   }
 
