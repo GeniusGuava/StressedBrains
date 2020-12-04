@@ -1,3 +1,4 @@
+import {TILE_SIZE} from '../MapInfo'
 export default {
   text: "\
   ariadne ariadne you \n\
@@ -24,7 +25,12 @@ export default {
         {x:16, y: 4},
         {x: 0, y: 14},
         {x:13, y: 14}
-      ],
+      ].map(coords => {
+        return {
+          x: coords.x*TILE_SIZE+TILE_SIZE/2,
+          y: coords.y*TILE_SIZE+TILE_SIZE/2
+        }
+      }),
       enemies: [
         {x:0, y:13}, {x:0, y:16},
         {x:1, y:3}, {x:1, y:8}, {x:1, y:19},
@@ -45,7 +51,12 @@ export default {
         {x:17, y:3}, {x:17, y:7}, {x:17, y:12},
         {x:18, y:9}, {x:18, y:19},
         {x:19, y:3},
-      ]
+      ].map(coords => {
+        return {
+          x: coords.x*TILE_SIZE+TILE_SIZE/2,
+          y: coords.y*TILE_SIZE+TILE_SIZE/2
+        }
+      })
     },
   ],
 }
