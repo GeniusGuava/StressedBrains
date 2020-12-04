@@ -1,3 +1,17 @@
+import battle1 from './Battles/battle1'
+import converter from './Battles/textNumberConverter'
+
+function textToLevel(text){
+  splitByNewLine = text.split('\n')
+  let trimmed
+  return splitByNewLine.map(line=>{
+    trimmed = line.slice(2)
+    return Array.from(trimmed).map(letter=>{
+      return converter[letter.toLowerCase()]
+    })
+  })
+}
+
 export const enemySprite = [
   'assets/spriteSheets/minotaur.png'
 ]
