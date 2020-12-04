@@ -51,7 +51,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
-    this.load.audio('locked', 'assets/audio/locked.wav')
+    this.load.audio('locked', 'assets/audio/locked.wav');
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -67,10 +67,6 @@ export default class MapScene extends Phaser.Scene {
         'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
       sceneKey: 'rexUI',
     });
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    );
     this.load.image(
       'nextPage',
       'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
@@ -124,9 +120,7 @@ export default class MapScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard;
 
     this.collideSound = this.sound.add('collide', { volume: 0.25 });
-    this.lockedSound = this.sound.add('locked', { volume: 0.25 } )
-
-
+    this.lockedSound = this.sound.add('locked', { volume: 0.25 });
 
     this.physics.add.overlap(
       this.player,
@@ -174,21 +168,26 @@ export default class MapScene extends Phaser.Scene {
 
       this.player.beforeBattle = this.player.getPosition();
 
-      
-      if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
+      if (
+        x === this.player.beforeBattle.x ||
+        y === this.player.beforeBattle.y
+      ) {
         x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
         y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
-
       }
       this.spawns.create(x, y, 32, 32);
     }
 
     this.exit = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
-    })
+    });
 
-    this.exit.create(padlockLocation[this.level].x * TILE_SIZE,
-      padlockLocation[this.level].y * TILE_SIZE, 32, 32)
+    this.exit.create(
+      padlockLocation[this.level].x * TILE_SIZE,
+      padlockLocation[this.level].y * TILE_SIZE,
+      32,
+      32
+    );
 
     this.physics.add.overlap(
       this.player,
@@ -204,7 +203,7 @@ export default class MapScene extends Phaser.Scene {
       this.exitLevel,
       null,
       this
-    )
+    );
 
     this.sys.events.on(
       'wake',

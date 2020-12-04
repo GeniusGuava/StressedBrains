@@ -43,7 +43,7 @@ export default class BattleScene extends Phaser.Scene {
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
-    this.load.spritesheet('letters', 'assets/spriteSheets/letters.png', {
+    this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
