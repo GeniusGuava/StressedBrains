@@ -47,24 +47,3 @@ export const weapons = [
 ]
 
 export const enemies = [battle1.maps[0].enemies]
-
-/*
-export const enemies = [
-  [
-    {x:48, y:48},
-    {x:80, y:48},
-    {x:592, y:16},
-    {x:400, y:208},
-    {x:624, y:304},
-    {x:560, y:304},
-    {x:16, y:496},
-    {x:400, y:400},
-    {x:336, y:16},
-    {x:336, y:336},
-    {x:592, y:528},
-    {x:400, y:560},
-    {x:112, y:80},
-    {x:80, y:560}
-  ]
-]
-*/
