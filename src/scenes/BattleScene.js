@@ -228,7 +228,7 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  endBattle() {       
+  endBattle() {
     // this.weapons.length = 0;
     // this.enemies.length = 0;
     Object.keys(this.allKeys).map((key) => {
