@@ -174,7 +174,7 @@ export default class MapScene extends Phaser.Scene {
 
       this.player.beforeBattle = this.player.getPosition();
 
-      
+
       if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
         x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
         y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
@@ -263,6 +263,7 @@ export default class MapScene extends Phaser.Scene {
     if(this.keyCount >=3){
       this.level ++
       this.scene.restart()
+      this.keyCount = 0
     }else{
       this.lockedSound.play()
     }

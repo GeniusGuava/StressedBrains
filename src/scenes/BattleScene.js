@@ -226,8 +226,6 @@ export default class BattleScene extends Phaser.Scene {
 
   playerAttack(player, weapon, x, y) {
     this.attackSound.play();
-    this.gridPhysics.stopMoving();
-    this.gridPhysics.tileSizePixelsWalked = 0;
     this.enemies.hp--;
     this.weapons.killAndHide(weapon);
     weapon.body.enable = false;
@@ -249,7 +247,7 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  endBattle() {       
+  endBattle() {
     // this.weapons.length = 0;
     // this.enemies.length = 0;
     this.input.keyboard.enabled = false;
