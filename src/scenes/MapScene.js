@@ -265,7 +265,14 @@ export default class MapScene extends Phaser.Scene {
       this.scene.restart()
       this.keyCount = 0
     }else{
-      this.lockedSound.play()
+      if(!this.lockPlayed){
+        this.lockedSound.play()
+        this.lockPlayed = true
+        this.lockedSound.on('complete', () => setTimeout(() =>
+          this.lockPlayed = false, 1000))
+
+      }
+
     }
   }
 
