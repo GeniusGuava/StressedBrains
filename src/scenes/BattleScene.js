@@ -43,7 +43,7 @@ export default class BattleScene extends Phaser.Scene {
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
-    this.load.spritesheet('letters', 'assets/spriteSheets/letters.png', {
+    this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -153,10 +153,6 @@ export default class BattleScene extends Phaser.Scene {
       fontSize: '3000px',
     });
 
-    // // Create sounds
-
-    // << CREATE SOUNDS HERE >>
-
     // Create collisions for all entities
     // << CREATE COLLISIONS HERE >>
     this.physics.add.overlap(
@@ -173,24 +169,6 @@ export default class BattleScene extends Phaser.Scene {
       null,
       this
     );
-
-    // wake() {
-    //   this.input.keyboard.enabled = true;
-    //   this.scene.run('UIScene');
-    //   this.time.addEvent({
-    //     delay: 5000,
-    //     callback: this.exitBattle,
-    //     callbackScope: this,
-    //   });
-    // }
-
-    // auto switch between battle scenes
-    // this.timeEvent = this.time.addEvent({
-    //   delay: 8000,
-    //   callback: this.exitBattle,
-    //   callbackScope: this,
-    // });
-    // this.sys.events.on('wake', this.wake, this);
   }
 
   // time: total time elapsed (ms)
@@ -215,8 +193,7 @@ export default class BattleScene extends Phaser.Scene {
       this.loseSound.play();
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
-      this.createWeapon(x, y);
-      this.createEnemy(x, y);
+      this.createGroups();
       this.player.hp = 3
       this.enemies.hp = 3
       this.endBattle();
@@ -227,22 +204,20 @@ export default class BattleScene extends Phaser.Scene {
   playerAttack(player, weapon, x, y) {
     this.attackSound.play();
     this.enemies.hp--;
-    this.weapons.killAndHide(weapon);
+    weapon.setActive(false).setVisible(false)
     weapon.body.enable = false;
     const third = (this.enemyBar.scaleX - 0.30) * 100;
     this.setValue(this.enemyBar, third);
 
     if (this.enemies.hp <= 0) {
-      // this.enemies.clear(true, false);
-
       this.winSound.play();
+      this.endBattle();
+      this.player.resetPosition(this.player.startPosition);
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
-      this.createEnemy(x, y);
-      this.createWeapon(x, y);
+      this.createGroups();
       this.player.hp = 3
       this.enemies.hp = 3
-      this.endBattle();
       this.sys.events.on('wake', this.wake, this);
     }
   }
