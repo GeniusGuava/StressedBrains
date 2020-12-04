@@ -42,13 +42,19 @@ export default class MapScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-    this.scene.switch('BattleScene');
+    this.time.addEvent({
+      delay: 500,
+      callback: () => this.scene.switch('BattleScene'),
+      callbackScope: this
+    })
   }
 
   preload() {
     //this.load.image('tiles', 'assets/backgrounds/tiles.png');
     //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
+    console.log(this.level)
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
+    this.cache.tilemap.remove('map')
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
     this.load.audio('locked', 'assets/audio/locked.wav');
@@ -106,7 +112,8 @@ export default class MapScene extends Phaser.Scene {
       playerStartPosition[this.level].x,
       playerStartPosition[this.level].y,
       'Ariadne'
-    ).setScale(1);
+    ).setScale(1);    this.cache.tilemap.remove('map')
+
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
@@ -168,9 +175,14 @@ export default class MapScene extends Phaser.Scene {
 
       this.player.beforeBattle = this.player.getPosition();
 
-      if (x === this.player.beforeBattle.x || y === this.player.beforeBattle.y) {
-        x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 1);
-        y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 1);
+
+      if (
+        x === this.player.beforeBattle.x ||
+        y === this.player.beforeBattle.y
+      ) {
+        x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 5);
+        y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 5);
+
       }
       this.spawns.create(x, y, 32, 32);
     }
@@ -204,7 +216,15 @@ export default class MapScene extends Phaser.Scene {
 
     this.sys.events.on(
       'wake',
-      () => (this.input.keyboard.enabled = true),
+      (test) => {
+        if (!this.game.playerAlive){
+          this.player.setPosition(
+            playerStartPosition[this.level].x*TILE_SIZE + TILE_SIZE/2,
+            playerStartPosition[this.level].y*TILE_SIZE + TILE_SIZE/2
+          )
+        }
+        this.input.keyboard.enabled = true
+      },
       this
     );
 
