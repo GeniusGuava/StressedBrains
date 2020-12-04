@@ -216,7 +216,6 @@ export default class BattleScene extends Phaser.Scene {
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
       this.createGroups();
-      this.createWeapon(x, y);
       this.player.hp = 3
       this.enemies.hp = 3
       this.sys.events.on('wake', this.wake, this);
