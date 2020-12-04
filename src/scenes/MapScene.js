@@ -263,6 +263,7 @@ export default class MapScene extends Phaser.Scene {
     if(this.keyCount >=3){
       this.level ++
       this.scene.restart()
+      this.keyCount = 0
     }else{
       this.lockedSound.play()
     }
