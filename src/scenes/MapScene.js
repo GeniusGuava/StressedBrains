@@ -26,7 +26,7 @@ let content = `Ariadne: \n I'm bored. Where are the knights that are going to ge
 export default class MapScene extends Phaser.Scene {
   constructor() {
     super('MapScene');
-    this.keyCount = 0;
+    this.keyCount = 3;
     this.getKey = this.getKey.bind(this);
     this.level = 0;
   }
@@ -48,7 +48,9 @@ export default class MapScene extends Phaser.Scene {
   preload() {
     //this.load.image('tiles', 'assets/backgrounds/tiles.png');
     //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
+    console.log(this.level)
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
+    this.cache.tilemap.remove('map')
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
     this.load.audio('locked', 'assets/audio/locked.wav');
@@ -106,7 +108,8 @@ export default class MapScene extends Phaser.Scene {
       playerStartPosition[this.level].x,
       playerStartPosition[this.level].y,
       'Ariadne'
-    ).setScale(1);
+    ).setScale(1);    this.cache.tilemap.remove('map')
+
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();

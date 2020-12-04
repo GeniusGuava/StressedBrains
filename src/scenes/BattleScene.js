@@ -189,13 +189,7 @@ export default class BattleScene extends Phaser.Scene {
     const third = (this.playerBar.scaleX - 0.30) * 100;
     this.setValue(this.playerBar, third);
     if (this.player.hp <= 0) {
-      this.player.resetPosition(this.player.startPosition);
       this.loseSound.play();
-      this.setValue(this.playerBar, 100);
-      this.setValue(this.enemyBar, 100);
-      this.createGroups();
-      this.player.hp = 3
-      this.enemies.hp = 3
       this.endBattle();
       this.sys.events.on('wake', this.wake, this);
     }
@@ -212,13 +206,6 @@ export default class BattleScene extends Phaser.Scene {
     if (this.enemies.hp <= 0) {
       this.winSound.play();
       this.endBattle();
-      this.player.resetPosition(this.player.startPosition);
-      this.setValue(this.playerBar, 100);
-      this.setValue(this.enemyBar, 100);
-      this.createGroups();
-      this.createWeapon(x, y);
-      this.player.hp = 3
-      this.enemies.hp = 3
       this.sys.events.on('wake', this.wake, this);
     }
   }
@@ -226,16 +213,16 @@ export default class BattleScene extends Phaser.Scene {
   endBattle() {       
     // this.weapons.length = 0;
     // this.enemies.length = 0;
-    this.input.keyboard.enabled = false;
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
+    this.scene.restart()
     this.scene.sleep('UIScene')
     this.scene.switch('MapScene')
   }
 
   wake() {
-    this.input.keyboard.enabled = true;
+    this.scene.restart()
     this.scene.run('UIScene');
   }
 
