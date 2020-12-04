@@ -26,6 +26,10 @@ class UIScene extends Phaser.Scene {
     this.graphics.fillRect(95, 150, 90, 100);
     this.graphics.strokeRect(188, 150, 130, 100);
     this.graphics.fillRect(188, 150, 130, 100);
+
+
+    this.collideDelay = 500
+    this.lastCollide = 0
   }
 }
 
@@ -184,15 +188,28 @@ export default class BattleScene extends Phaser.Scene {
     this.enemySprite.play('enemyAttack')
     this.gridPhysics.stopMoving();
     this.gridPhysics.tileSizePixelsWalked = 0;
-    this.player.resetPosition(this.player.startPosition);
-    this.player.hp--;
     const third = (this.playerBar.scaleX - 0.30) * 100;
     this.setValue(this.playerBar, third);
-    if (this.player.hp <= 0) {
+
+    if (this.player.hp==1){
+      this.player.resetPosition(this.player.startPosition);
       this.loseSound.play();
       this.game.playerAlive = false
       this.endBattle();
       this.sys.events.on('wake', this.wake, this);
+    }else{
+      this.player.resetPosition(this.player.startPosition);
+      this.input.keyboard.enabled=false
+      Object.keys(this.allKeys).map((key) => {
+        this.allKeys[key]['key'].isDown = false;
+      });
+      this.time.addEvent({
+        delay: 500,
+        callback: () => {
+          this.input.keyboard.enabled=true
+          this.player.hp--
+        }
+      })
     }
   }
 
