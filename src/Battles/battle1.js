@@ -17,8 +17,7 @@ export default {
   reclaim your power  \n\
   to strike down your \n\
   foes and depart from\n\
-  your stone prison   \n\
-  ",
+  your stone prison   ",
   maps: [
     {
       weapons: [

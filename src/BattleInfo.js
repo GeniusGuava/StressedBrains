@@ -1,16 +1,26 @@
 import battle1 from './Battles/battle1'
 import converter from './Battles/textNumberConverter'
 
+let bufferRows = [[],[]]
+for (let i=0;i<2;i++){
+  for (let j=0;j<20;j++){
+    bufferRows[i].push(0)
+  }
+}
+
+
 function textToLevel(text){
-  splitByNewLine = text.split('\n')
+  const splitByNewLine = text.split('\n')
   let trimmed
-  return splitByNewLine.map(line=>{
+  return bufferRows.concat(splitByNewLine.map(line=>{
     trimmed = line.slice(2)
     return Array.from(trimmed).map(letter=>{
       return converter[letter.toLowerCase()]
     })
-  })
+  }))
 }
+
+console.log(textToLevel(battle1.text))
 
 export const enemySprite = [
   'assets/spriteSheets/minotaur.png'
@@ -23,7 +33,7 @@ export const enemySize = [
 export const weaponSprite = [
   'assets/backgrounds/sword.png'
 ]
-
+/*
 export const level = [
   [
     [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
@@ -47,6 +57,11 @@ export const level = [
     [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0],
     [20, 9, 13, 5, 0, 20, 15, 0, 0, 2, 1, 20, 20, 12, 5, 0, 20, 9, 13, 5, 0, 20, 15, 0, 0]
   ]
+]
+*/
+
+export const level = [
+  textToLevel(battle1.text)
 ]
 
 export const playerStartPosition = [
