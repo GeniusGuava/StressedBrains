@@ -43,7 +43,7 @@ export const playerStartPosition = [
 ]
 
 export const weapons = [
-  battle1.maps[0].weapons
+  battle1.maps[3].weapons
 ]
 
-export const enemies = [battle1.maps[0].enemies]
+export const enemies = [battle1.maps[3].enemies]
