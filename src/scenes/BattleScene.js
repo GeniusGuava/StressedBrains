@@ -5,10 +5,10 @@ import { Direction } from './FgScene';
 import {
   enemySprite,
   weaponSprite,
-  level,
+  getLevel,
   playerStartPosition,
-  weapons,
-  enemies,
+  getWeapons,
+  getEnemies,
   enemySize,
 } from '../BattleInfo';
 
@@ -27,21 +27,19 @@ class UIScene extends Phaser.Scene {
     this.graphics.strokeRect(188, 150, 130, 100);
     this.graphics.fillRect(188, 150, 130, 100);
 
-
-    this.collideDelay = 500
-    this.lastCollide = 0
   }
 }
 
 export default class BattleScene extends Phaser.Scene {
   constructor() {
     super('BattleScene');
-    this.level = 0;
     this.onMeetEnemy = this.onMeetEnemy.bind(this);
     this.createGroups = this.createGroups.bind(this);
     this.createWeapon = this.createWeapon.bind(this);
     this.playerAttack = this.playerAttack.bind(this);
     this.createEnemy = this.createEnemy.bind(this);
+    this.wins = 0
+    this.collideDelay = 500
   }
 
   preload() {
@@ -55,11 +53,11 @@ export default class BattleScene extends Phaser.Scene {
       frameHeight: 32,
       frameWidth: 32,
     });
-    this.load.spritesheet('enemy', enemySprite[this.level], {
-      frameWidth: enemySize[this.level].w,
-      frameHeight: enemySize[this.level].h,
+    this.load.spritesheet('enemy', enemySprite[this.game.level], {
+      frameWidth: enemySize[this.game.level].w,
+      frameHeight: enemySize[this.game.level].h,
     });
-    this.load.spritesheet('sword', weaponSprite[this.level], {
+    this.load.spritesheet('sword', weaponSprite[this.game.level], {
       frameHeight: 32,
       frameWidth: 32,
     });
@@ -83,7 +81,7 @@ export default class BattleScene extends Phaser.Scene {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
     const map = this.make.tilemap({
-      data: level[this.level],
+      data: getLevel(this.game.level),
       tileHeight: 32,
       tileWidth: 32,
     });
@@ -91,8 +89,8 @@ export default class BattleScene extends Phaser.Scene {
     const ground = map.createStaticLayer(0, tiles, 0, 0);
     this.player = new Player(
       this,
-      playerStartPosition[this.level].x,
-      playerStartPosition[this.level].y,
+      playerStartPosition[this.game.level].x,
+      playerStartPosition[this.game.level].y,
       'Ariadne'
     );
     this.enemySprite = new Enemy(
@@ -204,7 +202,7 @@ export default class BattleScene extends Phaser.Scene {
         this.allKeys[key]['key'].isDown = false;
       });
       this.time.addEvent({
-        delay: 500,
+        delay: this.collideDelay,
         callback: () => {
           this.input.keyboard.enabled=true
           this.player.hp--
@@ -222,6 +220,8 @@ export default class BattleScene extends Phaser.Scene {
     this.setValue(this.enemyBar, third);
 
     if (this.enemies.hp <= 0) {
+      if (this.wins >= 3) this.wins = 0
+      else this.wins++
       this.winSound.play();
       this.endBattle();
       this.sys.events.on('wake', this.wake, this);
@@ -261,11 +261,14 @@ export default class BattleScene extends Phaser.Scene {
       classType: Enemy,
     });
 
-    weapons[this.level].map((coords) => {
+    const weapons = getWeapons(this.game.level, this.wins)
+    const enemies = getEnemies(this.game.level, this.wins)
+
+    weapons.map((coords) => {
       this.createWeapon(coords.x, coords.y);
     });
 
-    enemies[this.level].map((coords) => {
+    enemies.map((coords) => {
       this.createEnemy(coords.x, coords.y);
     });
   }
