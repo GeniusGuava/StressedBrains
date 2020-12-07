@@ -40,7 +40,7 @@ export default class BattleScene extends Phaser.Scene {
     this.createWeapon = this.createWeapon.bind(this);
     this.playerAttack = this.playerAttack.bind(this);
     this.createEnemy = this.createEnemy.bind(this);
-    this.wins = 0
+    this.wins = 3
     this.collideDelay = 500
   }
 
