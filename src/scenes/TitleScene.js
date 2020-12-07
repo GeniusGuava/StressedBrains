@@ -21,6 +21,11 @@ export default class TitleScene extends Phaser.Scene {
         let screenText = this.add.text(480, 350, 'Press Enter to Start Game', { fontFamily: 'Roboto, sans-serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 }).setOrigin(0.5);
         let copyright = this.add.text(630, 620, '© StressedBrains, 2020. All rights reserved.', { fontFamily: 'Roboto, sans-serif', color: '#fff', stroke: '#000000', strokeThickness: 1 })
         TweenHelper.flashElement(this, screenText);
+
+        this.input.keyboard.on('keydown', () => {
+            this.scene.stop('TitleScene');
+            this.scene.start('MainScene');
+        });
     }
 
     update() {
