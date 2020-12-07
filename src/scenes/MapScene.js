@@ -10,6 +10,8 @@ import {
   keyLocations,
   playerStartPosition,
 } from '../MapInfo';
+import MainScene from './MainScene';
+import TitleScene from './TitleScene';
 
 export const TILE_SIZE = 32;
 
@@ -22,6 +24,9 @@ export const Direction = {
 };
 
 let content = `Ariadne: \n I'm bored. Where are the knights that are going to get me out of here? \n Maybe I can escape this labyrinth by myself. God of VIM, please give me power! \n Looks like I can use 'h', 'j', 'k', & 'l' to walk around. I need to find keys to unlock the door.`;
+
+// this.scene.sleep('TitleScene');
+// this.scene.start('MainScene');
 
 export default class MapScene extends Phaser.Scene {
   constructor() {
