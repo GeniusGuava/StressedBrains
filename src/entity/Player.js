@@ -25,7 +25,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       y * TILE_SIZE + this.playerOffsetY()
     );
 
-    this.moveDelay = 100;
+    this.moveDelay = 200;
     this.lastMoved = 0;
   }
 
@@ -49,8 +49,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       let keyButton;
       Object.keys(allKeys).map((key) => {
         keyButton = allKeys[key]['key'];
-        if (keyButton.isDown && !keyButton.shiftKey) {
-          allKeys[key]['function'](time);
+        if (keyButton.isDown) {
+          allKeys[key]['function'](time, keyButton.shiftKey);
           this.lastMoved = time + this.moveDelay;
           if (key === 'h') {
             this.play('left', true);

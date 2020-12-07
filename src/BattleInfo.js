@@ -50,6 +50,10 @@ export const getLevel = (level) => {
   return textToLevel(battles[level].text)
 }
 
+export const getText = (level) => {
+  return battles[level].text
+}
+
 export const playerStartPosition = [
   {x: 0, y:2},
   {x: 0, y:2},
