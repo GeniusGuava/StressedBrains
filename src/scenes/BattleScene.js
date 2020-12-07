@@ -10,7 +10,9 @@ import {
   getWeapons,
   getEnemies,
   enemySize,
+  getText,
 } from '../BattleInfo';
+import { TILE_SIZE } from '../MapInfo';
 
 class UIScene extends Phaser.Scene {
   constructor() {
@@ -75,6 +77,7 @@ export default class BattleScene extends Phaser.Scene {
     this.load.audio('attack', 'assets/audio/attack.wav');
     this.load.audio('lose', 'assets/audio/loseBattle.wav');
     this.load.audio('win', 'assets/audio/winBattle.wav');
+    this.load.audio('collide', 'assets/audio/jump.wav');
   }
 
   create() {
@@ -103,6 +106,7 @@ export default class BattleScene extends Phaser.Scene {
     this.attackSound = this.sound.add('attack', { volume: 0.25 });
     this.loseSound = this.sound.add('lose', { volume: 0.25 });
     this.winSound = this.sound.add('win', { volume: 0.25 });
+    this.collideSound = this.sound.add('collide', { volume: 0.25 });
     this.createAnimations()
 
     this.player.startPosition = this.player.getPosition();
@@ -110,31 +114,51 @@ export default class BattleScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard;
     this.createGroups();
     this.enemies.hp = 3;
+
+    this.text = getText(this.game.level)
     this.allKeys = {
       h: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.LEFT);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.LEFT, time, this.collideSound);
         },
       },
       j: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.DOWN);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.DOWN, time, this.collideSound);
         },
       },
       k: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.UP);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
         },
       },
       l: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.RIGHT);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound);
         },
       },
+      w: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 1) this.jumpToNextword(this.player, this.text, this.collideSound)
+        }
+      },
+      b: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 2) this.jumpToPreviousword(this.player, this.text, this.collideSound)
+        }
+      },
+      e: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 3) this.jumpToEndOfword(this.player, this.text, this.collideSound)
+        }
+      }
     };
 
     this.playerBar = this.makeBar(8, 8, 0x2ecc71);
@@ -312,5 +336,69 @@ export default class BattleScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
       frameRate: 2,
     })
+  }
+  jumpToNextword(player, text, collideSound){
+    const playerPos = player.getPosition()
+    const xGrid = (playerPos.x - TILE_SIZE/2)/TILE_SIZE
+    const yGrid = (playerPos.y - TILE_SIZE/2)/TILE_SIZE - 2
+    const textRows = text.split('\n')
+    const currentRow = Array.from(textRows[yGrid]).slice(2)
+    let currentChar = currentRow[xGrid]
+    let currentInd = xGrid
+    while (currentChar!=' ' && currentInd<currentRow.length-1){
+      currentInd++
+      currentChar = currentRow[currentInd]
+    }
+    const indToJump = currentInd+1
+    if (indToJump!=currentRow.length && currentRow[indToJump]!=' '){
+      player.setPosition(
+        indToJump*TILE_SIZE + TILE_SIZE/2,
+        playerPos.y
+      )
+    }else collideSound.play()
+  }
+
+  jumpToPreviousword(player, text, collideSound){
+    const playerPos = player.getPosition()
+    const xGrid = (playerPos.x - TILE_SIZE/2)/TILE_SIZE
+    const yGrid = (playerPos.y - TILE_SIZE/2)/TILE_SIZE - 2
+    const textRows = text.split('\n')
+    const currentRow = Array.from(textRows[yGrid]).slice(2)
+    let currentInd = xGrid
+
+    if (currentInd==0) collideSound.play()
+    else{
+      currentInd -= 2
+      while (currentInd >= 0 && currentRow[currentInd]!=' ' || currentRow[currentInd+1]==' '){
+        currentInd--
+      }
+      const indToJump = currentInd+1
+      player.setPosition(
+        indToJump*TILE_SIZE + TILE_SIZE/2,
+        playerPos.y
+      )
+    }
+  }
+
+  jumpToEndOfword(player, text, collideSound){
+    const playerPos = player.getPosition()
+    const xGrid = (playerPos.x - TILE_SIZE/2)/TILE_SIZE
+    const yGrid = (playerPos.y - TILE_SIZE/2)/TILE_SIZE - 2
+    const textRows = text.split('\n')
+    const currentRow = Array.from(textRows[yGrid]).slice(2)
+    let currentInd = xGrid
+
+    currentInd += 2
+    while (currentInd < currentRow.length && currentRow[currentInd]!=' ') currentInd++
+    if (currentInd>currentRow.length) collideSound.play()
+    else{
+      const indToJump = currentInd-1
+      if (currentRow[indToJump]!=' ') {
+        player.setPosition(
+          indToJump*TILE_SIZE + TILE_SIZE/2,
+          playerPos.y
+        )
+      } else collideSound.play()
+    }
   }
 }
