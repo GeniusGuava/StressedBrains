@@ -147,26 +147,26 @@ export default class MapScene extends Phaser.Scene {
     this.allKeys = {
       h: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: (time) => {
-          this.gridPhysics.movePlayer(Direction.LEFT, time, this.collideSound);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.LEFT, time, this.collideSound);
         },
       },
       j: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: (time) => {
-          this.gridPhysics.movePlayer(Direction.DOWN, time, this.collideSound);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.DOWN, time, this.collideSound);
         },
       },
       k: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: (time) => {
-          this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
         },
       },
       l: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: (time) => {
-          this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound);
+        function: (time, shift) => {
+          if (!shift) this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound);
         },
       },
     };
