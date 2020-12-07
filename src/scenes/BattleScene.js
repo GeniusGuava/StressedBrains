@@ -146,6 +146,18 @@ export default class BattleScene extends Phaser.Scene {
         function: (time, shift) => {
           if (!shift && this.game.level >= 1) this.jumpToNextword(this.player, this.text, this.collideSound)
         }
+      },
+      b: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 2) this.jumpToPreviousword(this.player, this.text, this.collideSound)
+        }
+      },
+      e: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 3) this.jumpToEndOfword(this.player, this.text, this.collideSound)
+        }
       }
     };
 
@@ -344,5 +356,49 @@ export default class BattleScene extends Phaser.Scene {
         playerPos.y
       )
     }else collideSound.play()
+  }
+
+  jumpToPreviousword(player, text, collideSound){
+    const playerPos = player.getPosition()
+    const xGrid = (playerPos.x - TILE_SIZE/2)/TILE_SIZE
+    const yGrid = (playerPos.y - TILE_SIZE/2)/TILE_SIZE - 2
+    const textRows = text.split('\n')
+    const currentRow = Array.from(textRows[yGrid]).slice(2)
+    let currentInd = xGrid
+
+    if (currentInd==0) collideSound.play()
+    else{
+      currentInd -= 2
+      while (currentInd >= 0 && currentRow[currentInd]!=' ' || currentRow[currentInd+1]==' '){
+        currentInd--
+      }
+      const indToJump = currentInd+1
+      player.setPosition(
+        indToJump*TILE_SIZE + TILE_SIZE/2,
+        playerPos.y
+      )
+    }
+  }
+
+  jumpToEndOfword(player, text, collideSound){
+    const playerPos = player.getPosition()
+    const xGrid = (playerPos.x - TILE_SIZE/2)/TILE_SIZE
+    const yGrid = (playerPos.y - TILE_SIZE/2)/TILE_SIZE - 2
+    const textRows = text.split('\n')
+    const currentRow = Array.from(textRows[yGrid]).slice(2)
+    let currentInd = xGrid
+
+    currentInd += 2
+    while (currentInd < currentRow.length && currentRow[currentInd]!=' ') currentInd++
+    if (currentInd>currentRow.length) collideSound.play()
+    else{
+      const indToJump = currentInd-1
+      if (currentRow[indToJump]!=' ') {
+        player.setPosition(
+          indToJump*TILE_SIZE + TILE_SIZE/2,
+          playerPos.y
+        )
+      } else collideSound.play()
+    }
   }
 }
