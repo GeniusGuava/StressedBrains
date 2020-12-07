@@ -1,8 +1,9 @@
 import battle1 from './Battles/battle1'
 import battle2 from './Battles/battle2'
+import battle3 from './Battles/battle3'
 import converter from './Battles/textNumberConverter'
 
-const battles = [battle1, battle2]
+const battles = [battle1, battle2, battle3]
 
 let bufferRows = [[],[]]
 for (let i=0;i<2;i++){
@@ -26,14 +27,17 @@ function textToLevel(text){
 export const enemySprite = [
   'assets/spriteSheets/minotaur.png',
   'assets/spriteSheets/minotaur.png',
+  'assets/spriteSheets/minotaur.png',
 ]
 
 export const enemySize = [
   {w: 96, h: 96},
   {w: 96, h: 96},
+  {w: 96, h: 96},
 ]
 
 export const weaponSprite = [
+  'assets/backgrounds/sword.png',
   'assets/backgrounds/sword.png',
   'assets/backgrounds/sword.png',
 ]
@@ -43,6 +47,7 @@ export const getLevel = (level) => {
 }
 
 export const playerStartPosition = [
+  {x: 0, y:2},
   {x: 0, y:2},
   {x: 0, y:2},
 ]
