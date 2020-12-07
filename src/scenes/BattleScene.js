@@ -1,5 +1,6 @@
 import Player from '../entity/Player';
 import Enemy from '../entity/Enemy';
+import Sprite from '../entity/Sprite'
 import { GridPhysics } from '../physics/GridPhysics';
 import { Direction } from './FgScene';
 import {
@@ -67,6 +68,10 @@ export default class BattleScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet('AriadneAttack', 'assets/spriteSheets/battleSprite.png',{
+      frameWidth: 32,
+      frameHeight: 32,
+    });
     this.load.spritesheet('warning', 'assets/spriteSheets/warning.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -83,6 +88,7 @@ export default class BattleScene extends Phaser.Scene {
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
+    this.physics.world.bounds.y = 64
     const map = this.make.tilemap({
       data: getLevel(this.game.level),
       tileHeight: 32,
@@ -96,10 +102,11 @@ export default class BattleScene extends Phaser.Scene {
       playerStartPosition[this.game.level].y,
       'Ariadne'
     );
-    this.enemySprite = new Enemy(
+    this.enemySprite = new Sprite(
       this,
-      900, 200, 'enemy'
+      750, 200, 'enemy'
     )
+    this.playerSprite = new Sprite(this, 850, 200, 'AriadneAttack')
     this.player.setFrame(4);
     this.player.hp = 3;
     this.enemySound = this.sound.add('enemy', { volume: 0.25 });
@@ -237,6 +244,7 @@ export default class BattleScene extends Phaser.Scene {
 
   playerAttack(player, weapon, x, y) {
     this.attackSound.play();
+    this.playerSprite.play('AriadneAttack')
     this.enemies.hp--;
     weapon.setActive(false).setVisible(false)
     weapon.body.enable = false;
@@ -271,10 +279,12 @@ export default class BattleScene extends Phaser.Scene {
 
   createWeapon(x, y) {
     this.weapons.create(x, y, 'sword');
+    this.weapons.setAlpha(.75)
   }
 
   createEnemy(x, y) {
     this.enemies.create(x, y, 'warning');
+    this.enemies.setAlpha(.5)
   }
 
   createGroups() {
@@ -328,7 +338,7 @@ export default class BattleScene extends Phaser.Scene {
     });
     this.anims.create({
       key: 'enemyAttack',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 10 }),
+      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
       frameRate: 2,
     });
     this.anims.create({
@@ -336,6 +346,11 @@ export default class BattleScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
       frameRate: 2,
     })
+    this.anims.create({
+      key: 'AriadneAttack',
+      frames: this.anims.generateFrameNumbers('AriadneAttack', { start: 15, end: 17 }),
+      frameRate: 2,
+    });
   }
   jumpToNextword(player, text, collideSound){
     const playerPos = player.getPosition()
