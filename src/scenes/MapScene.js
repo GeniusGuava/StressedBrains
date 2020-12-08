@@ -287,6 +287,7 @@ export default class MapScene extends Phaser.Scene {
 
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
+      this.game.level++;
       this.level++;
       this.scene.restart();
       this.keyCount = 0;
