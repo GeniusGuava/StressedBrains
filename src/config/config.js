@@ -7,12 +7,11 @@ export default {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: true,
+      // debug: true,
     },
   },
   render: {
     pixelArt: true,
   },
-  backgroundColor: '#5f2a55'
+  backgroundColor: '#5f2a55',
 };
-
