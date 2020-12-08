@@ -2,7 +2,7 @@ export const TILE_SIZE = 32;
 
 export const tileMaps = [
   'assets/backgrounds/levelOne.json',
-  'assets/backgrounds/LevelTwo.json',
+  'assets/backgrounds/levelTwo.json',
 ];
 
 export const padlockLocation = [
@@ -25,5 +25,5 @@ export const keyLocations = [
 
 export const playerStartPosition = [
   { x: 11, y: 6 },
-  { x: 11, y: 15 },
+  { x: 15, y: 5 },
 ];
