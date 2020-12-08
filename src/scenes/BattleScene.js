@@ -120,8 +120,8 @@ export default class BattleScene extends Phaser.Scene {
       playerStartPosition[this.game.level].y,
       'Ariadne'
     );
-    this.enemySprite = new Sprite(this, 750, 200, 'enemy');
-    this.playerSprite = new Sprite(this, 850, 200, 'AriadneAttack');
+    this.enemySprite = new Sprite(this, 750, 500, 'enemy');
+    this.playerSprite = new Sprite(this, 850, 500, 'AriadneAttack');
     this.player.setFrame(4);
     this.player.hp = 3;
     this.enemySound = this.sound.add('enemy', { volume: 0.25 });
@@ -257,9 +257,11 @@ export default class BattleScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
-    // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], {
+        wordWrap: { width: 250 },
+        fontSize: '12px',
+      })
       .setVisible(false);
 
     createTextBox(this, 665, 300, {
@@ -284,7 +286,7 @@ export default class BattleScene extends Phaser.Scene {
       this.gridPhysics.tileSizePixelsWalked = 0;
       const third = (this.playerBar.scaleX - 0.3) * 100;
       this.setValue(this.playerBar, third);
-      console.log('enemy is attacking');
+      // console.log('enemy is attacking');
 
       if (this.player.hp <= 1) {
         this.isAttacked = false;
@@ -329,8 +331,8 @@ export default class BattleScene extends Phaser.Scene {
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
       this.createGroups();
-      this.player.hp = 3
-      this.enemies.hp = 3
+      this.player.hp = 3;
+      this.enemies.hp = 3;
       this.sys.events.on('wake', this.wake, this);
     }
   }
@@ -342,8 +344,8 @@ export default class BattleScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-    this.scene.sleep('UIScene')
-    this.scene.switch('MapScene')
+    this.scene.sleep('UIScene');
+    this.scene.switch('MapScene');
   }
 
   wake() {
@@ -414,7 +416,7 @@ export default class BattleScene extends Phaser.Scene {
     });
     this.anims.create({
       key: 'enemyAttack',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
+      frames: this.anims.generateFrameNumbers('enemy', { start: 5, end: 9 }),
       frameRate: 2,
     });
     this.anims.create({

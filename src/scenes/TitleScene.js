@@ -17,9 +17,9 @@ export default class TitleScene extends Phaser.Scene {
         let background = this.add.sprite(0, 0, 'background_image')
         background.setOrigin(0, 0)
 
-        let title_text = this.add.text(100, 110, 'Learning VIM in the Adventure of Ariadne...', { fontFamily: 'Roboto, sans-serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 })
-        let screenText = this.add.text(480, 350, 'Press Enter to Start Game', { fontFamily: 'Roboto, sans-serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 }).setOrigin(0.5);
-        let copyright = this.add.text(630, 620, '© StressedBrains, 2020. All rights reserved.', { fontFamily: 'Roboto, sans-serif', color: '#fff', stroke: '#000000', strokeThickness: 1 })
+        let title_text = this.add.text(100, 110, 'Learning VIM in the Adventure of Ariadne...', { fontFamily: 'Georgia, serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 })
+        let screenText = this.add.text(480, 350, 'Press Enter to Start Game', { fontFamily: 'Verdana, sans-serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 }).setOrigin(0.5);
+        let copyright = this.add.text(560, 610, '© StressedBrains, 2020. All rights reserved.', { fontFamily: 'Arial', fontSize: '20px', color: '#fff', stroke: '#000000', strokeThickness: 2 })
         TweenHelper.flashElement(this, screenText);
 
         this.input.keyboard.on('keydown', () => {
