@@ -26,7 +26,7 @@ function textToLevel(text){
 }
 
 export const enemySprite = [
-  'assets/spriteSheets/minotaur.png',
+  'assets/spriteSheets/enemy/minotaur.png',
   'assets/spriteSheets/minotaur.png',
   'assets/spriteSheets/minotaur.png',
   'assets/spriteSheets/minotaur.png',
