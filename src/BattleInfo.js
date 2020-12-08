@@ -27,16 +27,18 @@ function textToLevel(text){
 
 export const enemySprite = [
   'assets/spriteSheets/enemy/minotaur.png',
-  'assets/spriteSheets/enemy/minotaur.png',
-  'assets/spriteSheets/enemy/minotaur.png',
-  'assets/spriteSheets/enemy/minotaur.png',
+  'assets/spriteSheets/enemy/spider.png',
+  'assets/spriteSheets/enemy/centipede.png',
+  'assets/spriteSheets/enemy/cyclops.png',
+  'assets/spriteSheets/enemy/adventurer.png'
 ]
 
 export const enemySize = [
   {w: 96, h: 96},
-  {w: 96, h: 96},
-  {w: 96, h: 96},
-  {w: 96, h: 96},
+  {w: 32, h: 22},
+  {w: 70, h: 54},
+  {w: 64, h: 64},
+  {w: 32, h: 36}
 ]
 
 export const weaponSprite = [

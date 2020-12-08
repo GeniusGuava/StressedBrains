@@ -118,8 +118,8 @@ export default class BattleScene extends Phaser.Scene {
       playerStartPosition[this.game.level].y,
       'Ariadne'
     );
-    this.enemySprite = new Sprite(this, 750, 200, 'enemy');
-    this.playerSprite = new Sprite(this, 850, 200, 'AriadneAttack');
+    this.enemySprite = new Sprite(this, 750, 500, 'enemy');
+    this.playerSprite = new Sprite(this, 850, 500, 'AriadneAttack');
     this.player.setFrame(4);
     this.player.hp = 3;
     this.enemySound = this.sound.add('enemy', { volume: 0.25 });
@@ -408,7 +408,7 @@ export default class BattleScene extends Phaser.Scene {
     });
     this.anims.create({
       key: 'enemyAttack',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
+      frames: this.anims.generateFrameNumbers('enemy', { start: 5, end: 9 }),
       frameRate: 2,
     });
     this.anims.create({
