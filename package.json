@@ -9,6 +9,8 @@
     "deploy": "script/deploy"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "phaser": "^3.15.1",
     "webpack": "^5.9.0"
