@@ -47,6 +47,7 @@ export default class MapScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
+
     this.time.addEvent({
       delay: 500,
       callback: () => this.scene.switch('BattleScene'),
@@ -55,9 +56,6 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-    //this.load.image('tiles', 'assets/backgrounds/tiles.png');
-    //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
-    console.log(this.level);
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
     this.cache.tilemap.remove('map');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
@@ -120,7 +118,6 @@ export default class MapScene extends Phaser.Scene {
       playerStartPosition[this.level].y,
       'Ariadne'
     ).setScale(1);
-    this.cache.tilemap.remove('map');
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
@@ -237,7 +234,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.sys.events.on(
       'wake',
-      (test) => {
+      () => {
         if (!this.game.playerAlive) {
           this.player.setPosition(
             playerStartPosition[this.level].x * TILE_SIZE + TILE_SIZE / 2,
