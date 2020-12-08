@@ -44,16 +44,28 @@
             "scaleInDock": 0.55,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/levelThree.json": {
-            "scale": 1.17,
+        "public/assets/backgrounds/levelFour.json": {
+            "scale": 0.9952380952380953,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 312.8205128205128,
-                "y": 315.3846153846154
+                "x": 304.4497607655502,
+                "y": 320.5263157894737
+            }
+        },
+        "public/assets/backgrounds/levelFour.json#castle": {
+            "scaleInDock": 0.7037
+        },
+        "public/assets/backgrounds/levelThree.json": {
+            "scale": 1.11,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 318.91891891891885,
+                "y": 306.3063063063062
             }
         },
         "public/assets/backgrounds/levelThree.json#castle": {
-            "scaleInDock": 0.6702
+            "scaleInDock": 0.7363,
+            "scaleInEditor": 1
         }
     },
     "lastUsedTilesetExportFilter": "JSON tileset files (*.json)",

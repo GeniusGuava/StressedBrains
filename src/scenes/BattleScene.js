@@ -276,7 +276,7 @@ export default class BattleScene extends Phaser.Scene {
       this.gridPhysics.tileSizePixelsWalked = 0;
       const third = (this.playerBar.scaleX - 0.3) * 100;
       this.setValue(this.playerBar, third);
-      console.log('enemy is attacking');
+      // console.log('enemy is attacking');
 
       if (this.player.hp <= 1) {
         this.isAttacked = false;
