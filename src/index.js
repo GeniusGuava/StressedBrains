@@ -12,13 +12,16 @@ npm install @types/phaser
 But this hasn't happened yet!
 */
 
+import TitleScene from './scenes/TitleScene';
 import MainScene from './scenes/MainScene';
 import MapScene from './scenes/MapScene';
 import config from './config/config';
-import BattleScene from './scenes/BattleScene'
-
-// Bring in all the scenes
+import BattleScene from './scenes/BattleScene';
 import 'phaser';
+import Phaser from 'phaser';
+// Bring in all the scenes
+
+let titleScene = new TitleScene()
 
 class Game extends Phaser.Game {
   constructor() {
@@ -27,16 +30,14 @@ class Game extends Phaser.Game {
 
     // Add all the scenes
     // << ADD ALL SCENES HERE >>
-
-    // this.scene.add('BgScene', BgScene);
-    // this.scene.add('FgScene', FgScene);
+    this.scene.add('TitleScene', titleScene)
     this.scene.add('BattleScene', BattleScene)
     this.scene.add('MapScene', MapScene)
     this.scene.add('MainScene', MainScene);
 
     // Start the game with the mainscene
     // << START GAME WITH MAIN SCENE HERE >>
-    this.scene.start('MainScene');
+    this.scene.start('TitleScene');
   }
 }
 // Create new instance of game

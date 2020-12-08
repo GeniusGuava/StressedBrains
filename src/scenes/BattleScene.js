@@ -1,16 +1,21 @@
 import Player from '../entity/Player';
 import Enemy from '../entity/Enemy';
+import Sprite from '../entity/Sprite';
 import { GridPhysics } from '../physics/GridPhysics';
 import { Direction } from './FgScene';
 import {
   enemySprite,
   weaponSprite,
-  level,
+  getLevel,
   playerStartPosition,
-  weapons,
-  enemies,
+  getWeapons,
+  getEnemies,
   enemySize,
+  getText,
 } from '../BattleInfo';
+import { TILE_SIZE } from '../MapInfo';
+import { battleText } from '../text/battleText';
+import { helpContent } from '../text/helpText';
 
 class UIScene extends Phaser.Scene {
   constructor() {
@@ -32,12 +37,14 @@ class UIScene extends Phaser.Scene {
 export default class BattleScene extends Phaser.Scene {
   constructor() {
     super('BattleScene');
-    this.level = 0;
     this.onMeetEnemy = this.onMeetEnemy.bind(this);
     this.createGroups = this.createGroups.bind(this);
     this.createWeapon = this.createWeapon.bind(this);
     this.playerAttack = this.playerAttack.bind(this);
     this.createEnemy = this.createEnemy.bind(this);
+    this.wins = 0;
+    this.isAttacked = false;
+    this.collideDelay = 500;
   }
 
   preload() {
@@ -51,11 +58,11 @@ export default class BattleScene extends Phaser.Scene {
       frameHeight: 32,
       frameWidth: 32,
     });
-    this.load.spritesheet('enemy', enemySprite[this.level], {
-      frameWidth: enemySize[this.level].w,
-      frameHeight: enemySize[this.level].h,
+    this.load.spritesheet('enemy', enemySprite[this.game.level], {
+      frameWidth: enemySize[this.game.level].w,
+      frameHeight: enemySize[this.game.level].h,
     });
-    this.load.spritesheet('sword', weaponSprite[this.level], {
+    this.load.spritesheet('sword', weaponSprite[this.game.level], {
       frameHeight: 32,
       frameWidth: 32,
     });
@@ -63,23 +70,43 @@ export default class BattleScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet(
+      'AriadneAttack',
+      'assets/spriteSheets/battleSprite.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
     this.load.spritesheet('warning', 'assets/spriteSheets/warning.png', {
       frameWidth: 32,
       frameHeight: 32,
-    })
+    });
+    this.load.scenePlugin({
+      key: 'rexuiplugin',
+      url:
+        'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+      sceneKey: 'rexUI',
+    });
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    );
     // Preload Sounds
     // << LOAD SOUNDS HERE >>
     this.load.audio('enemy', 'assets/audio/enemy.wav');
     this.load.audio('attack', 'assets/audio/attack.wav');
     this.load.audio('lose', 'assets/audio/loseBattle.wav');
     this.load.audio('win', 'assets/audio/winBattle.wav');
+    this.load.audio('collide', 'assets/audio/jump.wav');
   }
 
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
+    this.physics.world.bounds.y = 64;
     const map = this.make.tilemap({
-      data: level[this.level],
+      data: getLevel(this.game.level),
       tileHeight: 32,
       tileWidth: 32,
     });
@@ -87,50 +114,88 @@ export default class BattleScene extends Phaser.Scene {
     const ground = map.createStaticLayer(0, tiles, 0, 0);
     this.player = new Player(
       this,
-      playerStartPosition[this.level].x,
-      playerStartPosition[this.level].y,
+      playerStartPosition[this.game.level].x,
+      playerStartPosition[this.game.level].y,
       'Ariadne'
     );
-    this.enemySprite = new Enemy(
-      this,
-      900, 200, 'enemy'
-    )
+    this.enemySprite = new Sprite(this, 750, 200, 'enemy');
+    this.playerSprite = new Sprite(this, 850, 200, 'AriadneAttack');
     this.player.setFrame(4);
     this.player.hp = 3;
     this.enemySound = this.sound.add('enemy', { volume: 0.25 });
     this.attackSound = this.sound.add('attack', { volume: 0.25 });
     this.loseSound = this.sound.add('lose', { volume: 0.25 });
     this.winSound = this.sound.add('win', { volume: 0.25 });
-    this.createAnimations()
+    this.collideSound = this.sound.add('collide', { volume: 0.25 });
+    this.createAnimations();
 
     this.player.startPosition = this.player.getPosition();
     this.gridPhysics = new GridPhysics(this.player, map);
     this.keyboard = this.input.keyboard;
     this.createGroups();
     this.enemies.hp = 3;
+
+    this.text = getText(this.game.level);
     this.allKeys = {
       h: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.LEFT);
+        function: (time, shift) => {
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.LEFT,
+              time,
+              this.collideSound
+            );
         },
       },
       j: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.DOWN);
+        function: (time, shift) => {
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.DOWN,
+              time,
+              this.collideSound
+            );
         },
       },
       k: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.UP);
+        function: (time, shift) => {
+          if (!shift)
+            this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
         },
       },
       l: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: () => {
-          this.gridPhysics.movePlayer(Direction.RIGHT);
+        function: (time, shift) => {
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.RIGHT,
+              time,
+              this.collideSound
+            );
+        },
+      },
+      w: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 1)
+            this.jumpToNextword(this.player, this.text, this.collideSound);
+        },
+      },
+      b: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 2)
+            this.jumpToPreviousword(this.player, this.text, this.collideSound);
+        },
+      },
+      e: {
+        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+        function: (time, shift) => {
+          if (!shift && this.game.level >= 3)
+            this.jumpToEndOfword(this.player, this.text, this.collideSound);
         },
       },
     };
@@ -169,6 +234,29 @@ export default class BattleScene extends Phaser.Scene {
       null,
       this
     );
+
+    //help button
+    let helpVisible = true;
+    this.help = this.add
+      .text(750, 20, ':help', { backgroundColor: '#000' })
+      .setInteractive()
+      .on('pointerdown', () => {
+        if (!helpVisible) {
+          this.helpText.setVisible(false);
+          helpVisible = !helpVisible;
+        } else {
+          this.helpText.setVisible(true);
+          helpVisible = !helpVisible;
+        }
+      });
+    // this.helpContent = `Testing`;
+    this.helpText = this.add
+      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .setVisible(false);
+
+    createTextBox(this, 665, 300, {
+      wrapWidth: 200,
+    }).start(battleText[this.game.level], 50);
   }
 
   // time: total time elapsed (ms)
@@ -180,36 +268,53 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   onMeetEnemy(player, enemies, x, y) {
-    this.enemySound.play();
-    this.enemySprite.play('enemyAttack')
-    this.gridPhysics.stopMoving();
-    this.gridPhysics.tileSizePixelsWalked = 0;
-    this.player.resetPosition(this.player.startPosition);
-    this.player.hp--;
-    const third = (this.playerBar.scaleX - 0.30) * 100;
-    this.setValue(this.playerBar, third);
-    if (this.player.hp <= 0) {
-      this.player.resetPosition(this.player.startPosition);
-      this.loseSound.play();
-      this.setValue(this.playerBar, 100);
-      this.setValue(this.enemyBar, 100);
-      this.createGroups();
-      this.player.hp = 3
-      this.enemies.hp = 3
-      this.endBattle();
-      this.sys.events.on('wake', this.wake, this);
+    if (!this.isAttacked) {
+      this.isAttacked = true;
+      this.enemySound.play();
+      this.enemySprite.play('enemyAttack');
+      this.gridPhysics.stopMoving();
+      this.gridPhysics.tileSizePixelsWalked = 0;
+      const third = (this.playerBar.scaleX - 0.3) * 100;
+      this.setValue(this.playerBar, third);
+      console.log('enemy is attacking');
+
+      if (this.player.hp <= 1) {
+        this.isAttacked = false;
+        this.player.resetPosition(this.player.startPosition);
+        this.loseSound.play();
+        this.game.playerAlive = false;
+        this.endBattle();
+        this.sys.events.on('wake', this.wake, this);
+      } else {
+        this.player.resetPosition(this.player.startPosition);
+        this.input.keyboard.enabled = false;
+        Object.keys(this.allKeys).map((key) => {
+          this.allKeys[key]['key'].isDown = false;
+        });
+        this.time.addEvent({
+          delay: this.collideDelay,
+          callback: () => {
+            this.input.keyboard.enabled = true;
+            this.player.hp--;
+            this.isAttacked = false;
+          },
+        });
+      }
     }
   }
 
   playerAttack(player, weapon, x, y) {
     this.attackSound.play();
+    this.playerSprite.play('AriadneAttack');
     this.enemies.hp--;
-    weapon.setActive(false).setVisible(false)
+    weapon.setActive(false).setVisible(false);
     weapon.body.enable = false;
-    const third = (this.enemyBar.scaleX - 0.30) * 100;
+    const third = (this.enemyBar.scaleX - 0.3) * 100;
     this.setValue(this.enemyBar, third);
 
     if (this.enemies.hp <= 0) {
+      if (this.wins >= 3) this.wins = 0;
+      else this.wins++;
       this.winSound.play();
       this.endBattle();
       this.player.resetPosition(this.player.startPosition);
@@ -235,15 +340,19 @@ export default class BattleScene extends Phaser.Scene {
 
   wake() {
     this.input.keyboard.enabled = true;
+    this.scene.restart();
+    this.game.playerAlive = true;
     this.scene.run('UIScene');
   }
 
   createWeapon(x, y) {
     this.weapons.create(x, y, 'sword');
+    this.weapons.setAlpha(0.75);
   }
 
   createEnemy(x, y) {
     this.enemies.create(x, y, 'warning');
+    this.enemies.setAlpha(0.5);
   }
 
   createGroups() {
@@ -254,11 +363,14 @@ export default class BattleScene extends Phaser.Scene {
       classType: Enemy,
     });
 
-    weapons[this.level].map((coords) => {
+    const weapons = getWeapons(this.game.level, this.wins);
+    const enemies = getEnemies(this.game.level, this.wins);
+
+    weapons.map((coords) => {
       this.createWeapon(coords.x, coords.y);
     });
 
-    enemies[this.level].map((coords) => {
+    enemies.map((coords) => {
       this.createEnemy(coords.x, coords.y);
     });
   }
@@ -290,17 +402,190 @@ export default class BattleScene extends Phaser.Scene {
       key: 'enemyIdle',
       frames: this.anims.generateFrameNumbers('enemy', { start: 1, end: 5 }),
       frameRate: 2,
-      repeat: -1
+      repeat: -1,
     });
     this.anims.create({
       key: 'enemyAttack',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 10 }),
+      frames: this.anims.generateFrameNumbers('enemy', { start: 6, end: 8 }),
       frameRate: 2,
     });
     this.anims.create({
       key: 'enemyDeath',
       frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
       frameRate: 2,
-    })
+    });
+    this.anims.create({
+      key: 'AriadneAttack',
+      frames: this.anims.generateFrameNumbers('AriadneAttack', {
+        start: 15,
+        end: 17,
+      }),
+      frameRate: 2,
+    });
+  }
+  jumpToNextword(player, text, collideSound) {
+    const playerPos = player.getPosition();
+    const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
+    const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
+    const textRows = text.split('\n');
+    const currentRow = Array.from(textRows[yGrid]).slice(2);
+    let currentChar = currentRow[xGrid];
+    let currentInd = xGrid;
+    while (currentChar != ' ' && currentInd < currentRow.length - 1) {
+      currentInd++;
+      currentChar = currentRow[currentInd];
+    }
+    const indToJump = currentInd + 1;
+    if (indToJump != currentRow.length && currentRow[indToJump] != ' ') {
+      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
+    } else collideSound.play();
+  }
+
+  jumpToPreviousword(player, text, collideSound) {
+    const playerPos = player.getPosition();
+    const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
+    const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
+    const textRows = text.split('\n');
+    const currentRow = Array.from(textRows[yGrid]).slice(2);
+    let currentInd = xGrid;
+
+    if (currentInd == 0) collideSound.play();
+    else {
+      currentInd -= 2;
+      while (
+        (currentInd >= 0 && currentRow[currentInd] != ' ') ||
+        currentRow[currentInd + 1] == ' '
+      ) {
+        currentInd--;
+      }
+      const indToJump = currentInd + 1;
+      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
+    }
+  }
+
+  jumpToEndOfword(player, text, collideSound) {
+    const playerPos = player.getPosition();
+    const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
+    const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
+    const textRows = text.split('\n');
+    const currentRow = Array.from(textRows[yGrid]).slice(2);
+    let currentInd = xGrid;
+
+    currentInd += 2;
+    while (currentInd < currentRow.length && currentRow[currentInd] != ' ')
+      currentInd++;
+    if (currentInd > currentRow.length) collideSound.play();
+    else {
+      const indToJump = currentInd - 1;
+      if (currentRow[indToJump] != ' ') {
+        player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
+      } else collideSound.play();
+    }
   }
 }
+
+const COLOR_PRIMARY = 0x4e342e;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
+
+const GetValue = Phaser.Utils.Objects.GetValue;
+var createTextBox = function (scene, x, y, config) {
+  var wrapWidth = GetValue(config, 'wrapWidth', 0);
+  var fixedWidth = GetValue(config, 'fixedWidth', 0);
+  var fixedHeight = GetValue(config, 'fixedHeight', 0);
+  var textBox = scene.rexUI.add
+    .textBox({
+      x: x,
+      y: y,
+
+      background: scene.rexUI.add
+        .roundRectangle(0, 0, 2, 2, 20, COLOR_PRIMARY)
+        .setStrokeStyle(2, COLOR_LIGHT),
+
+      // text: getBuiltInText(scene, wrapWidth, fixedWidth, fixedHeight),
+      text: getBBcodeText(scene, wrapWidth, fixedWidth, fixedHeight),
+
+      action: scene.add
+        .image(0, 0, 'nextPage')
+        .setTint(COLOR_LIGHT)
+        .setVisible(false),
+
+      space: {
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20,
+        icon: 10,
+        text: 10,
+      },
+    })
+    .setOrigin(0)
+    .layout();
+
+  textBox
+    .setInteractive()
+    .on(
+      'pointerdown',
+      function () {
+        var icon = this.getElement('action').setVisible(false);
+        this.resetChildVisibleState(icon);
+        if (this.isTyping) {
+          this.stop(true);
+        } else {
+          this.typeNextPage();
+        }
+      },
+      textBox
+    )
+    .on(
+      'pageend',
+      function () {
+        if (this.isLastPage) {
+          return;
+        }
+
+        var icon = this.getElement('action').setVisible(true);
+        this.resetChildVisibleState(icon);
+        icon.y -= 30;
+        var tween = scene.tweens.add({
+          targets: icon,
+          y: '+=30', // '+=100'
+          ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+          duration: 500,
+          repeat: 0, // -1: infinity
+          yoyo: false,
+        });
+      },
+      textBox
+    );
+  //.on('type', function () {
+  //})
+
+  return textBox;
+};
+
+var getBuiltInText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+  return scene.add
+    .text(0, 0, '', {
+      fontSize: '12px',
+      wordWrap: {
+        width: wrapWidth,
+      },
+      maxLines: 3,
+    })
+    .setFixedSize(fixedWidth, fixedHeight);
+};
+
+var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+  return scene.rexUI.add.BBCodeText(0, 0, '', {
+    fixedWidth: fixedWidth,
+    fixedHeight: fixedHeight,
+
+    fontSize: '12px',
+    wrap: {
+      mode: 'word',
+      width: wrapWidth,
+    },
+    maxLines: 4,
+  });
+};

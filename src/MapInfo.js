@@ -25,5 +25,5 @@ export const keyLocations = [
 
 export const playerStartPosition = [
   { x: 11, y: 6 },
-  { x: 11, y: 15 },
+  { x: 15, y: 5 },
 ];
