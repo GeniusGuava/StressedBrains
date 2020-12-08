@@ -260,9 +260,11 @@ export default class MapScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
-    // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(665, 50, helpContent[this.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.level], {
+        wordWrap: { width: 250 },
+        fontSize: '12px',
+      })
       .setVisible(false);
 
     createTextBox(this, 660, 300, {
