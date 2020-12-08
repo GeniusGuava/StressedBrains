@@ -249,9 +249,11 @@ export default class BattleScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
-    // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], {
+        wordWrap: { width: 250 },
+        fontSize: '12px',
+      })
       .setVisible(false);
 
     createTextBox(this, 665, 300, {
@@ -321,8 +323,8 @@ export default class BattleScene extends Phaser.Scene {
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
       this.createGroups();
-      this.player.hp = 3
-      this.enemies.hp = 3
+      this.player.hp = 3;
+      this.enemies.hp = 3;
       this.sys.events.on('wake', this.wake, this);
     }
   }
@@ -334,8 +336,8 @@ export default class BattleScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-    this.scene.sleep('UIScene')
-    this.scene.switch('MapScene')
+    this.scene.sleep('UIScene');
+    this.scene.switch('MapScene');
   }
 
   wake() {
