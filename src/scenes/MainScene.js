@@ -10,7 +10,5 @@ export default class MainScene extends Phaser.Scene {
     this.game.level = 0
     this.scene.launch('MapScene')
     // this.scene.launch('BattleScene')
-
-
   }
 }

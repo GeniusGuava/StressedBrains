@@ -12,6 +12,8 @@ import {
   keyLocations,
   playerStartPosition,
 } from '../MapInfo';
+import MainScene from './MainScene';
+import TitleScene from './TitleScene';
 
 export const TILE_SIZE = 32;
 
@@ -22,6 +24,9 @@ export const Direction = {
   RIGHT: 'right',
   DOWN: 'down',
 };
+
+// this.scene.sleep('TitleScene');
+// this.scene.start('MainScene');
 
 export default class MapScene extends Phaser.Scene {
   constructor() {
