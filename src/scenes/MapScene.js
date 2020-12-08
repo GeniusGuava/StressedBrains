@@ -4,6 +4,8 @@ import Player from '../entity/Player';
 import { GridPhysics } from '../physics/GridPhysics';
 import Key from '../entity/Key';
 import Padlock from '../entity/Padlock';
+import { mapText } from '../text/mapText';
+import { helpContent } from '../text/helpText';
 import {
   tileMaps,
   padlockLocation,
@@ -20,8 +22,6 @@ export const Direction = {
   RIGHT: 'right',
   DOWN: 'down',
 };
-
-let content = `Ariadne: \n I'm bored. Where are the knights that are going to get me out of here? \n Maybe I can escape this labyrinth by myself. God of VIM, please give me power! \n Looks like I can use 'h', 'j', 'k', & 'l' to walk around. I need to find keys to unlock the door.`;
 
 export default class MapScene extends Phaser.Scene {
   constructor() {
@@ -45,16 +45,16 @@ export default class MapScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 500,
       callback: () => this.scene.switch('BattleScene'),
-      callbackScope: this
-    })
+      callbackScope: this,
+    });
   }
 
   preload() {
     //this.load.image('tiles', 'assets/backgrounds/tiles.png');
     //this.load.tilemapTiledJSON('map', 'assets/backgrounds/testing-map2.json');
-    console.log(this.level)
+    console.log(this.level);
     this.load.image('tiles', 'assets/backgrounds/Castle2.png');
-    this.cache.tilemap.remove('map')
+    this.cache.tilemap.remove('map');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
     this.load.audio('locked', 'assets/audio/locked.wav');
@@ -114,8 +114,8 @@ export default class MapScene extends Phaser.Scene {
       playerStartPosition[this.level].x,
       playerStartPosition[this.level].y,
       'Ariadne'
-    ).setScale(1);    this.cache.tilemap.remove('map')
-
+    ).setScale(1);
+    this.cache.tilemap.remove('map');
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.createAnimations();
@@ -143,25 +143,41 @@ export default class MapScene extends Phaser.Scene {
       h: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
         function: (time, shift) => {
-          if (!shift) this.gridPhysics.movePlayer(Direction.LEFT, time, this.collideSound);
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.LEFT,
+              time,
+              this.collideSound
+            );
         },
       },
       j: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
         function: (time, shift) => {
-          if (!shift) this.gridPhysics.movePlayer(Direction.DOWN, time, this.collideSound);
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.DOWN,
+              time,
+              this.collideSound
+            );
         },
       },
       k: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
         function: (time, shift) => {
-          if (!shift) this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
+          if (!shift)
+            this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
         },
       },
       l: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
         function: (time, shift) => {
-          if (!shift) this.gridPhysics.movePlayer(Direction.RIGHT, time, this.collideSound);
+          if (!shift)
+            this.gridPhysics.movePlayer(
+              Direction.RIGHT,
+              time,
+              this.collideSound
+            );
         },
       },
     };
@@ -177,14 +193,12 @@ export default class MapScene extends Phaser.Scene {
 
       this.player.beforeBattle = this.player.getPosition();
 
-
       if (
         x === this.player.beforeBattle.x ||
         y === this.player.beforeBattle.y
       ) {
         x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 5);
         y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 5);
-
       }
       this.spawns.create(x, y, 32, 32);
     }
@@ -219,13 +233,13 @@ export default class MapScene extends Phaser.Scene {
     this.sys.events.on(
       'wake',
       (test) => {
-        if (!this.game.playerAlive){
+        if (!this.game.playerAlive) {
           this.player.setPosition(
-            playerStartPosition[this.level].x*TILE_SIZE + TILE_SIZE/2,
-            playerStartPosition[this.level].y*TILE_SIZE + TILE_SIZE/2
-          )
+            playerStartPosition[this.level].x * TILE_SIZE + TILE_SIZE / 2,
+            playerStartPosition[this.level].y * TILE_SIZE + TILE_SIZE / 2
+          );
         }
-        this.input.keyboard.enabled = true
+        this.input.keyboard.enabled = true;
       },
       this
     );
@@ -237,31 +251,21 @@ export default class MapScene extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         if (!helpVisible) {
-          // this.helpText.alpha = 0;
           this.helpText.setVisible(false);
           helpVisible = !helpVisible;
         } else {
-          // this.helpText.alpha = 1;
           this.helpText.setVisible(true);
           helpVisible = !helpVisible;
         }
       });
+    // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(
-        665,
-        50,
-        `power given by the God of VIM: \n h: left \n l: right \n j: down \n k: up`
-      )
+      .text(665, 50, helpContent[this.level], { wordWrap: { width: 250 } })
       .setVisible(false);
 
-    // this.label = this.add.text(675, 450, '').setWordWrapWidth(260);
-    // this.typewriteText(
-    //   `Ariadne: Where are the knights that are going rescue me from this labyrinth? I'm so bored. I guess I should use the power given by the God of VIM to escape here myself.`
-    // );
-
-    createTextBox(this, 665, 300, {
-      wrapWidth: 200,
-    }).start(content, 50);
+    createTextBox(this, 660, 300, {
+      wrapWidth: 205,
+    }).start(mapText[this.level], 50);
   }
 
   update(time, delta) {
@@ -278,19 +282,18 @@ export default class MapScene extends Phaser.Scene {
   }
 
   exitLevel(player, exit) {
-    if(this.keyCount >=3){
-      this.level ++
-      this.scene.restart()
-      this.keyCount = 0
-    }else{
-      if(!this.lockPlayed){
-        this.lockedSound.play()
-        this.lockPlayed = true
-        this.lockedSound.on('complete', () => setTimeout(() =>
-          this.lockPlayed = false, 1000))
-
+    if (this.keyCount >= 3) {
+      this.level++;
+      this.scene.restart();
+      this.keyCount = 0;
+    } else {
+      if (!this.lockPlayed) {
+        this.lockedSound.play();
+        this.lockPlayed = true;
+        this.lockedSound.on('complete', () =>
+          setTimeout(() => (this.lockPlayed = false), 1000)
+        );
       }
-
     }
   }
 
@@ -374,8 +377,8 @@ var createTextBox = function (scene, x, y, config) {
         .setVisible(false),
 
       space: {
-        left: 20,
-        right: 20,
+        left: 15,
+        right: 15,
         top: 20,
         bottom: 20,
         icon: 10,
