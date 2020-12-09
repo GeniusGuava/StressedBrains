@@ -7,7 +7,7 @@ import converter from './Battles/textNumberConverter'
 
 const battles = [battle1, battle2, battle3, battle4, battle5]
 
-let bufferRows = [[],[]]
+export let bufferRows = [[],[]]
 for (let i=0;i<2;i++){
   for (let j=0;j<20;j++){
     bufferRows[i].push(0)
@@ -15,7 +15,7 @@ for (let i=0;i<2;i++){
 }
 
 
-function textToLevel(text){
+export function textToLevel(text){
   const splitByNewLine = text.split('\n')
   let trimmed
   return bufferRows.concat(splitByNewLine.map(line=>{

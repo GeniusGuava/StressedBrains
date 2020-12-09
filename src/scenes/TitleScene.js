@@ -31,7 +31,7 @@ export default class TitleScene extends Phaser.Scene {
     update() {
         if (Phaser.Input.Keyboard.JustDown(buttonEnter)) {
             this.scene.pause('TitleScene');
-            this.scene.run('MapScene');
+            this.scene.run('MainScene');
         }
     }
 }
