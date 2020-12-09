@@ -44,16 +44,29 @@
             "scaleInDock": 0.55,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/levelFour.json": {
-            "scale": 0.9952380952380953,
-            "selectedLayer": 2,
+        "public/assets/backgrounds/finalLevel.json": {
+            "scale": 0.99,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 304.4497607655502,
-                "y": 320.5263157894737
+                "x": 283.33333333333337,
+                "y": 309.0909090909091
+            }
+        },
+        "public/assets/backgrounds/finalLevel.json#castle": {
+            "scaleInDock": 0.7444,
+            "scaleInEditor": 1
+        },
+        "public/assets/backgrounds/levelFour.json": {
+            "scale": 0.99,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 301.5151515151515,
+                "y": 320.20202020202026
             }
         },
         "public/assets/backgrounds/levelFour.json#castle": {
-            "scaleInDock": 0.7037
+            "scaleInDock": 0.7302,
+            "scaleInEditor": 1
         },
         "public/assets/backgrounds/levelThree.json": {
             "scale": 1.11,
@@ -66,6 +79,17 @@
         "public/assets/backgrounds/levelThree.json#castle": {
             "scaleInDock": 0.7363,
             "scaleInEditor": 1
+        },
+        "public/assets/backgrounds/levelTwo.json": {
+            "scale": 1,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 319.5,
+                "y": 318
+            }
+        },
+        "public/assets/backgrounds/levelTwo.json#castle": {
+            "scaleInDock": 1
         }
     },
     "lastUsedTilesetExportFilter": "JSON tileset files (*.json)",
