@@ -43,11 +43,11 @@ export const enemySize = [
 ]
 
 export const weaponSprite = [
-  'assets/backgrounds/sword.png',
-  'assets/backgrounds/sword.png',
-  'assets/backgrounds/sword.png',
-  'assets/backgrounds/sword.png',
-  'assets/backgrounds/sword.png',
+  'assets/sprites/sword.png',
+  'assets/sprites/sword.png',
+  'assets/sprites/sword.png',
+  'assets/sprites/sword.png',
+  'assets/sprites/sword.png',
 ]
 
 export const getLevel = (level) => {

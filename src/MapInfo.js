@@ -1,11 +1,11 @@
 export const TILE_SIZE = 32;
 
 export const tileMaps = [
-  'assets/backgrounds/levelOne.json',
-  'assets/backgrounds/levelTwo.json',
-  'assets/backgrounds/levelThree.json',
-  'assets/backgrounds/levelFour.json',
-  'assets/backgrounds/finalLevel.json'
+  'assets/backgrounds/jsonFiles/levelOne.json',
+  'assets/backgrounds/jsonFiles/levelTwo.json',
+  'assets/backgrounds/jsonFiles/levelThree.json',
+  'assets/backgrounds/jsonFiles/levelFour.json',
+  'assets/backgrounds/jsonFiles/finalLevel.json'
 ];
 
 export const padlockLocation = [

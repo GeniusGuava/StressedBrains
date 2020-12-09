@@ -44,7 +44,7 @@
             "scaleInDock": 0.55,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/finalLevel.json": {
+        "public/assets/backgrounds/jsonFiles/finalLevel.json": {
             "scale": 0.99,
             "selectedLayer": 0,
             "viewCenter": {
@@ -52,11 +52,11 @@
                 "y": 309.0909090909091
             }
         },
-        "public/assets/backgrounds/finalLevel.json#castle": {
+        "public/assets/backgrounds/jsonFiles/finalLevel.json#castle": {
             "scaleInDock": 0.7444,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/levelFour.json": {
+        "public/assets/backgrounds/jsonFiles/levelFour.json": {
             "scale": 0.99,
             "selectedLayer": 1,
             "viewCenter": {
@@ -64,11 +64,11 @@
                 "y": 320.20202020202026
             }
         },
-        "public/assets/backgrounds/levelFour.json#castle": {
+        "public/assets/backgrounds/jsonFiles/levelFour.json#castle": {
             "scaleInDock": 0.7302,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/levelThree.json": {
+        "public/assets/backgrounds/jsonFiles/levelThree.json": {
             "scale": 1.11,
             "selectedLayer": 2,
             "viewCenter": {
@@ -76,11 +76,11 @@
                 "y": 306.3063063063062
             }
         },
-        "public/assets/backgrounds/levelThree.json#castle": {
+        "public/assets/backgrounds/jsonFiles/levelThree.json#castle": {
             "scaleInDock": 0.7363,
             "scaleInEditor": 1
         },
-        "public/assets/backgrounds/levelTwo.json": {
+        "public/assets/backgrounds/jsonFiles/levelTwo.json": {
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
@@ -88,7 +88,7 @@
                 "y": 318
             }
         },
-        "public/assets/backgrounds/levelTwo.json#castle": {
+        "public/assets/backgrounds/jsonFiles/levelTwo.json#castle": {
             "scaleInDock": 1
         }
     },

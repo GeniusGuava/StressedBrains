@@ -55,13 +55,9 @@ export default class BattleScene extends Phaser.Scene {
       this.wins = 0
       this.currentLevel = this.game.level
     }
-    this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
+    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
-    });
-    this.load.spritesheet('battle', 'assets/backgrounds/tiles.png', {
-      frameHeight: 32,
-      frameWidth: 32,
     });
     this.textures.remove('enemy')
     this.anims.remove('enemyAttack')
@@ -85,7 +81,7 @@ export default class BattleScene extends Phaser.Scene {
         frameHeight: 32,
       }
     );
-    this.load.spritesheet('warning', 'assets/spriteSheets/warning.png', {
+    this.load.spritesheet('warning', 'assets/sprites/warning.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -101,11 +97,11 @@ export default class BattleScene extends Phaser.Scene {
     );
     // Preload Sounds
     // << LOAD SOUNDS HERE >>
-    this.load.audio('enemy', 'assets/audio/enemy.wav');
-    this.load.audio('attack', 'assets/audio/attack.wav');
-    this.load.audio('lose', 'assets/audio/loseBattle.wav');
-    this.load.audio('win', 'assets/audio/winBattle.wav');
-    this.load.audio('collide', 'assets/audio/jump.wav');
+    this.load.audio('enemy', 'assets/audio/battleSounds/enemy.wav');
+    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
+    this.load.audio('lose', 'assets/audio/battleSounds/loseBattle.wav');
+    this.load.audio('win', 'assets/audio/battleSounds/winBattle.wav');
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
     this.load.audio('battleBackground', music[this.game.level])
   }
 

@@ -57,11 +57,11 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('tiles', 'assets/backgrounds/Castle2.png');
+    this.load.image('tiles', 'assets/backgrounds/spriteSheets/Castle2.png');
     this.cache.tilemap.remove('map');
     this.load.tilemapTiledJSON('map', tileMaps[this.level]);
-    this.load.audio('collide', 'assets/audio/jump.wav');
-    this.load.audio('locked', 'assets/audio/locked.wav');
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
+    this.load.audio('locked', 'assets/audio/worldSounds/locked.wav');
     this.load.audio('background', music[this.level] )
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
