@@ -37,6 +37,7 @@ export default class CreditScene extends Phaser.Scene {
   }
 
   create() {
+    this.cameras.main.backgroundColor.setTo('#000000');
     mcrate = this.physics.add.sprite(200, 200, "Ariadne");
     mcrate.body
       .setVelocity(100, 200)
@@ -55,12 +56,12 @@ export default class CreditScene extends Phaser.Scene {
       .setBounce(1, 1)
       .setCollideWorldBounds(true);
 
-    // this.add.image(400, 300, "background");
     this.creditsText = this.add.text(0, 0, "StressedBrains", {
-      font: "Brush Script MT, cursive",
-      fontSize: "32px",
+      fontFamily: "Brush Script MT, cursive",
+      fontSize: "50px",
       fill: "#fff",
-    });
+    })
+
     this.madeByText = this.add.text(
       0,
       0,
@@ -86,7 +87,7 @@ export default class CreditScene extends Phaser.Scene {
       y: -100,
       ease: "Power1",
       duration: 8000,
-      delay: 1000,
+      delay: 2000,
       onComplete: function () {
         this.destroy;
       },
