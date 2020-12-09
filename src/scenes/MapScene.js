@@ -260,11 +260,9 @@ export default class MapScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
+    // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(665, 50, helpContent[this.level], {
-        wordWrap: { width: 250 },
-        fontSize: '12px',
-      })
+      .text(665, 50, helpContent[this.level], { wordWrap: { width: 250 } })
       .setVisible(false);
 
     createTextBox(this, 660, 300, {
@@ -287,6 +285,7 @@ export default class MapScene extends Phaser.Scene {
 
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
+      this.game.level++;
       this.level++;
       this.scene.restart();
       this.keyCount = 0;
