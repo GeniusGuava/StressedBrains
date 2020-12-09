@@ -15,6 +15,7 @@ But this hasn't happened yet!
 import TitleScene from './scenes/TitleScene';
 import MainScene from './scenes/MainScene';
 import MapScene from './scenes/MapScene';
+import CreditScene from './scenes/CreditScene';
 import config from './config/config';
 import BattleScene from './scenes/BattleScene';
 import 'phaser';
@@ -34,10 +35,12 @@ class Game extends Phaser.Game {
     this.scene.add('BattleScene', BattleScene)
     this.scene.add('MapScene', MapScene)
     this.scene.add('MainScene', MainScene);
+    this.scene.add('CreditScene', CreditScene)
 
     // Start the game with the mainscene
     // << START GAME WITH MAIN SCENE HERE >>
-    this.scene.start('TitleScene');
+    // this.scene.start('TitleScene');
+    this.scene.start('CreditScene');
   }
 }
 // Create new instance of game
