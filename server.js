@@ -3,9 +3,24 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const routes = require('./routes/main');
 const secureRoutes = require('./routes/secure');
+
+const uri = process.env.MONGO_CONNECTION_URL;
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.on('error', (error) => {
+  console.log(error);
+  process.exit(1);
+});
+mongoose.connection.on('connected', function () {
+  console.log('connected to mongo');
+});
 
 const app = express();
 
