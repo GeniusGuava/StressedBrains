@@ -29,6 +29,7 @@ class UIScene extends Phaser.Scene {
     this.graphics.fillStyle(0x031f4c, 1);
     this.graphics.strokeRect(2, 150, 90, 100);
     this.graphics.fillRect(2, 150, 90, 100);
+    this.cache.tilemap.remove('map');
     this.graphics.strokeRect(95, 150, 90, 100);
     this.graphics.fillRect(95, 150, 90, 100);
     this.graphics.strokeRect(188, 150, 130, 100);
@@ -39,19 +40,20 @@ class UIScene extends Phaser.Scene {
 export default class BattleScene extends Phaser.Scene {
   constructor() {
     super('BattleScene');
-    this.onMeetEnemy = this.onMeetEnemy.bind(this);
-    this.createGroups = this.createGroups.bind(this);
-    this.createWeapon = this.createWeapon.bind(this);
-    this.playerAttack = this.playerAttack.bind(this);
-    this.createEnemy = this.createEnemy.bind(this);
     this.wins = 0;
     this.isAttacked = false;
     this.collideDelay = 500;
+    this.awake = true;
+    this.currentLevel = 0
   }
 
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
+    if (this.currentLevel!=this.game.level){
+      this.wins = 0
+      this.currentLevel = this.game.level
+    }
     this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -60,6 +62,8 @@ export default class BattleScene extends Phaser.Scene {
       frameHeight: 32,
       frameWidth: 32,
     });
+    this.textures.remove('enemy')
+    this.anims.remove('enemyAttack')
     this.load.spritesheet('enemy', enemySprite[this.game.level], {
       frameWidth: enemySize[this.game.level].w,
       frameHeight: enemySize[this.game.level].h,
@@ -340,6 +344,7 @@ export default class BattleScene extends Phaser.Scene {
   endBattle() {
     // this.weapons.length = 0;
     // this.enemies.length = 0;
+    this.awake = false
     this.input.keyboard.enabled = false;
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
@@ -349,10 +354,14 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   wake() {
-    this.input.keyboard.enabled = true;
-    this.scene.restart();
-    this.game.playerAlive = true;
-    this.scene.run('UIScene');
+    if (!this.awake){
+      this.awake = true
+      console.log('I am waking up!')
+      this.input.keyboard.enabled = true;
+      this.game.playerAlive = true;
+      this.scene.run('UIScene');
+      this.scene.restart();
+    }
   }
 
   createWeapon(x, y) {
