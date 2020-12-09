@@ -51,3 +51,11 @@ export const playerStartPosition = [
   { x: 15, y: 6 },
   { x: 2, y: 17 }
 ];
+
+export const music = [
+  'assets/audio/music/level1.mp3',
+  'assets/audio/music/level2.mp3',
+  'assets/audio/music/level3.mp3',
+  'assets/audio/music/level4.mp3',
+  'assets/audio/music/level5.mp3',
+]

@@ -73,3 +73,11 @@ export const getWeapons = (level, wins) => {
 export const getEnemies = (level, wins) => {
   return battles[level].maps[wins].enemies
 }
+
+export const music = [
+  'assets/audio/music/battle1.mp3',
+  'assets/audio/music/battle2.mp3',
+  'assets/audio/music/battle3.mp3',
+  'assets/audio/music/battle4.mp3',
+  'assets/audio/music/battle5.mp3',
+]
