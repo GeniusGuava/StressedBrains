@@ -2,16 +2,74 @@ import "phaser";
 import Phaser from "phaser";
 import config from "../config/config";
 
+let mcrate, mcrate1, mcrate2, mgraphic;
+
 export default class CreditScene extends Phaser.Scene {
+  constructor() {
+    super({
+      key: "CreditScene",
+      active: true,
+      physics: {
+        default: "arcade",
+        arcade: {
+          debug: false,
+          gravity: {
+            y: 100,
+          },
+        },
+      },
+    });
+  }
+  preload() {
+    this.load.image("background", "assets/backgrounds/blackCanvas.png");
+    this.load.spritesheet("Ariadne", "assets/spriteSheets/battleSprite.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("Enemy1", "assets/spriteSheets/george.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("Enemy2", "assets/spriteSheets/enemy/cyclops.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+  }
+
   create() {
-    this.creditsText = this.add.text(0, 0, "Credits", {
+    mcrate = this.physics.add.sprite(200, 200, "Ariadne");
+    mcrate.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate1 = this.physics.add.sprite(0, 180, "Enemy1");
+    mcrate1.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate2 = this.physics.add.sprite(160, 0, "Enemy2");
+    mcrate2.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    // this.add.image(400, 300, "background");
+    this.creditsText = this.add.text(0, 0, "StressedBrains", {
+      font: "Brush Script MT, cursive",
       fontSize: "32px",
       fill: "#fff",
     });
-    this.madeByText = this.add.text(0, 0, `Created By: \n Avery Schiff \n Ariel Wang \n Katelynn Burns \n Guoying Zhong`, {
-      fontSize: "26px",
-      fill: "#fff",
-    });
+    this.madeByText = this.add.text(
+      0,
+      0,
+      ` Created By:\n Avery Schiff\n Ariel Wang\n Katelynn Burns\n Guoying Zhong`,
+      {
+        fontSize: "28px",
+        fill: "#fff",
+      }
+    );
     this.zone = this.add.zone(
       config.width / 2,
       config.height / 2,
@@ -20,7 +78,6 @@ export default class CreditScene extends Phaser.Scene {
     );
 
     Phaser.Display.Align.In.Center(this.creditsText, this.zone);
-
     Phaser.Display.Align.In.Center(this.madeByText, this.zone);
 
     this.madeByText.setY(1000);
@@ -46,5 +103,10 @@ export default class CreditScene extends Phaser.Scene {
         this.scene.start("Title");
       }.bind(this),
     });
+  }
+
+  update() {
+    /* COLLIDE SPRITE WITH GRAPHIC */
+    this.physics.world.collide(mcrate, [mgraphic]);
   }
 }
