@@ -15,7 +15,6 @@ export default class MapScene extends Phaser.Scene {
     super('MapScene');
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
-    this.level = 0;
   }
 
   onMeetEnemy(player, zone) {
@@ -39,11 +38,11 @@ export default class MapScene extends Phaser.Scene {
 
   preload() {
     this.cache.tilemap.remove('map');
-    this.load.tilemapTiledJSON('map', tileMaps[this.level]);
+    this.load.tilemapTiledJSON('map', tileMaps[this.game.level]);
 
     this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
     this.load.audio('locked', 'assets/audio/worldSounds/locked.wav');
-    this.load.audio('background', music[this.level])
+    this.load.audio('background', music[this.game.level])
 
     this.load.image('tiles', 'assets/backgrounds/spriteSheets/Castle2.png');
     this.load.image('padlock', 'assets/sprites/padlock.png');
@@ -86,14 +85,14 @@ export default class MapScene extends Phaser.Scene {
       classType: Key,
     });
 
-    keyLocations[this.level].map((coords) => {
+    keyLocations[this.game.level].map((coords) => {
       this.mapKeys.create(coords.x, coords.y, 'key');
     });
 
     this.player = new Player(
       this,
-      playerStartPosition[this.level].x,
-      playerStartPosition[this.level].y,
+      playerStartPosition[this.game.level].x,
+      playerStartPosition[this.game.level].y,
       'Ariadne'
     ).setScale(1);
 
@@ -103,8 +102,8 @@ export default class MapScene extends Phaser.Scene {
 
     this.padlock = new Padlock(
       this,
-      padlockLocation[this.level].x * TILE_SIZE,
-      padlockLocation[this.level].y * TILE_SIZE,
+      padlockLocation[this.game.level].x * TILE_SIZE,
+      padlockLocation[this.game.level].y * TILE_SIZE,
       'padlock'
     ).setScale(0.08);
 
@@ -179,8 +178,8 @@ export default class MapScene extends Phaser.Scene {
     });
 
     this.exit.create(
-      padlockLocation[this.level].x * TILE_SIZE,
-      padlockLocation[this.level].y * TILE_SIZE,
+      padlockLocation[this.game.level].x * TILE_SIZE,
+      padlockLocation[this.game.level].y * TILE_SIZE,
       32,
       32
     );
@@ -214,8 +213,8 @@ export default class MapScene extends Phaser.Scene {
       () => {
         if (!this.game.playerAlive) {
           this.player.setPosition(
-            playerStartPosition[this.level].x * TILE_SIZE + TILE_SIZE / 2,
-            playerStartPosition[this.level].y * TILE_SIZE + TILE_SIZE / 2
+            playerStartPosition[this.game.level].x * TILE_SIZE + TILE_SIZE / 2,
+            playerStartPosition[this.game.level].y * TILE_SIZE + TILE_SIZE / 2
           );
         }
         this.input.keyboard.enabled = true;
@@ -240,12 +239,12 @@ export default class MapScene extends Phaser.Scene {
       });
 
     this.helpText = this.add
-      .text(665, 50, helpContent[this.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
-    createTextBox(this, 660, 300, {
+    createTextBox(this, 660, 325, {
       wrapWidth: 205,
-    }).start(mapText[this.level], 50);
+    }).start(mapText[this.game.level], 50);
   }
 
   update(time, delta) {
@@ -264,9 +263,10 @@ export default class MapScene extends Phaser.Scene {
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
       this.game.level++;
-      this.level++;
+      localStorage.setItem('level', this.game.level)
       this.music.destroy();
       this.cache.audio.remove('background')
+
       this.scene.restart();
       this.keyCount = 0;
     } else {
