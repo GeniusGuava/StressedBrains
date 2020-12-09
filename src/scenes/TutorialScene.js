@@ -1,11 +1,9 @@
 import Player from '../entity/Player';
 import Enemy from '../entity/Enemy';
 import { GridPhysics } from '../physics/GridPhysics';
-import { Direction } from './FgScene';
-import Sprite from '../entity/Sprite';
 import {textToLevel}  from '../BattleInfo'
 import tutorial from '../Battles/tutorial'
-import { TILE_SIZE } from '../MapInfo';
+import { TILE_SIZE, Direction } from '../MapInfo';
 import { helpContent } from '../text/helpText';
 
 const PUNCTUATION = [",", "'", "!", "?", "."]
@@ -18,16 +16,12 @@ export default class TutorialScene extends Phaser.Scene {
 
   preload() {
 
-    this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
+    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
-    });
-    this.load.spritesheet('battle', 'assets/backgrounds/tiles.png', {
-      frameHeight: 32,
-      frameWidth: 32,
     });
 
-    this.load.spritesheet('sword', 'assets/backgrounds/sword.png', {
+    this.load.spritesheet('sword', 'assets/sprites/sword.png', {
       frameHeight: 32,
       frameWidth: 32,
     });
@@ -36,8 +30,8 @@ export default class TutorialScene extends Phaser.Scene {
       frameHeight: 32,
     });
 
-    this.load.audio('attack', 'assets/audio/attack.wav');
-    this.load.audio('collide', 'assets/audio/jump.wav');
+    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
   }
 
   create() {
@@ -170,7 +164,7 @@ export default class TutorialScene extends Phaser.Scene {
     this.weapons.setAlpha(0.75);
   }
   playerAttack(player, weapon, x, y) {
-    this.attacks++ 
+    this.attacks++
     weapon.setActive(false).setVisible(false);
     weapon.body.enable = false;
 
@@ -182,7 +176,7 @@ export default class TutorialScene extends Phaser.Scene {
       this.scene.sleep()
       this.scene.launch('MapScene')
     }
-  }  
+  }
   getRowAndInd(playerPos, text){
     const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
     const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;

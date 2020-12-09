@@ -1,5 +1,4 @@
 import 'phaser';
-import Phaser from 'phaser';
 
 let buttonEnter;
 
@@ -9,7 +8,7 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background_image', 'assets/backgrounds/startScene_background.png')
+        this.load.image('background_image', 'assets/backgrounds/spriteSheets/startScene_background.png')
         buttonEnter = this.input.keyboard.addKey('enter')
     }
 

@@ -17,8 +17,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.game.level==0) this.scene.launch('TutorialScene')
     else this.scene.launch('MapScene')
     localStorage.setItem('level', this.game.level)
-    // this.scene.launch('BattleScene')
-  }  
+  }
   createAnimations() {
     this.anims.create({
       key: 'left',

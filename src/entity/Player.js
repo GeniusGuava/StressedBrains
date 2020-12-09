@@ -4,17 +4,9 @@ import { TILE_SIZE } from '../scenes/MapScene';
 const Vector2 = Phaser.Math.Vector2;
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  playerOffsetX() {
-    return TILE_SIZE / 2;
-  }
-
-  playerOffsetY() {
-    return TILE_SIZE / 2;
-  }
-
   constructor(scene, x, y, spriteKey) {
     super(scene, x, y, spriteKey);
-    // << INITIALIZE PLAYER ATTRIBUTES HERE >>
+
     this.scene = scene;
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
@@ -29,22 +21,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.lastMoved = 0;
   }
 
-  getPosition() {
-    return this.getCenter();
-  }
-
-  resetPosition(position) {
-    this.setPosition(position.x, position.y);
-  }
-
-  getTilePos() {
-    const x = (this.getCenter().x - this.playerOffsetX()) / TILE_SIZE;
-    const y = (this.getCenter().y - this.playerOffsetY()) / TILE_SIZE;
-    return new Vector2(Math.floor(x), Math.floor(y));
-  }
-
-  // Check which controller button is being pushed and execute movement & animation
-  update(time, allKeys) {
+   // Check which controller button is being pushed and execute movement & animation
+   update(time, allKeys) {
     if (time > this.lastMoved) {
       let keyButton;
       Object.keys(allKeys).map((key) => {
@@ -61,10 +39,34 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
           } else if (key === 'j') {
             this.play('down', true);
           } else {
-            this.play('idle', true); //this part doesn't work yet.
+            this.play('idle', true);
           }
         }
       });
     }
   }
+
+  getPosition() {
+    return this.getCenter();
+  }
+
+  resetPosition(position) {
+    this.setPosition(position.x, position.y);
+  }
+
+  getTilePos() {
+    const x = (this.getCenter().x - this.playerOffsetX()) / TILE_SIZE;
+    const y = (this.getCenter().y - this.playerOffsetY()) / TILE_SIZE;
+    return new Vector2(Math.floor(x), Math.floor(y));
+  }
+
+  playerOffsetX() {
+    return TILE_SIZE / 2;
+  }
+
+  playerOffsetY() {
+    return TILE_SIZE / 2;
+  }
+
+
 }
