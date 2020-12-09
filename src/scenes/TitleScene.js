@@ -1,5 +1,4 @@
 import 'phaser';
-import Phaser from 'phaser';
 
 let buttonEnter;
 

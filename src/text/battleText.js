@@ -6,4 +6,3 @@ export const battleText = [
   `Level 5`,
 ];
 
-//Ariadne: \n Monsters!!! I need to find some weapons. Is there anything I can use? \n I see three swords, I should collect them and avoid the red boxes. They look dangerous.

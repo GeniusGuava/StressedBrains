@@ -59,3 +59,11 @@ export const music = [
   'assets/audio/music/level4.mp3',
   'assets/audio/music/level5.mp3',
 ]
+
+export const Direction = {
+  NONE: 'none',
+  LEFT: 'left',
+  UP: 'up',
+  RIGHT: 'right',
+  DOWN: 'down',
+};
