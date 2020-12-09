@@ -18,7 +18,7 @@ import { TILE_SIZE } from '../MapInfo';
 import { battleText } from '../text/battleText';
 import { helpContent } from '../text/helpText';
 
-const PUNCTUATION = [",", "'", "!", "?"]
+const PUNCTUATION = [',', "'", '!', '?'];
 
 class UIScene extends Phaser.Scene {
   constructor() {
@@ -45,15 +45,15 @@ export default class BattleScene extends Phaser.Scene {
     this.isAttacked = false;
     this.collideDelay = 500;
     this.awake = true;
-    this.currentLevel = 0
+    this.currentLevel = 0;
   }
 
   preload() {
     // Preload Sprites
     // << LOAD SPRITES HERE >>
-    if (this.currentLevel!=this.game.level){
-      this.wins = 0
-      this.currentLevel = this.game.level
+    if (this.currentLevel != this.game.level) {
+      this.wins = 0;
+      this.currentLevel = this.game.level;
     }
     this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
       frameWidth: 32,
@@ -63,8 +63,8 @@ export default class BattleScene extends Phaser.Scene {
       frameHeight: 32,
       frameWidth: 32,
     });
-    this.textures.remove('enemy')
-    this.anims.remove('enemyAttack')
+    this.textures.remove('enemy');
+    this.anims.remove('enemyAttack');
     this.load.spritesheet('enemy', enemySprite[this.game.level], {
       frameWidth: enemySize[this.game.level].w,
       frameHeight: enemySize[this.game.level].h,
@@ -191,28 +191,37 @@ export default class BattleScene extends Phaser.Scene {
       w: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
         function: (time, shift) => {
-          if ((!shift && this.game.level >= 1 && this.game.level < 4) || (this.game.level>=4 && shift))
+          if (
+            (!shift && this.game.level >= 1 && this.game.level < 4) ||
+            (this.game.level >= 4 && shift)
+          )
             this.jumpToNextWord(this.player, this.text, this.collideSound);
-          else if (this.game.level >=4 && !shift)
+          else if (this.game.level >= 4 && !shift)
             this.jumpToNextword(this.player, this.text, this.collideSound);
         },
       },
       b: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B),
         function: (time, shift) => {
-          if ((!shift && this.game.level >= 2 && this.game.level < 4) || (this.game.level>=4 && shift))
+          if (
+            (!shift && this.game.level >= 2 && this.game.level < 4) ||
+            (this.game.level >= 4 && shift)
+          )
             this.jumpToPreviousWord(this.player, this.text, this.collideSound);
-          else if (this.game.level>=4 && !shift)
-            this.jumpToPreviousword(this.player,this.text, this.collideSound);
+          else if (this.game.level >= 4 && !shift)
+            this.jumpToPreviousword(this.player, this.text, this.collideSound);
         },
       },
       e: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
         function: (time, shift) => {
-          if ((!shift && this.game.level >= 3 && this.game.level < 4) || (this.game.level>=4 && shift))
+          if (
+            (!shift && this.game.level >= 3 && this.game.level < 4) ||
+            (this.game.level >= 4 && shift)
+          )
             this.jumpToEndOfWord(this.player, this.text, this.collideSound);
-          else if (this.game.level>=4 && !shift)
-            this.jumpToEndOfword(this.player, this.text, this.collideSound)
+          else if (this.game.level >= 4 && !shift)
+            this.jumpToEndOfword(this.player, this.text, this.collideSound);
         },
       },
     };
@@ -266,7 +275,6 @@ export default class BattleScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
-    // this.helpContent = `Testing`;
     this.helpText = this.add
       .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
       .setVisible(false);
@@ -338,8 +346,8 @@ export default class BattleScene extends Phaser.Scene {
       this.setValue(this.playerBar, 100);
       this.setValue(this.enemyBar, 100);
       this.createGroups();
-      this.player.hp = 3
-      this.enemies.hp = 3
+      this.player.hp = 3;
+      this.enemies.hp = 3;
       this.sys.events.on('wake', this.wake, this);
     }
   }
@@ -347,11 +355,12 @@ export default class BattleScene extends Phaser.Scene {
   endBattle() {
     // this.weapons.length = 0;
     // this.enemies.length = 0;
-    this.awake = false
+    this.awake = false;
     this.input.keyboard.enabled = false;
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
+
     this.music.pause()
 
     this.scene.sleep('UIScene')
@@ -361,6 +370,7 @@ export default class BattleScene extends Phaser.Scene {
   wake() {
     if (!this.awake){
       this.awake = true
+
       this.input.keyboard.enabled = true;
       this.game.playerAlive = true;
       this.cache.audio.remove('battleBackground')
@@ -448,17 +458,17 @@ export default class BattleScene extends Phaser.Scene {
     });
   }
 
-  getRowAndInd(playerPos, text){
+  getRowAndInd(playerPos, text) {
     const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
     const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
     const textRows = text.split('\n');
     const currentRow = Array.from(textRows[yGrid]).slice(2);
-    return {currentInd: xGrid, currentRow}
+    return { currentInd: xGrid, currentRow };
   }
 
   jumpToNextWord(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
     let currentChar = currentRow[currentInd];
     while (currentChar != ' ' && currentInd < currentRow.length - 1) {
       currentInd++;
@@ -470,11 +480,15 @@ export default class BattleScene extends Phaser.Scene {
     } else collideSound.play();
   }
 
-  jumpToNextword(player, text, collideSound){
+  jumpToNextword(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
     let currentChar = currentRow[currentInd];
-    while (currentChar != ' ' && currentInd < currentRow.length - 1 && !PUNCTUATION.includes(currentRow[currentInd+1])) {
+    while (
+      currentChar != ' ' &&
+      currentInd < currentRow.length - 1 &&
+      !PUNCTUATION.includes(currentRow[currentInd + 1])
+    ) {
       currentInd++;
       currentChar = currentRow[currentInd];
     }
@@ -486,7 +500,7 @@ export default class BattleScene extends Phaser.Scene {
 
   jumpToPreviousWord(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
 
     if (currentInd == 0) collideSound.play();
     else {
@@ -502,15 +516,17 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  jumpToPreviousword(player, text, collideSound){
+  jumpToPreviousword(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
 
     if (currentInd == 0) collideSound.play();
     else {
       currentInd -= 2;
       while (
-        (currentInd >= 0 && currentRow[currentInd] != ' ' && !PUNCTUATION.includes(currentRow[currentInd+1])) ||
+        (currentInd >= 0 &&
+          currentRow[currentInd] != ' ' &&
+          !PUNCTUATION.includes(currentRow[currentInd + 1])) ||
         currentRow[currentInd + 1] == ' '
       ) {
         currentInd--;
@@ -522,7 +538,7 @@ export default class BattleScene extends Phaser.Scene {
 
   jumpToEndOfWord(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
 
     currentInd += 2;
     while (currentInd < currentRow.length && currentRow[currentInd] != ' ')
@@ -538,19 +554,23 @@ export default class BattleScene extends Phaser.Scene {
 
   jumpToEndOfword(player, text, collideSound) {
     const playerPos = player.getPosition();
-    let {currentInd, currentRow} = this.getRowAndInd(playerPos, text)
+    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
 
     currentInd += 2;
-    while (currentInd < currentRow.length && currentRow[currentInd] != ' ' && !PUNCTUATION.includes(currentRow[currentInd]) && !PUNCTUATION.includes(currentRow[currentInd-1]))
+    while (
+      currentInd < currentRow.length &&
+      currentRow[currentInd] != ' ' &&
+      !PUNCTUATION.includes(currentRow[currentInd]) &&
+      !PUNCTUATION.includes(currentRow[currentInd - 1])
+    )
       currentInd++;
     if (currentInd > currentRow.length) collideSound.play();
     else {
-      const indToJump = currentInd - 1
+      const indToJump = currentInd - 1;
       if (currentRow[indToJump] != ' ') {
         player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
       } else collideSound.play();
     }
-
   }
 }
 

@@ -13,6 +13,5 @@ export default {
   render: {
     pixelArt: true,
   },
-  backgroundColor: '#5f2a55'
+  backgroundColor: '#5f2a55',
 };
-
