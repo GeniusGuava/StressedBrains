@@ -49,7 +49,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 314.4624613365827,
-                "y": 325.24135345393194
+                "y": 324.30405848720596
             }
         },
         "public/assets/backgrounds/finalLevel.json#castle": {
@@ -106,6 +106,7 @@
     "project": "levelDesign.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "public/assets/backgrounds/levelTwo.json",
         "/Users/Ariel/GHP2009/senior_phase/Capstone/mapLevel1.json",
         "level1.json",
         "/Users/Ariel/GHP2009/senior_phase/Capstone/Level_Design.json"
