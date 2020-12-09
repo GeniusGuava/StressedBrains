@@ -12,6 +12,7 @@ import {
   getEnemies,
   enemySize,
   getText,
+  music
 } from '../BattleInfo';
 import { TILE_SIZE } from '../MapInfo';
 import { battleText } from '../text/battleText';
@@ -105,11 +106,15 @@ export default class BattleScene extends Phaser.Scene {
     this.load.audio('lose', 'assets/audio/loseBattle.wav');
     this.load.audio('win', 'assets/audio/winBattle.wav');
     this.load.audio('collide', 'assets/audio/jump.wav');
+    this.load.audio('battleBackground', music[this.game.level])
   }
 
   create() {
     // Create game entities
     // << CREATE GAME ENTITIES HERE >>
+    this.music = this.sound.add('battleBackground', {volume: .15})
+    console.log('I am music')
+    this.music.play()
     this.physics.world.bounds.y = 64;
     const map = this.make.tilemap({
       data: getLevel(this.game.level),
@@ -128,11 +133,11 @@ export default class BattleScene extends Phaser.Scene {
     this.playerSprite = new Sprite(this, 850, 500, 'AriadneAttack');
     this.player.setFrame(4);
     this.player.hp = 3;
-    this.enemySound = this.sound.add('enemy', { volume: 0.25 });
-    this.attackSound = this.sound.add('attack', { volume: 0.25 });
-    this.loseSound = this.sound.add('lose', { volume: 0.25 });
-    this.winSound = this.sound.add('win', { volume: 0.25 });
-    this.collideSound = this.sound.add('collide', { volume: 0.25 });
+    this.enemySound = this.sound.add('enemy', { volume: 0.20 });
+    this.attackSound = this.sound.add('attack', { volume: 0.10 });
+    this.loseSound = this.sound.add('lose', { volume: 0.10 });
+    this.winSound = this.sound.add('win', { volume: 0.10 });
+    this.collideSound = this.sound.add('collide', { volume: 0.10 });
     this.createAnimations();
 
     this.player.startPosition = this.player.getPosition();
@@ -197,7 +202,7 @@ export default class BattleScene extends Phaser.Scene {
         function: (time, shift) => {
           if ((!shift && this.game.level >= 2 && this.game.level < 4) || (this.game.level>=4 && shift))
             this.jumpToPreviousWord(this.player, this.text, this.collideSound);
-          else if (this.game.level>=4 && !shift) 
+          else if (this.game.level>=4 && !shift)
             this.jumpToPreviousword(this.player,this.text, this.collideSound);
         },
       },
@@ -347,6 +352,8 @@ export default class BattleScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
+    this.music.pause()
+
     this.scene.sleep('UIScene')
     this.scene.switch('MapScene')
   }
@@ -354,9 +361,9 @@ export default class BattleScene extends Phaser.Scene {
   wake() {
     if (!this.awake){
       this.awake = true
-      console.log('I am waking up!')
       this.input.keyboard.enabled = true;
       this.game.playerAlive = true;
+      this.cache.audio.remove('battleBackground')
       this.scene.run('UIScene');
       this.scene.restart();
     }

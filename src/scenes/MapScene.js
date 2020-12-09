@@ -11,6 +11,7 @@ import {
   padlockLocation,
   keyLocations,
   playerStartPosition,
+  music
 } from '../MapInfo';
 import MainScene from './MainScene';
 import TitleScene from './TitleScene';
@@ -46,7 +47,7 @@ export default class MapScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-
+    this.music.pause()
     this.time.addEvent({
       delay: 500,
       callback: () => this.scene.switch('BattleScene'),
@@ -60,6 +61,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', tileMaps[this.game.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
     this.load.audio('locked', 'assets/audio/locked.wav');
+    this.load.audio('background', music[this.level] )
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -82,6 +84,8 @@ export default class MapScene extends Phaser.Scene {
   }
   create() {
     /* Background map */
+    this.music = this.sound.add('background', {volume: .15})
+    this.music.play()
     const map = this.make.tilemap({
       key: 'map',
     });
@@ -129,8 +133,8 @@ export default class MapScene extends Phaser.Scene {
     ).setScale(0.08);
     this.keyboard = this.input.keyboard;
 
-    this.collideSound = this.sound.add('collide', { volume: 0.25 });
-    this.lockedSound = this.sound.add('locked', { volume: 0.25 });
+    this.collideSound = this.sound.add('collide', { volume: 0.10 });
+    this.lockedSound = this.sound.add('locked', { volume: 0.10 });
 
     this.physics.add.overlap(
       this.player,
@@ -241,6 +245,7 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
+        this.music.resume()
       },
       this
     );
@@ -286,6 +291,9 @@ export default class MapScene extends Phaser.Scene {
     if (this.keyCount >= 3) {
       this.game.level++;
       localStorage.setItem('level', this.game.level)
+      this.music.destroy();
+      this.cache.audio.remove('background')
+
       this.scene.restart();
       this.keyCount = 0;
     } else {
