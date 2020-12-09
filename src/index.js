@@ -18,6 +18,7 @@ import MapScene from './scenes/MapScene';
 import CreditScene from './scenes/CreditScene';
 import config from './config/config';
 import BattleScene from './scenes/BattleScene';
+import TutorialScene from './scenes/TutorialScene'
 import 'phaser';
 import Phaser from 'phaser';
 // Bring in all the scenes
@@ -35,7 +36,11 @@ class Game extends Phaser.Game {
     this.scene.add('BattleScene', BattleScene)
     this.scene.add('MapScene', MapScene)
     this.scene.add('MainScene', MainScene);
+<<<<<<< HEAD
     this.scene.add('CreditScene', CreditScene)
+=======
+    this.scene.add('TutorialScene', TutorialScene)
+>>>>>>> 7d60e6d5f4839038c58fc808c7fa8b38a527b77b
 
     // Start the game with the mainscene
     // << START GAME WITH MAIN SCENE HERE >>
