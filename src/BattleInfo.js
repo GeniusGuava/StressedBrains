@@ -2,9 +2,10 @@ import battle1 from './Battles/battle1'
 import battle2 from './Battles/battle2'
 import battle3 from './Battles/battle3'
 import battle4 from './Battles/battle4'
+import battle5 from './Battles/battle5'
 import converter from './Battles/textNumberConverter'
 
-const battles = [battle1, battle2, battle3, battle4]
+const battles = [battle1, battle2, battle3, battle4, battle5]
 
 let bufferRows = [[],[]]
 for (let i=0;i<2;i++){
@@ -46,6 +47,7 @@ export const weaponSprite = [
   'assets/backgrounds/sword.png',
   'assets/backgrounds/sword.png',
   'assets/backgrounds/sword.png',
+  'assets/backgrounds/sword.png',
 ]
 
 export const getLevel = (level) => {
@@ -57,6 +59,7 @@ export const getText = (level) => {
 }
 
 export const playerStartPosition = [
+  {x: 0, y:2},
   {x: 0, y:2},
   {x: 0, y:2},
   {x: 0, y:2},
