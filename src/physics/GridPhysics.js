@@ -1,5 +1,4 @@
-import {Direction} from '../scenes/FgScene'
-import {Player} from '../entity/Player'
+import {Direction} from '../MapInfo'
 import {TILE_SIZE} from '../scenes/MapScene'
 import 'phaser';
 
@@ -7,22 +6,28 @@ const Vector2 = Phaser.Math.Vector2
 
 export class GridPhysics {
   constructor(player, map){
+    this.player = player
+    this.map = map
 
     this.movementDirection = Direction.NONE;
     this.speedPixelsPerSecond = TILE_SIZE * 8;
     this.tileSizePixelsWalked = 0;
     this.decimalPlacesLeft = 0
-    this.player = player
     this.movementDirectVectors = {
       [Direction.UP]: new Vector2(0,-1),
       [Direction.DOWN]: new Vector2(0,1),
       [Direction.LEFT]: new Vector2(-1,0),
       [Direction.RIGHT]: new Vector2(1,0)
     }
-    this.map = map
 
     this.beepDelay = 500;
     this.lastBeeped = 0;
+  }
+
+  update(delta){
+    if (this.isMoving()){
+      this.updatePlayerPosition(delta)
+    }
   }
 
   tilePosInDirection(direction){
@@ -79,13 +84,6 @@ export class GridPhysics {
     this.tileSizePixelsWalked %= TILE_SIZE
   }
 
-  update(delta){
-
-    if (this.isMoving()){
-      this.updatePlayerPosition(delta)
-    }
-  }
-
   getSpeedPerDelta(delta){
     const deltaInSeconds = delta/1000;
     return this.speedPixelsPerSecond * deltaInSeconds
@@ -128,8 +126,8 @@ export class GridPhysics {
     }
   }
 
-
   isMoving() {
     return this.movementDirection != Direction.NONE;
   }
+
 }

@@ -1,33 +1,14 @@
 import 'phaser';
-import Phaser from 'phaser';
 import Player from '../entity/Player';
 import { GridPhysics } from '../physics/GridPhysics';
 import Key from '../entity/Key';
 import Padlock from '../entity/Padlock';
 import { mapText } from '../text/mapText';
 import { helpContent } from '../text/helpText';
-import {
-  tileMaps,
-  padlockLocation,
-  keyLocations,
-  playerStartPosition,
-  music
-} from '../MapInfo';
-import MainScene from './MainScene';
-import TitleScene from './TitleScene';
+import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
+  music, Direction } from '../MapInfo';
 
 export const TILE_SIZE = 32;
-
-export const Direction = {
-  NONE: 'none',
-  LEFT: 'left',
-  UP: 'up',
-  RIGHT: 'right',
-  DOWN: 'down',
-};
-
-// this.scene.sleep('TitleScene');
-// this.scene.start('MainScene');
 
 export default class MapScene extends Phaser.Scene {
   constructor() {
@@ -56,36 +37,42 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('tiles', 'assets/backgrounds/Castle2.png');
     this.cache.tilemap.remove('map');
     this.load.tilemapTiledJSON('map', tileMaps[this.game.level]);
-    this.load.audio('collide', 'assets/audio/jump.wav');
-    this.load.audio('locked', 'assets/audio/locked.wav');
-    this.load.audio('background', music[this.level] )
+
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
+    this.load.audio('locked', 'assets/audio/worldSounds/locked.wav');
+    this.load.audio('background', music[this.game.level])
+
+    this.load.image('tiles', 'assets/backgrounds/spriteSheets/Castle2.png');
+    this.load.image('padlock', 'assets/sprites/padlock.png');
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    );
+
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.image('padlock', 'assets/sprites/padlock.png');
     this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
+
     this.load.scenePlugin({
       key: 'rexuiplugin',
       url:
         'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
       sceneKey: 'rexUI',
     });
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    );
   }
   create() {
-    /* Background map */
+    this.collideSound = this.sound.add('collide', { volume: 0.10 });
+    this.lockedSound = this.sound.add('locked', { volume: 0.10 });
     this.music = this.sound.add('background', {volume: .15})
     this.music.play()
+
     const map = this.make.tilemap({
       key: 'map',
     });
@@ -94,20 +81,6 @@ export default class MapScene extends Phaser.Scene {
     const pathLayer = map.createStaticLayer('path', tileset);
     const gateLayer = map.createStaticLayer('gate', tileset);
 
-    // << LOAD BACKGROUND AND FOREGROUND SCENES IN PARALLEL HERE >>
-    // this.scene.launch('BattleScene');
-    // this.scene.launch('FgScene');
-
-    /*
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
-    grassLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-    });
-    */
-
-    /*Character*/
     this.mapKeys = this.physics.add.group({
       classType: Key,
     });
@@ -115,6 +88,7 @@ export default class MapScene extends Phaser.Scene {
     keyLocations[this.game.level].map((coords) => {
       this.mapKeys.create(coords.x, coords.y, 'key');
     });
+
     this.player = new Player(
       this,
       playerStartPosition[this.game.level].x,
@@ -123,6 +97,7 @@ export default class MapScene extends Phaser.Scene {
     ).setScale(1);
 
     this.gridPhysics = new GridPhysics(this.player, map);
+
     this.createAnimations();
 
     this.padlock = new Padlock(
@@ -131,18 +106,8 @@ export default class MapScene extends Phaser.Scene {
       padlockLocation[this.game.level].y * TILE_SIZE,
       'padlock'
     ).setScale(0.08);
+
     this.keyboard = this.input.keyboard;
-
-    this.collideSound = this.sound.add('collide', { volume: 0.10 });
-    this.lockedSound = this.sound.add('locked', { volume: 0.10 });
-
-    this.physics.add.overlap(
-      this.player,
-      this.mapKeys,
-      this.getKey,
-      null,
-      this
-    );
 
     this.allKeys = {
       h: {
@@ -221,6 +186,14 @@ export default class MapScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       this.player,
+      this.mapKeys,
+      this.getKey,
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
       this.spawns,
       this.onMeetEnemy,
       false,
@@ -264,12 +237,12 @@ export default class MapScene extends Phaser.Scene {
           helpVisible = !helpVisible;
         }
       });
-    // this.helpContent = `Testing`;
+
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
-    createTextBox(this, 660, 300, {
+    createTextBox(this, 660, 325, {
       wrapWidth: 205,
     }).start(mapText[this.game.level], 50);
   }
@@ -362,14 +335,13 @@ export default class MapScene extends Phaser.Scene {
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
-const COLOR_DARK = 0x260e04;
 
 const GetValue = Phaser.Utils.Objects.GetValue;
-var createTextBox = function (scene, x, y, config) {
-  var wrapWidth = GetValue(config, 'wrapWidth', 0);
-  var fixedWidth = GetValue(config, 'fixedWidth', 0);
-  var fixedHeight = GetValue(config, 'fixedHeight', 0);
-  var textBox = scene.rexUI.add
+let createTextBox = function (scene, x, y, config) {
+  let wrapWidth = GetValue(config, 'wrapWidth', 0);
+  let fixedWidth = GetValue(config, 'fixedWidth', 0);
+  let fixedHeight = GetValue(config, 'fixedHeight', 0);
+  let textBox = scene.rexUI.add
     .textBox({
       x: x,
       y: y,
@@ -403,7 +375,7 @@ var createTextBox = function (scene, x, y, config) {
     .on(
       'pointerdown',
       function () {
-        var icon = this.getElement('action').setVisible(false);
+        let icon = this.getElement('action').setVisible(false);
         this.resetChildVisibleState(icon);
         if (this.isTyping) {
           this.stop(true);
@@ -420,39 +392,24 @@ var createTextBox = function (scene, x, y, config) {
           return;
         }
 
-        var icon = this.getElement('action').setVisible(true);
+        let icon = this.getElement('action').setVisible(true);
         this.resetChildVisibleState(icon);
         icon.y -= 30;
-        var tween = scene.tweens.add({
+        let tween = scene.tweens.add({
           targets: icon,
-          y: '+=30', // '+=100'
-          ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+          y: '+=30',
+          ease: 'Bounce',
           duration: 500,
-          repeat: 0, // -1: infinity
+          repeat: 0,
           yoyo: false,
         });
       },
       textBox
-    );
-  //.on('type', function () {
-  //})
-
+    )
   return textBox;
 };
 
-var getBuiltInText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
-  return scene.add
-    .text(0, 0, '', {
-      fontSize: '12px',
-      wordWrap: {
-        width: wrapWidth,
-      },
-      maxLines: 3,
-    })
-    .setFixedSize(fixedWidth, fixedHeight);
-};
-
-var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+let getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
   return scene.rexUI.add.BBCodeText(0, 0, '', {
     fixedWidth: fixedWidth,
     fixedHeight: fixedHeight,

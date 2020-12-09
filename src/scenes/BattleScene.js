@@ -2,18 +2,9 @@ import Player from '../entity/Player';
 import Enemy from '../entity/Enemy';
 import Sprite from '../entity/Sprite';
 import { GridPhysics } from '../physics/GridPhysics';
-import { Direction } from './FgScene';
-import {
-  enemySprite,
-  weaponSprite,
-  getLevel,
-  playerStartPosition,
-  getWeapons,
-  getEnemies,
-  enemySize,
-  getText,
-  music
-} from '../BattleInfo';
+import { Direction } from '../MapInfo';
+import { enemySprite, weaponSprite, getLevel, playerStartPosition, getWeapons,
+  getEnemies, enemySize, getText, music } from '../BattleInfo';
 import { TILE_SIZE } from '../MapInfo';
 import { battleText } from '../text/battleText';
 import { helpContent } from '../text/helpText';
@@ -49,22 +40,18 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload() {
-    // Preload Sprites
-    // << LOAD SPRITES HERE >>
-    if (this.currentLevel != this.game.level) {
-      this.wins = 0;
-      this.currentLevel = this.game.level;
+    if (this.currentLevel!=this.game.level){
+      this.wins = 0
+      this.currentLevel = this.game.level
     }
-    this.load.spritesheet('letters', 'assets/spriteSheets/letters2.png', {
+
+    this.textures.remove('enemy')
+    this.anims.remove('enemyAttack')
+
+    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.spritesheet('battle', 'assets/backgrounds/tiles.png', {
-      frameHeight: 32,
-      frameWidth: 32,
-    });
-    this.textures.remove('enemy');
-    this.anims.remove('enemyAttack');
     this.load.spritesheet('enemy', enemySprite[this.game.level], {
       frameWidth: enemySize[this.game.level].w,
       frameHeight: enemySize[this.game.level].h,
@@ -85,36 +72,40 @@ export default class BattleScene extends Phaser.Scene {
         frameHeight: 32,
       }
     );
-    this.load.spritesheet('warning', 'assets/spriteSheets/warning.png', {
+    this.load.spritesheet('warning', 'assets/sprites/warning.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    );
+
     this.load.scenePlugin({
       key: 'rexuiplugin',
       url:
         'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
       sceneKey: 'rexUI',
     });
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    );
-    // Preload Sounds
-    // << LOAD SOUNDS HERE >>
-    this.load.audio('enemy', 'assets/audio/enemy.wav');
-    this.load.audio('attack', 'assets/audio/attack.wav');
-    this.load.audio('lose', 'assets/audio/loseBattle.wav');
-    this.load.audio('win', 'assets/audio/winBattle.wav');
-    this.load.audio('collide', 'assets/audio/jump.wav');
+
+    this.load.audio('enemy', 'assets/audio/battleSounds/enemy.wav');
+    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
+    this.load.audio('lose', 'assets/audio/battleSounds/loseBattle.wav');
+    this.load.audio('win', 'assets/audio/battleSounds/winBattle.wav');
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
     this.load.audio('battleBackground', music[this.game.level])
   }
 
   create() {
-    // Create game entities
-    // << CREATE GAME ENTITIES HERE >>
+    this.enemySound = this.sound.add('enemy', { volume: 0.20 });
+    this.attackSound = this.sound.add('attack', { volume: 0.10 });
+    this.loseSound = this.sound.add('lose', { volume: 0.10 });
+    this.winSound = this.sound.add('win', { volume: 0.10 });
+    this.collideSound = this.sound.add('collide', { volume: 0.10 });
     this.music = this.sound.add('battleBackground', {volume: .15})
-    console.log('I am music')
+
     this.music.play()
+
     this.physics.world.bounds.y = 64;
     const map = this.make.tilemap({
       data: getLevel(this.game.level),
@@ -123,30 +114,42 @@ export default class BattleScene extends Phaser.Scene {
     });
     const tiles = map.addTilesetImage('letters');
     const ground = map.createStaticLayer(0, tiles, 0, 0);
+
     this.player = new Player(
       this,
       playerStartPosition[this.game.level].x,
       playerStartPosition[this.game.level].y,
       'Ariadne'
     );
-    this.enemySprite = new Sprite(this, 750, 500, 'enemy');
-    this.playerSprite = new Sprite(this, 850, 500, 'AriadneAttack');
     this.player.setFrame(4);
     this.player.hp = 3;
-    this.enemySound = this.sound.add('enemy', { volume: 0.20 });
-    this.attackSound = this.sound.add('attack', { volume: 0.10 });
-    this.loseSound = this.sound.add('lose', { volume: 0.10 });
-    this.winSound = this.sound.add('win', { volume: 0.10 });
-    this.collideSound = this.sound.add('collide', { volume: 0.10 });
-    this.createAnimations();
-
     this.player.startPosition = this.player.getPosition();
-    this.gridPhysics = new GridPhysics(this.player, map);
-    this.keyboard = this.input.keyboard;
+    this.playerBar = this.makeBar(8, 8, 0x2ecc71);
+    this.setValue(this.playerBar, 100);
+    this.add.text(8, 8, 'You', {
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
+      color: 'black',
+      fontSize: '3000px',
+    });
+
+    this.createAnimations();
     this.createGroups();
     this.enemies.hp = 3;
+    this.enemyBar = this.makeBar(250, 8, 0xe74c3c);
+    this.setValue(this.enemyBar, 100);
+    this.add.text(250, 8, 'Enemy', {
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
+      color: 'black',
+      fontSize: '3000px',
+    });
 
+    this.enemySprite = new Sprite(this, 750, 500, 'enemy');
+    this.playerSprite = new Sprite(this, 850, 500, 'AriadneAttack');
+
+    this.gridPhysics = new GridPhysics(this.player, map);
+    this.keyboard = this.input.keyboard;
     this.text = getText(this.game.level);
+
     this.allKeys = {
       h: {
         key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
@@ -226,26 +229,6 @@ export default class BattleScene extends Phaser.Scene {
       },
     };
 
-    this.playerBar = this.makeBar(8, 8, 0x2ecc71);
-    this.setValue(this.playerBar, 100);
-
-    this.enemyBar = this.makeBar(250, 8, 0xe74c3c);
-    this.setValue(this.enemyBar, 100);
-
-    this.add.text(8, 8, 'You', {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
-      color: 'black',
-      fontSize: '3000px',
-    });
-
-    this.add.text(250, 8, 'Enemy', {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
-      color: 'black',
-      fontSize: '3000px',
-    });
-
-    // Create collisions for all entities
-    // << CREATE COLLISIONS HERE >>
     this.physics.add.overlap(
       this.player,
       this.enemies,
@@ -276,18 +259,15 @@ export default class BattleScene extends Phaser.Scene {
         }
       });
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
-    createTextBox(this, 665, 300, {
+    createTextBox(this, 665, 325, {
       wrapWidth: 200,
     }).start(battleText[this.game.level], 50);
   }
 
-  // time: total time elapsed (ms)
-  // delta: time elapsed (ms) since last update() call. 16.666 ms @ 60fps
   update(time, delta) {
-    // << DO UPDATE LOGIC HERE >>
     this.player.update(time, this.allKeys);
     this.gridPhysics.update(delta);
   }
@@ -299,9 +279,9 @@ export default class BattleScene extends Phaser.Scene {
       this.enemySprite.play('enemyAttack');
       this.gridPhysics.stopMoving();
       this.gridPhysics.tileSizePixelsWalked = 0;
+
       const third = (this.playerBar.scaleX - 0.3) * 100;
       this.setValue(this.playerBar, third);
-      // console.log('enemy is attacking');
 
       if (this.player.hp <= 1) {
         this.isAttacked = false;
@@ -334,6 +314,7 @@ export default class BattleScene extends Phaser.Scene {
     this.enemies.hp--;
     weapon.setActive(false).setVisible(false);
     weapon.body.enable = false;
+
     const third = (this.enemyBar.scaleX - 0.3) * 100;
     this.setValue(this.enemyBar, third);
 
@@ -353,9 +334,8 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   endBattle() {
-    // this.weapons.length = 0;
-    // this.enemies.length = 0;
-    this.awake = false;
+    this.awake = false
+
     this.input.keyboard.enabled = false;
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
@@ -410,27 +390,18 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   makeBar(x, y, color) {
-    //draw the bar
     let bar = this.add.graphics();
-
-    //color the bar
     bar.fillStyle(color, 1);
-
-    //fill the bar with a rectangle
     bar.fillRect(0, 0, 200, 50);
-
-    //position the bar
     bar.x = x;
     bar.y = y;
-
-    //return the bar
     return bar;
   }
 
   setValue(bar, percentage) {
-    //scale the bar
     bar.scaleX = percentage / 100;
   }
+
   createAnimations() {
     this.anims.create({
       key: 'enemyIdle',
@@ -576,14 +547,13 @@ export default class BattleScene extends Phaser.Scene {
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
-const COLOR_DARK = 0x260e04;
 
 const GetValue = Phaser.Utils.Objects.GetValue;
-var createTextBox = function (scene, x, y, config) {
-  var wrapWidth = GetValue(config, 'wrapWidth', 0);
-  var fixedWidth = GetValue(config, 'fixedWidth', 0);
-  var fixedHeight = GetValue(config, 'fixedHeight', 0);
-  var textBox = scene.rexUI.add
+let createTextBox = function (scene, x, y, config) {
+  let wrapWidth = GetValue(config, 'wrapWidth', 0);
+  let fixedWidth = GetValue(config, 'fixedWidth', 0);
+  let fixedHeight = GetValue(config, 'fixedHeight', 0);
+  let textBox = scene.rexUI.add
     .textBox({
       x: x,
       y: y,
@@ -592,7 +562,6 @@ var createTextBox = function (scene, x, y, config) {
         .roundRectangle(0, 0, 2, 2, 20, COLOR_PRIMARY)
         .setStrokeStyle(2, COLOR_LIGHT),
 
-      // text: getBuiltInText(scene, wrapWidth, fixedWidth, fixedHeight),
       text: getBBcodeText(scene, wrapWidth, fixedWidth, fixedHeight),
 
       action: scene.add
@@ -617,7 +586,7 @@ var createTextBox = function (scene, x, y, config) {
     .on(
       'pointerdown',
       function () {
-        var icon = this.getElement('action').setVisible(false);
+        let icon = this.getElement('action').setVisible(false);
         this.resetChildVisibleState(icon);
         if (this.isTyping) {
           this.stop(true);
@@ -634,39 +603,25 @@ var createTextBox = function (scene, x, y, config) {
           return;
         }
 
-        var icon = this.getElement('action').setVisible(true);
+        let icon = this.getElement('action').setVisible(true);
         this.resetChildVisibleState(icon);
         icon.y -= 30;
-        var tween = scene.tweens.add({
+        let tween = scene.tweens.add({
           targets: icon,
-          y: '+=30', // '+=100'
-          ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+          y: '+=30',
+          ease: 'Bounce',
           duration: 500,
-          repeat: 0, // -1: infinity
+          repeat: 0,
           yoyo: false,
         });
       },
       textBox
     );
-  //.on('type', function () {
-  //})
 
   return textBox;
 };
 
-var getBuiltInText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
-  return scene.add
-    .text(0, 0, '', {
-      fontSize: '12px',
-      wordWrap: {
-        width: wrapWidth,
-      },
-      maxLines: 3,
-    })
-    .setFixedSize(fixedWidth, fixedHeight);
-};
-
-var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+let getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
   return scene.rexUI.add.BBCodeText(0, 0, '', {
     fixedWidth: fixedWidth,
     fixedHeight: fixedHeight,
