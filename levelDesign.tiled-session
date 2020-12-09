@@ -45,11 +45,11 @@
             "scaleInEditor": 1
         },
         "public/assets/backgrounds/finalLevel.json": {
-            "scale": 0.99,
+            "scale": 1.0669,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 283.33333333333337,
-                "y": 309.0909090909091
+                "x": 314.4624613365827,
+                "y": 325.24135345393194
             }
         },
         "public/assets/backgrounds/finalLevel.json#castle": {
@@ -72,8 +72,8 @@
             "scale": 1.11,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 318.91891891891885,
-                "y": 306.3063063063062
+                "x": 322.072072072072,
+                "y": 335.13513513513504
             }
         },
         "public/assets/backgrounds/levelThree.json#castle": {
@@ -85,7 +85,7 @@
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 319.5,
-                "y": 318
+                "y": 317
             }
         },
         "public/assets/backgrounds/levelTwo.json#castle": {

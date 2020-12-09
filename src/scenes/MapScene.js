@@ -33,7 +33,7 @@ export default class MapScene extends Phaser.Scene {
     super('MapScene');
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
-    this.level = 4;
+    this.level = 0;
   }
 
   onMeetEnemy(player, zone) {
