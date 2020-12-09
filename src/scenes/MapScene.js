@@ -33,7 +33,7 @@ export default class MapScene extends Phaser.Scene {
     super('MapScene');
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
-    this.level = 0;
+    this.level = 4;
   }
 
   onMeetEnemy(player, zone) {
@@ -285,6 +285,7 @@ export default class MapScene extends Phaser.Scene {
 
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
+      this.game.level++;
       this.level++;
       this.scene.restart();
       this.keyCount = 0;
