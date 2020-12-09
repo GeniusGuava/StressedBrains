@@ -61,7 +61,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', tileMaps[this.game.level]);
     this.load.audio('collide', 'assets/audio/jump.wav');
     this.load.audio('locked', 'assets/audio/locked.wav');
-    this.load.audio('background', music[this.level] )
+    this.load.audio('background', music[this.game.level] )
     this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -266,10 +266,10 @@ export default class MapScene extends Phaser.Scene {
       });
     // this.helpContent = `Testing`;
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 } })
+      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
-    createTextBox(this, 660, 300, {
+    createTextBox(this, 660, 325, {
       wrapWidth: 205,
     }).start(mapText[this.game.level], 50);
   }
