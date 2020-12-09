@@ -7,8 +7,10 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     this.game.playerAlive = true
-    this.game.level = 0
     this.scene.launch('MapScene')
+    this.game.level = parseInt(localStorage.getItem('level')) || 0
+    console.log(this.game.level)
+    localStorage.setItem('level', this.game.level)
     // this.scene.launch('BattleScene')
   }
 }
