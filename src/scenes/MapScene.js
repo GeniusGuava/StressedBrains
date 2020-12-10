@@ -1,18 +1,24 @@
-import 'phaser';
-import Player from '../entity/Player';
-import { GridPhysics } from '../physics/GridPhysics';
-import Key from '../entity/Key';
-import Padlock from '../entity/Padlock';
-import { mapText } from '../text/mapText';
-import { helpContent } from '../text/helpText';
-import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
-  music, Direction } from '../MapInfo';
+import "phaser";
+import Player from "../entity/Player";
+import { GridPhysics } from "../physics/GridPhysics";
+import Key from "../entity/Key";
+import Padlock from "../entity/Padlock";
+import { mapText } from "../text/mapText";
+import { helpContent } from "../text/helpText";
+import {
+  tileMaps,
+  padlockLocation,
+  keyLocations,
+  playerStartPosition,
+  music,
+  Direction,
+} from "../MapInfo";
 
 export const TILE_SIZE = 32;
 
 export default class MapScene extends Phaser.Scene {
   constructor() {
-    super('MapScene');
+    super("MapScene");
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
   }
@@ -22,78 +28,76 @@ export default class MapScene extends Phaser.Scene {
     zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height - 2);
     this.cameras.main.shake(300);
 
-    // switch to BattleScene
-
     this.input.keyboard.enabled = false;
     Object.keys(this.allKeys).map((key) => {
-      this.allKeys[key]['key'].isDown = false;
+      this.allKeys[key]["key"].isDown = false;
     });
-    this.music.pause()
+    this.music.pause();
     this.time.addEvent({
       delay: 500,
-      callback: () => this.scene.switch('BattleScene'),
+      callback: () => this.scene.switch("BattleScene"),
       callbackScope: this,
     });
   }
 
   preload() {
-    this.cache.tilemap.remove('map');
-    this.load.tilemapTiledJSON('map', tileMaps[this.game.level]);
+    this.cache.tilemap.remove("map");
+    this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
 
-    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
-    this.load.audio('locked', 'assets/audio/worldSounds/locked.wav');
-    this.load.audio('background', music[this.game.level])
+    this.load.audio("collide", "assets/audio/worldSounds/jump.wav");
+    this.load.audio("locked", "assets/audio/worldSounds/locked.wav");
+    this.load.audio("background", music[this.game.level]);
 
-    this.load.image('tiles', 'assets/backgrounds/spriteSheets/Castle2.png');
-    this.load.image('padlock', 'assets/sprites/padlock.png');
+    this.load.image("tiles", "assets/backgrounds/spriteSheets/Castle2.png");
+    this.load.image("padlock", "assets/sprites/padlock.png");
     this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+      "nextPage",
+      "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png"
     );
 
-    this.load.spritesheet('key', 'assets/spriteSheets/key.png', {
+    this.load.spritesheet("key", "assets/spriteSheets/key.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
+    this.load.spritesheet("Ariadne", "assets/spriteSheets/george2.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
 
     this.load.scenePlugin({
-      key: 'rexuiplugin',
+      key: "rexuiplugin",
       url:
-        'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
-      sceneKey: 'rexUI',
+        "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js",
+      sceneKey: "rexUI",
     });
   }
   create() {
-    this.collideSound = this.sound.add('collide', { volume: 0.10 });
-    this.lockedSound = this.sound.add('locked', { volume: 0.10 });
-    this.music = this.sound.add('background', {volume: .15})
-    this.music.play()
+    this.collideSound = this.sound.add("collide", { volume: 0.1 });
+    this.lockedSound = this.sound.add("locked", { volume: 0.1 });
+    this.music = this.sound.add("background", { volume: 0.15 });
+    this.music.play();
 
     const map = this.make.tilemap({
-      key: 'map',
+      key: "map",
     });
-    const tileset = map.addTilesetImage('castle', 'tiles');
-    const grassLayer = map.createStaticLayer('grass', tileset);
-    const pathLayer = map.createStaticLayer('path', tileset);
-    const gateLayer = map.createStaticLayer('gate', tileset);
+    const tileset = map.addTilesetImage("castle", "tiles");
+    const grassLayer = map.createStaticLayer("grass", tileset);
+    const pathLayer = map.createStaticLayer("path", tileset);
+    const gateLayer = map.createStaticLayer("gate", tileset);
 
     this.mapKeys = this.physics.add.group({
       classType: Key,
     });
 
     keyLocations[this.game.level].map((coords) => {
-      this.mapKeys.create(coords.x, coords.y, 'key');
+      this.mapKeys.create(coords.x, coords.y, "key");
     });
 
     this.player = new Player(
       this,
       playerStartPosition[this.game.level].x,
       playerStartPosition[this.game.level].y,
-      'Ariadne'
+      "Ariadne"
     ).setScale(1);
 
     this.gridPhysics = new GridPhysics(this.player, map);
@@ -104,7 +108,7 @@ export default class MapScene extends Phaser.Scene {
       this,
       padlockLocation[this.game.level].x * TILE_SIZE,
       padlockLocation[this.game.level].y * TILE_SIZE,
-      'padlock'
+      "padlock"
     ).setScale(0.08);
 
     this.keyboard = this.input.keyboard;
@@ -209,7 +213,7 @@ export default class MapScene extends Phaser.Scene {
     );
 
     this.sys.events.on(
-      'wake',
+      "wake",
       () => {
         if (!this.game.playerAlive) {
           this.player.setPosition(
@@ -218,7 +222,7 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
-        this.music.resume()
+        this.music.resume();
       },
       this
     );
@@ -226,9 +230,9 @@ export default class MapScene extends Phaser.Scene {
     //help button
     let helpVisible = true;
     this.help = this.add
-      .text(750, 20, ':help', { backgroundColor: '#000' })
+      .text(750, 20, ":help", { backgroundColor: "#000" })
       .setInteractive()
-      .on('pointerdown', () => {
+      .on("pointerdown", () => {
         if (!helpVisible) {
           this.helpText.setVisible(false);
           helpVisible = !helpVisible;
@@ -239,7 +243,10 @@ export default class MapScene extends Phaser.Scene {
       });
 
     this.helpText = this.add
-      .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
+      .text(665, 50, helpContent[this.game.level], {
+        wordWrap: { width: 250 },
+        fontSize: "12px",
+      })
       .setVisible(false);
 
     createTextBox(this, 660, 325, {
@@ -262,18 +269,21 @@ export default class MapScene extends Phaser.Scene {
 
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
-      this.game.level++;
-      localStorage.setItem('level', this.game.level)
-      this.music.destroy();
-      this.cache.audio.remove('background')
-
-      this.scene.restart();
-      this.keyCount = 0;
+      if (this.game.level === 4) {
+        this.scene.switch('CreditScene');
+      } else {
+        this.game.level++;
+        localStorage.setItem("level", this.game.level);
+        this.music.destroy();
+        this.cache.audio.remove("background");
+        this.scene.restart();
+        this.keyCount = 0;
+      }
     } else {
       if (!this.lockPlayed) {
         this.lockedSound.play();
         this.lockPlayed = true;
-        this.lockedSound.on('complete', () =>
+        this.lockedSound.on("complete", () =>
           setTimeout(() => (this.lockPlayed = false), 1000)
         );
       }
@@ -282,52 +292,52 @@ export default class MapScene extends Phaser.Scene {
 
   createAnimations() {
     this.anims.create({
-      key: 'left',
+      key: "left",
       frames: [
-        { key: 'Ariadne', frame: 1 },
-        { key: 'Ariadne', frame: 5 },
-        { key: 'Ariadne', frame: 9 },
-        { key: 'Ariadne', frame: 13 },
+        { key: "Ariadne", frame: 1 },
+        { key: "Ariadne", frame: 5 },
+        { key: "Ariadne", frame: 9 },
+        { key: "Ariadne", frame: 13 },
       ],
       frameRate: 2,
       repeat: -1,
     });
     this.anims.create({
-      key: 'right',
+      key: "right",
       frames: [
-        { key: 'Ariadne', frame: 3 },
-        { key: 'Ariadne', frame: 7 },
-        { key: 'Ariadne', frame: 11 },
-        { key: 'Ariadne', frame: 15 },
+        { key: "Ariadne", frame: 3 },
+        { key: "Ariadne", frame: 7 },
+        { key: "Ariadne", frame: 11 },
+        { key: "Ariadne", frame: 15 },
       ],
       frameRate: 2,
       repeat: -1,
     });
     this.anims.create({
-      key: 'down',
+      key: "down",
       frames: [
-        { key: 'Ariadne', frame: 0 },
-        { key: 'Ariadne', frame: 4 },
-        { key: 'Ariadne', frame: 8 },
-        { key: 'Ariadne', frame: 12 },
+        { key: "Ariadne", frame: 0 },
+        { key: "Ariadne", frame: 4 },
+        { key: "Ariadne", frame: 8 },
+        { key: "Ariadne", frame: 12 },
       ],
       frameRate: 2,
       repeat: -1,
     });
     this.anims.create({
-      key: 'up',
+      key: "up",
       frames: [
-        { key: 'Ariadne', frame: 2 },
-        { key: 'Ariadne', frame: 6 },
-        { key: 'Ariadne', frame: 10 },
-        { key: 'Ariadne', frame: 14 },
+        { key: "Ariadne", frame: 2 },
+        { key: "Ariadne", frame: 6 },
+        { key: "Ariadne", frame: 10 },
+        { key: "Ariadne", frame: 14 },
       ],
       frameRate: 2,
       repeat: -1,
     });
     this.anims.create({
-      key: 'idle',
-      frames: [{ key: 'Ariadne', frame: 0 }],
+      key: "idle",
+      frames: [{ key: "Ariadne", frame: 0 }],
       frameRate: 2,
     });
   }
@@ -338,9 +348,9 @@ const COLOR_LIGHT = 0x7b5e57;
 
 const GetValue = Phaser.Utils.Objects.GetValue;
 let createTextBox = function (scene, x, y, config) {
-  let wrapWidth = GetValue(config, 'wrapWidth', 0);
-  let fixedWidth = GetValue(config, 'fixedWidth', 0);
-  let fixedHeight = GetValue(config, 'fixedHeight', 0);
+  let wrapWidth = GetValue(config, "wrapWidth", 0);
+  let fixedWidth = GetValue(config, "fixedWidth", 0);
+  let fixedHeight = GetValue(config, "fixedHeight", 0);
   let textBox = scene.rexUI.add
     .textBox({
       x: x,
@@ -354,7 +364,7 @@ let createTextBox = function (scene, x, y, config) {
       text: getBBcodeText(scene, wrapWidth, fixedWidth, fixedHeight),
 
       action: scene.add
-        .image(0, 0, 'nextPage')
+        .image(0, 0, "nextPage")
         .setTint(COLOR_LIGHT)
         .setVisible(false),
 
@@ -373,9 +383,9 @@ let createTextBox = function (scene, x, y, config) {
   textBox
     .setInteractive()
     .on(
-      'pointerdown',
+      "pointerdown",
       function () {
-        let icon = this.getElement('action').setVisible(false);
+        let icon = this.getElement("action").setVisible(false);
         this.resetChildVisibleState(icon);
         if (this.isTyping) {
           this.stop(true);
@@ -386,37 +396,37 @@ let createTextBox = function (scene, x, y, config) {
       textBox
     )
     .on(
-      'pageend',
+      "pageend",
       function () {
         if (this.isLastPage) {
           return;
         }
 
-        let icon = this.getElement('action').setVisible(true);
+        let icon = this.getElement("action").setVisible(true);
         this.resetChildVisibleState(icon);
         icon.y -= 30;
         let tween = scene.tweens.add({
           targets: icon,
-          y: '+=30',
-          ease: 'Bounce',
+          y: "+=30",
+          ease: "Bounce",
           duration: 500,
           repeat: 0,
           yoyo: false,
         });
       },
       textBox
-    )
+    );
   return textBox;
 };
 
 let getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
-  return scene.rexUI.add.BBCodeText(0, 0, '', {
+  return scene.rexUI.add.BBCodeText(0, 0, "", {
     fixedWidth: fixedWidth,
     fixedHeight: fixedHeight,
 
-    fontSize: '12px',
+    fontSize: "12px",
     wrap: {
-      mode: 'word',
+      mode: "word",
       width: wrapWidth,
     },
     maxLines: 4,
