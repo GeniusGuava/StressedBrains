@@ -223,12 +223,8 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
-<<<<<<< HEAD
-        this.music.resume();
-=======
         this.music.resume()
         this.volume.setText(`${this.game.volume}`)
->>>>>>> 607b28c6f5cf506a5766eb21fb0d5627653cb821
       },
       this
     );
