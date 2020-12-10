@@ -1,18 +1,14 @@
-import "phaser";
-import Player from "../entity/Player";
-import { GridPhysics } from "../physics/GridPhysics";
-import Key from "../entity/Key";
-import Padlock from "../entity/Padlock";
-import { mapText } from "../text/mapText";
-import { helpContent } from "../text/helpText";
-import {
-  tileMaps,
-  padlockLocation,
-  keyLocations,
-  playerStartPosition,
-  music,
-  Direction,
-} from "../MapInfo";
+import 'phaser';
+import Player from '../entity/Player';
+import { GridPhysics } from '../physics/GridPhysics';
+import Key from '../entity/Key';
+import Padlock from '../entity/Padlock';
+import { mapText } from '../text/mapText';
+import { helpContent } from '../text/helpText';
+import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
+  music, Direction } from '../MapInfo';
+import Controls from '../physics/Controls'
+import VolumeMenu from '../Menus/VolumeMenu'
 
 export const TILE_SIZE = 32;
 
@@ -75,7 +71,17 @@ export default class MapScene extends Phaser.Scene {
     this.collideSound = this.sound.add('collide');
     this.lockedSound = this.sound.add('locked');
     this.music = this.sound.add('background')
-    this.setVolume(this.game.volume)
+
+    this.volumeMenu = new VolumeMenu(this, this.game,
+      [
+        { sound: this.collideSound, weight: 0.05, },
+        { sound: this.lockedSound, weight: 0.05 },
+        { sound: this.music, weight: 0.025 },
+      ]
+    )
+    this.volumeMenu.buildMenu()
+    this.volumeMenu.updateVolume()
+
     this.music.play()
 
     const map = this.make.tilemap({
@@ -114,49 +120,8 @@ export default class MapScene extends Phaser.Scene {
 
     this.keyboard = this.input.keyboard;
 
-    this.allKeys = {
-      h: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.LEFT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      j: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.DOWN,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      k: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
-        },
-      },
-      l: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.RIGHT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-    };
-
+    this.controls = new Controls(this, this.collideSound)
+    this.allKeys = this.controls.getKeys()
     // invisible triggers
     this.spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
@@ -223,10 +188,9 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
+        this.volumeMenu.updateVolume()
         this.music.resume()
-        this.volume.setText(`${this.game.volume}`)
       },
-      this
     );
 
     //help button
@@ -255,47 +219,6 @@ export default class MapScene extends Phaser.Scene {
       wrapWidth: 205,
     }).start(mapText[this.game.level], 50);
 
-    this.volumeRect = this.add.rectangle(815, 530, 110, 75, COLOR_PRIMARY)
-    this.volumeRect.setStrokeStyle(2, COLOR_LIGHT)
-
-    this.upButton = this.add
-      .text(850, 500, "^", 
-      {
-        fontSize: "16px",
-        color: 'white',
-    }).setInteractive({useHandCursor: true})
-      .on('pointerdown', () => {
-        if (this.game.volume<10){
-          this.game.volume++
-          this.setVolume(this.game.volume)
-          this.volume.setText(`${this.game.volume}`)
-        }
-      })
-    this.add
-      .text(774, 525, `Volume:`,
-      {
-        fontSize: "16px",
-        color: 'white',
-      })
-    this.volume = this.add
-      .text(850, 525, `${this.game.volume}`,
-      {
-        fontSize: "16px",
-        color: 'white',
-      })
-    this.downButton = this.add
-      .text(850, 550, "v",
-      {
-        fontSize: "16px",
-        color: 'white',
-      }).setInteractive({useHandCursor: true})
-      .on('pointerdown', () => {
-        if (this.game.volume>0){
-          this.game.volume--
-          this.setVolume(this.game.volume)
-          this.volume.setText(`${this.game.volume}`)
-        }
-      })
   }
 
   update(time, delta) {
@@ -332,12 +255,6 @@ export default class MapScene extends Phaser.Scene {
         );
       }
     }
-  }
-
-  setVolume(vol){
-    this.collideSound.volume = vol * 0.05
-    this.lockedSound.volume = vol * 0.05
-    this.music.volume = vol * 0.025
   }
 
   createAnimations() {

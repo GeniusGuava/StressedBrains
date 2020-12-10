@@ -21,6 +21,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
+  time: {
+    type: Number,
+    default: 0,
+  },
 });
 
 UserSchema.pre('save', async function (next) {
