@@ -97,6 +97,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
+    this.sound.pauseAll()
     this.enemySound = this.sound.add('enemy', { volume: 0.20 });
     this.attackSound = this.sound.add('attack', { volume: 0.10 });
     this.loseSound = this.sound.add('lose', { volume: 0.10 });

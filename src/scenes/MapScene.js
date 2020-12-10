@@ -18,6 +18,7 @@ export default class MapScene extends Phaser.Scene {
   }
 
   onMeetEnemy(player, zone) {
+    this.music.pause()
     zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width - 2);
     zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height - 2);
     this.cameras.main.shake(300);
@@ -28,7 +29,7 @@ export default class MapScene extends Phaser.Scene {
     Object.keys(this.allKeys).map((key) => {
       this.allKeys[key]['key'].isDown = false;
     });
-    this.music.pause()
+
     this.time.addEvent({
       delay: 500,
       callback: () => this.scene.switch('BattleScene'),
