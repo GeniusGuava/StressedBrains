@@ -14,6 +14,7 @@ export default class MapScene extends Phaser.Scene {
   constructor() {
     super('MapScene');
     this.keyCount = 0;
+    this.times =['', '', '', '', '']
     this.getKey = this.getKey.bind(this);
   }
 
@@ -69,6 +70,7 @@ export default class MapScene extends Phaser.Scene {
     });
   }
   create() {
+    this.timer = 0
     this.collideSound = this.sound.add('collide', { volume: 0.10 });
     this.lockedSound = this.sound.add('locked', { volume: 0.10 });
     this.music = this.sound.add('background', {volume: .15})
@@ -81,6 +83,15 @@ export default class MapScene extends Phaser.Scene {
     const grassLayer = map.createStaticLayer('grass', tileset);
     const pathLayer = map.createStaticLayer('path', tileset);
     const gateLayer = map.createStaticLayer('gate', tileset);
+
+    this.startTime = (this.time.now/1000)
+    this.add.text(0, 0, `Times:`)
+    this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time')
+    this.add.text(0, 16, `level 1: ${this.times[0]}`)
+    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`)
+    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`)
+    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`)
+    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`)
 
     this.mapKeys = this.physics.add.group({
       classType: Key,
@@ -251,6 +262,12 @@ export default class MapScene extends Phaser.Scene {
   update(time, delta) {
     this.player.update(time, this.allKeys);
     this.gridPhysics.update(delta);
+    this.currentTime = (this.time.now/1000)
+    this.timer += delta;
+    while (this.timer > 100) {
+        this.timerText.setText(`Current Time: ${this.currentTime.toFixed(2)}`)
+        this.timer -= 100;
+    }
   }
 
   getKey(player, mapKey) {
@@ -263,11 +280,12 @@ export default class MapScene extends Phaser.Scene {
 
   exitLevel(player, exit) {
     if (this.keyCount >= 3) {
+      this.levelScore = (this.currentTime - this.startTime).toFixed(2)
+      this.times[this.game.level] = this.levelScore
       this.game.level++;
       localStorage.setItem('level', this.game.level)
       this.music.destroy();
       this.cache.audio.remove('background')
-
       this.scene.restart();
       this.keyCount = 0;
     } else {
