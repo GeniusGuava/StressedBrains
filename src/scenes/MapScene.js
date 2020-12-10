@@ -7,6 +7,7 @@ import { mapText } from '../text/mapText';
 import { helpContent } from '../text/helpText';
 import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
   music, Direction } from '../MapInfo';
+import Controls from '../physics/Controls'
 
 export const TILE_SIZE = 32;
 
@@ -110,49 +111,8 @@ export default class MapScene extends Phaser.Scene {
 
     this.keyboard = this.input.keyboard;
 
-    this.allKeys = {
-      h: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.LEFT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      j: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.DOWN,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      k: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
-        },
-      },
-      l: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.RIGHT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-    };
-
+    this.controls = new Controls(this, this.collideSound)
+    this.allKeys = this.controls.getKeys()
     // invisible triggers
     this.spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
