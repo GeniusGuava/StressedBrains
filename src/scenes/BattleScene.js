@@ -2,14 +2,13 @@ import Player from '../entity/Player';
 import Enemy from '../entity/Enemy';
 import Sprite from '../entity/Sprite';
 import { GridPhysics } from '../physics/GridPhysics';
-import { Direction } from '../MapInfo';
 import { enemySprite, weaponSprite, getLevel, playerStartPosition, getWeapons,
   getEnemies, enemySize, getText, music } from '../BattleInfo';
-import { TILE_SIZE } from '../MapInfo';
 import { battleText } from '../text/battleText';
 import { helpContent } from '../text/helpText';
+import Controls from '../physics/Controls';
+import VolumeMenu from '../Menus/VolumeMenu';
 
-const PUNCTUATION = [',', "'", '!', '?'];
 
 class UIScene extends Phaser.Scene {
   constructor() {
@@ -103,7 +102,20 @@ export default class BattleScene extends Phaser.Scene {
     this.winSound = this.sound.add('win');
     this.collideSound = this.sound.add('collide');
     this.music = this.sound.add('battleBackground')
-    this.setVolume(this.game.volume)
+
+    this.volumeMenu = new VolumeMenu(this, this.game,
+      [
+        {sound: this.enemySound, weight: 0.05},
+        {sound: this.attackSound, weight: 0.05},
+        {sound: this.loseSound, weight: 0.05},
+        {sound: this.winSound, weight: 0.025},
+        {sound: this.collideSound, weight: 0.05},
+        {sound: this.music, weight: 0.025},
+      ],
+      50)
+
+    this.volumeMenu.buildMenu()
+    this.volumeMenu.updateVolume()
 
     this.music.play()
 
@@ -151,84 +163,8 @@ export default class BattleScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard;
     this.text = getText(this.game.level);
 
-    this.allKeys = {
-      h: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.LEFT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      j: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.DOWN,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      k: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(Direction.UP, time, this.collideSound);
-        },
-      },
-      l: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-        function: (time, shift) => {
-          if (!shift)
-            this.gridPhysics.movePlayer(
-              Direction.RIGHT,
-              time,
-              this.collideSound
-            );
-        },
-      },
-      w: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-        function: (time, shift) => {
-          if (
-            (!shift && this.game.level >= 1 && this.game.level < 4) ||
-            (this.game.level >= 4 && shift)
-          )
-            this.jumpToNextWord(this.player, this.text, this.collideSound);
-          else if (this.game.level >= 4 && !shift)
-            this.jumpToNextword(this.player, this.text, this.collideSound);
-        },
-      },
-      b: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B),
-        function: (time, shift) => {
-          if (
-            (!shift && this.game.level >= 2 && this.game.level < 4) ||
-            (this.game.level >= 4 && shift)
-          )
-            this.jumpToPreviousWord(this.player, this.text, this.collideSound);
-          else if (this.game.level >= 4 && !shift)
-            this.jumpToPreviousword(this.player, this.text, this.collideSound);
-        },
-      },
-      e: {
-        key: this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-        function: (time, shift) => {
-          if (
-            (!shift && this.game.level >= 3 && this.game.level < 4) ||
-            (this.game.level >= 4 && shift)
-          )
-            this.jumpToEndOfWord(this.player, this.text, this.collideSound);
-          else if (this.game.level >= 4 && !shift)
-            this.jumpToEndOfword(this.player, this.text, this.collideSound);
-        },
-      },
-    };
+    this.controls = new Controls(this, this.game.level)
+    this.allKeys = this.controls.getKeys()
 
     this.physics.add.overlap(
       this.player,
@@ -266,48 +202,6 @@ export default class BattleScene extends Phaser.Scene {
     createTextBox(this, 665, 325, {
       wrapWidth: 200,
     }).start(battleText[this.game.level], 50);
-
-    this.volumeRect = this.add.rectangle(815, 580, 110, 75, COLOR_PRIMARY)
-    this.volumeRect.setStrokeStyle(2, COLOR_LIGHT)
-
-    this.upButton = this.add
-      .text(850, 550, "^", 
-      {
-        fontSize: "16px",
-        color: 'white',
-    }).setInteractive({useHandCursor: true})
-      .on('pointerdown', () => {
-        if (this.game.volume<10){
-          this.game.volume++
-          this.setVolume(this.game.volume)
-          this.volume.setText(`${this.game.volume}`)
-        }
-      })
-    this.add
-      .text(774, 575, `Volume:`,
-      {
-        fontSize: "16px",
-        color: 'white',
-      })
-    this.volume = this.add
-      .text(850, 575, `${this.game.volume}`,
-      {
-        fontSize: "16px",
-        color: 'white',
-      })
-    this.downButton = this.add
-      .text(850, 600, "v",
-      {
-        fontSize: "16px",
-        color: 'white',
-      }).setInteractive({useHandCursor: true})
-      .on('pointerdown', () => {
-        if (this.game.volume>0){
-          this.game.volume--
-          this.setVolume(this.game.volume)
-          this.volume.setText(`${this.game.volume}`)
-        }
-      })
   }
 
   update(time, delta) {
@@ -470,129 +364,6 @@ export default class BattleScene extends Phaser.Scene {
       }),
       frameRate: 2,
     });
-  }
-
-  getRowAndInd(playerPos, text) {
-    const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
-    const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
-    const textRows = text.split('\n');
-    const currentRow = Array.from(textRows[yGrid]).slice(2);
-    return { currentInd: xGrid, currentRow };
-  }
-
-  jumpToNextWord(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-    let currentChar = currentRow[currentInd];
-    while (currentChar != ' ' && currentInd < currentRow.length - 1) {
-      currentInd++;
-      currentChar = currentRow[currentInd];
-    }
-    const indToJump = currentInd + 1;
-    if (indToJump != currentRow.length && currentRow[indToJump] != ' ') {
-      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-    } else collideSound.play();
-  }
-
-  jumpToNextword(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-    let currentChar = currentRow[currentInd];
-    while (
-      currentChar != ' ' &&
-      currentInd < currentRow.length - 1 &&
-      !PUNCTUATION.includes(currentRow[currentInd + 1])
-    ) {
-      currentInd++;
-      currentChar = currentRow[currentInd];
-    }
-    const indToJump = currentInd + 1;
-    if (indToJump != currentRow.length && currentRow[indToJump] != ' ') {
-      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-    } else collideSound.play();
-  }
-
-  jumpToPreviousWord(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-
-    if (currentInd == 0) collideSound.play();
-    else {
-      currentInd -= 2;
-      while (
-        (currentInd >= 0 && currentRow[currentInd] != ' ') ||
-        currentRow[currentInd + 1] == ' '
-      ) {
-        currentInd--;
-      }
-      const indToJump = currentInd + 1;
-      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-    }
-  }
-
-  jumpToPreviousword(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-
-    if (currentInd == 0) collideSound.play();
-    else {
-      currentInd -= 2;
-      while (
-        (currentInd >= 0 &&
-          currentRow[currentInd] != ' ' &&
-          !PUNCTUATION.includes(currentRow[currentInd + 1])) ||
-        currentRow[currentInd + 1] == ' '
-      ) {
-        currentInd--;
-      }
-      const indToJump = currentInd + 1;
-      player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-    }
-  }
-
-  jumpToEndOfWord(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-
-    currentInd += 2;
-    while (currentInd < currentRow.length && currentRow[currentInd] != ' ')
-      currentInd++;
-    if (currentInd > currentRow.length) collideSound.play();
-    else {
-      const indToJump = currentInd - 1;
-      if (currentRow[indToJump] != ' ') {
-        player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-      } else collideSound.play();
-    }
-  }
-
-  jumpToEndOfword(player, text, collideSound) {
-    const playerPos = player.getPosition();
-    let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
-
-    currentInd += 2;
-    while (
-      currentInd < currentRow.length &&
-      currentRow[currentInd] != ' ' &&
-      !PUNCTUATION.includes(currentRow[currentInd]) &&
-      !PUNCTUATION.includes(currentRow[currentInd - 1])
-    )
-      currentInd++;
-    if (currentInd > currentRow.length) collideSound.play();
-    else {
-      const indToJump = currentInd - 1;
-      if (currentRow[indToJump] != ' ') {
-        player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
-      } else collideSound.play();
-    }
-  }
-  setVolume(vol){
-    this.enemySound.volume = vol * 0.05
-    this.attackSound.volume = vol * 0.05
-    this.loseSound.volume = vol * 0.025
-    this.winSound.volume = vol * 0.025
-    this.collideSound.volume = vol * 0.05
-    this.music.volume = vol * 0.025
   }
 }
 
