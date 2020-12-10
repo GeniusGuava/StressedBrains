@@ -36,7 +36,11 @@ app.use(cookieParser());
 
 require('./auth/auth');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
 app.use('/', routes);
 app.use('/', passport.authenticate('jwt', { session: false }), secureRoutes);
