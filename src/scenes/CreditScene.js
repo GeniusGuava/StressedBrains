@@ -2,7 +2,7 @@ import "phaser";
 import Phaser from "phaser";
 import config from "../config/config";
 
-let mcrate, mcrate1, mcrate2, mgraphic;
+let mcrate, mcrate1, mcrate2, mcrate3, mcrate4, mcrate5, mcrate6, mcrate7, mgraphic;
 
 export default class CreditScene extends Phaser.Scene {
   constructor() {
@@ -26,7 +26,7 @@ export default class CreditScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.spritesheet("Enemy1", "assets/spriteSheets/george.png", {
+    this.load.spritesheet("Enemy1", "assets/spriteSheets/george2.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -34,11 +34,32 @@ export default class CreditScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet("Enemy3", "assets/spriteSheets/enemy/skeleton.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("warrior", "assets/spriteSheets/enemy/warrior.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("princess1", "assets/spriteSheets/princess.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("princess2", "assets/spriteSheets/princess2.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    this.load.spritesheet("witch", "assets/spriteSheets/witch.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
   }
 
   create() {
-    this.cameras.main.backgroundColor.setTo('#000000');
-    mcrate = this.physics.add.sprite(200, 200, "Ariadne");
+    this.cameras.main.backgroundColor.setTo("#000000");
+    mcrate = this.physics.add.sprite(500, 200, "Ariadne");
     mcrate.body
       .setVelocity(100, 200)
       .setBounce(1, 1)
@@ -50,8 +71,38 @@ export default class CreditScene extends Phaser.Scene {
       .setBounce(1, 1)
       .setCollideWorldBounds(true);
 
-    mcrate2 = this.physics.add.sprite(160, 0, "Enemy2");
+    mcrate2 = this.physics.add.sprite(250, 0, "Enemy2");
     mcrate2.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate3 = this.physics.add.sprite(0, 0, "Enemy3");
+    mcrate3.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate4 = this.physics.add.sprite(50, 0, "warrior");
+    mcrate4.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate5 = this.physics.add.sprite(20, 0, "princess1");
+    mcrate5.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate6 = this.physics.add.sprite(150, 10, "princess2");
+    mcrate6.body
+      .setVelocity(100, 200)
+      .setBounce(1, 1)
+      .setCollideWorldBounds(true);
+
+    mcrate7 = this.physics.add.sprite(60, 150, "witch");
+    mcrate7.body
       .setVelocity(100, 200)
       .setBounce(1, 1)
       .setCollideWorldBounds(true);
@@ -60,7 +111,7 @@ export default class CreditScene extends Phaser.Scene {
       fontFamily: "Brush Script MT, cursive",
       fontSize: "50px",
       fill: "#fff",
-    })
+    });
 
     this.madeByText = this.add.text(
       0,
