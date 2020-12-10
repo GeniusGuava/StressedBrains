@@ -97,12 +97,13 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    this.enemySound = this.sound.add('enemy', { volume: 0.20 });
-    this.attackSound = this.sound.add('attack', { volume: 0.10 });
-    this.loseSound = this.sound.add('lose', { volume: 0.10 });
-    this.winSound = this.sound.add('win', { volume: 0.10 });
-    this.collideSound = this.sound.add('collide', { volume: 0.10 });
-    this.music = this.sound.add('battleBackground', {volume: .15})
+    this.enemySound = this.sound.add('enemy');
+    this.attackSound = this.sound.add('attack');
+    this.loseSound = this.sound.add('lose');
+    this.winSound = this.sound.add('win');
+    this.collideSound = this.sound.add('collide');
+    this.music = this.sound.add('battleBackground')
+    this.setVolume(this.game.volume)
 
     this.music.play()
 
@@ -265,6 +266,48 @@ export default class BattleScene extends Phaser.Scene {
     createTextBox(this, 665, 325, {
       wrapWidth: 200,
     }).start(battleText[this.game.level], 50);
+
+    this.volumeRect = this.add.rectangle(815, 580, 110, 75, COLOR_PRIMARY)
+    this.volumeRect.setStrokeStyle(2, COLOR_LIGHT)
+
+    this.upButton = this.add
+      .text(850, 550, "^", 
+      {
+        fontSize: "16px",
+        color: 'white',
+    }).setInteractive({useHandCursor: true})
+      .on('pointerdown', () => {
+        if (this.game.volume<10){
+          this.game.volume++
+          this.setVolume(this.game.volume)
+          this.volume.setText(`${this.game.volume}`)
+        }
+      })
+    this.add
+      .text(774, 575, `Volume:`,
+      {
+        fontSize: "16px",
+        color: 'white',
+      })
+    this.volume = this.add
+      .text(850, 575, `${this.game.volume}`,
+      {
+        fontSize: "16px",
+        color: 'white',
+      })
+    this.downButton = this.add
+      .text(850, 600, "v",
+      {
+        fontSize: "16px",
+        color: 'white',
+      }).setInteractive({useHandCursor: true})
+      .on('pointerdown', () => {
+        if (this.game.volume>0){
+          this.game.volume--
+          this.setVolume(this.game.volume)
+          this.volume.setText(`${this.game.volume}`)
+        }
+      })
   }
 
   update(time, delta) {
@@ -542,6 +585,14 @@ export default class BattleScene extends Phaser.Scene {
         player.setPosition(indToJump * TILE_SIZE + TILE_SIZE / 2, playerPos.y);
       } else collideSound.play();
     }
+  }
+  setVolume(vol){
+    this.enemySound.volume = vol * 0.05
+    this.attackSound.volume = vol * 0.05
+    this.loseSound.volume = vol * 0.025
+    this.winSound.volume = vol * 0.025
+    this.collideSound.volume = vol * 0.05
+    this.music.volume = vol * 0.025
   }
 }
 

@@ -29,7 +29,7 @@ export default class TitleScene extends Phaser.Scene {
             stroke: '#fff',
             strokeThickness: 2
         }).setInteractive({useHandCursor: true}).on('pointerdown', () =>{
-            this.game.level = 0
+            this.game.level = 2
             this.scene.stop('TitleScene');
             this.scene.start('MainScene');
         })

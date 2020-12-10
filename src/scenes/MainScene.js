@@ -13,6 +13,7 @@ export default class MainScene extends Phaser.Scene {
   }
   create() {
     this.game.playerAlive = true
+    this.game.volume = 3
     this.createAnimations()
     if (this.game.level==0) this.scene.launch('TutorialScene')
     else this.scene.launch('MapScene')
