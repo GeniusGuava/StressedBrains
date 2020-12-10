@@ -239,7 +239,7 @@ export default class MapScene extends Phaser.Scene {
     this.currentTime = (this.time.now/1000)
     this.timer += delta;
     while (this.timer > 100) {
-        this.timerText.setText(`Current Time: ${this.currentTime.toFixed(2)}`)
+        this.timerText.setText(`Current Time: ${this.currentTime.toFixed(1)}`)
         this.timer -= 100;
     }
   }
@@ -257,7 +257,7 @@ export default class MapScene extends Phaser.Scene {
       if (this.game.level === 4) {
         this.scene.switch('CreditScene');
       } else {
-        this.levelScore = (this.currentTime - this.startTime).toFixed(2)
+        this.levelScore = (this.currentTime - this.startTime).toFixed(1)
         this.times[this.game.level] = this.levelScore
         this.game.level++;
         localStorage.setItem("level", this.game.level);
