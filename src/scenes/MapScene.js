@@ -72,10 +72,11 @@ export default class MapScene extends Phaser.Scene {
     });
   }
   create() {
-    this.collideSound = this.sound.add("collide", { volume: 0.1 });
-    this.lockedSound = this.sound.add("locked", { volume: 0.1 });
-    this.music = this.sound.add("background", { volume: 0.15 });
-    this.music.play();
+    this.collideSound = this.sound.add('collide');
+    this.lockedSound = this.sound.add('locked');
+    this.music = this.sound.add('background')
+    this.setVolume(this.game.volume)
+    this.music.play()
 
     const map = this.make.tilemap({
       key: "map",
@@ -222,7 +223,12 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
+<<<<<<< HEAD
         this.music.resume();
+=======
+        this.music.resume()
+        this.volume.setText(`${this.game.volume}`)
+>>>>>>> 607b28c6f5cf506a5766eb21fb0d5627653cb821
       },
       this
     );
@@ -252,6 +258,48 @@ export default class MapScene extends Phaser.Scene {
     createTextBox(this, 660, 325, {
       wrapWidth: 205,
     }).start(mapText[this.game.level], 50);
+
+    this.volumeRect = this.add.rectangle(815, 530, 110, 75, COLOR_PRIMARY)
+    this.volumeRect.setStrokeStyle(2, COLOR_LIGHT)
+
+    this.upButton = this.add
+      .text(850, 500, "^", 
+      {
+        fontSize: "16px",
+        color: 'white',
+    }).setInteractive({useHandCursor: true})
+      .on('pointerdown', () => {
+        if (this.game.volume<10){
+          this.game.volume++
+          this.setVolume(this.game.volume)
+          this.volume.setText(`${this.game.volume}`)
+        }
+      })
+    this.add
+      .text(774, 525, `Volume:`,
+      {
+        fontSize: "16px",
+        color: 'white',
+      })
+    this.volume = this.add
+      .text(850, 525, `${this.game.volume}`,
+      {
+        fontSize: "16px",
+        color: 'white',
+      })
+    this.downButton = this.add
+      .text(850, 550, "v",
+      {
+        fontSize: "16px",
+        color: 'white',
+      }).setInteractive({useHandCursor: true})
+      .on('pointerdown', () => {
+        if (this.game.volume>0){
+          this.game.volume--
+          this.setVolume(this.game.volume)
+          this.volume.setText(`${this.game.volume}`)
+        }
+      })
   }
 
   update(time, delta) {
@@ -288,6 +336,12 @@ export default class MapScene extends Phaser.Scene {
         );
       }
     }
+  }
+
+  setVolume(vol){
+    this.collideSound.volume = vol * 0.05
+    this.lockedSound.volume = vol * 0.05
+    this.music.volume = vol * 0.025
   }
 
   createAnimations() {

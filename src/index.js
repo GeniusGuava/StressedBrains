@@ -24,8 +24,7 @@ class Game extends Phaser.Game {
     this.scene.add('CreditScene', CreditScene)
     this.scene.add('TutorialScene', TutorialScene)
 
-    // this.scene.start('TitleScene');
-    this.scene.start('CreditScene');
+    this.scene.start('TitleScene');
   }
 }
 
