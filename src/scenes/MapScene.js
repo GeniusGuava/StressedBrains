@@ -97,12 +97,12 @@ export default class MapScene extends Phaser.Scene {
 
     this.startTime = (this.time.now/1000)
     this.add.text(0, 0, `Times:`)
-    this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time')
-    this.add.text(0, 16, `level 1: ${this.times[0]}`)
-    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`)
-    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`)
-    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`)
-    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`)
+    this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time', {fontSize:'14px'})
+    this.add.text(0, 16, `level 1: ${this.times[0]}`, {fontSize:'14px'})
+    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`, {fontSize:'14px'})
+    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`, {fontSize:'14px'})
+    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`, {fontSize:'14px'})
+    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`, {fontSize:'14px'})
 
     this.mapKeys = this.physics.add.group({
       classType: Key,
@@ -239,7 +239,7 @@ export default class MapScene extends Phaser.Scene {
     this.currentTime = (this.time.now/1000)
     this.timer += delta;
     while (this.timer > 100) {
-        this.timerText.setText(`Current Time: ${this.currentTime.toFixed(1)}`)
+        this.timerText.setText(`Current Time: ${(this.currentTime- this.startTime).toFixed(1)}`)
         this.timer -= 100;
     }
   }
