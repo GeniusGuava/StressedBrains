@@ -18,11 +18,11 @@ export default class TitleScene extends Phaser.Scene {
 
         let prevLevel = parseInt(localStorage.getItem('level')) || 0
 
-        let title_text = this.add.text(100, 110, 'Learning VIM in the Adventure of Ariadne...', { fontFamily: 'Georgia, serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 })
+        let title_text = this.add.text(90, 110, 'Learning VIM in the Adventure of Ariadne...', { fontFamily: 'Georgia, serif', fontSize: '40px', color: '#000000', stroke: '#fff', strokeThickness: 2 })
 
         let previousProgress = prevLevel!=0
 
-        let newGame = this.add.text(180, 350, 'New game', {
+        let newGame = this.add.text(200, 350, 'New game', {
             fontFamily: 'Georgia, serif',
             fontSize: '40px',
             color: '#000',
@@ -34,7 +34,7 @@ export default class TitleScene extends Phaser.Scene {
             this.scene.start('MainScene');
         })
 
-        let continueGame = this.add.text(520, 350, 'Continue', {
+        let continueGame = this.add.text(600, 350, 'Continue', {
             fontFamily: 'Georgia, serif',
             fontSize: '40px',
             color: previousProgress?'#000':'rgba(64, 64, 64, 0.8)',
