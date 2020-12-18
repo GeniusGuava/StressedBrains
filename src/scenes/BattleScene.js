@@ -200,11 +200,9 @@ export default class BattleScene extends Phaser.Scene {
       .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
-    /*
     createTextBox(this, 665, 325, {
       wrapWidth: 200,
     }).start(battleText[this.game.level], 50);
-    */
   }
 
   update(time, delta) {

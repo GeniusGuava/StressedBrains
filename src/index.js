@@ -10,7 +10,6 @@ import TutorialScene from './scenes/TutorialScene'
 import 'phaser';
 import Phaser from 'phaser';
 
-
 let titleScene = new TitleScene()
 
 class Game extends Phaser.Game {
