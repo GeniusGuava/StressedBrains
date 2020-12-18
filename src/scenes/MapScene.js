@@ -16,7 +16,7 @@ export default class MapScene extends Phaser.Scene {
   constructor() {
     super("MapScene");
     this.keyCount = 0;
-    this.times =[localStorage.getItem('0 score')||'', localStorage.getItem('1 score')||'', localStorage.getItem('2 score') || '', localStorage.getItem('3 score') || '', localStorage.getItem('4 score') || '']
+    this.times =['', '', '', '', '']
     this.getKey = this.getKey.bind(this);
   }
 
@@ -258,7 +258,6 @@ export default class MapScene extends Phaser.Scene {
         this.scene.switch('CreditScene');
       } else {
         this.levelScore = (this.currentTime - this.startTime).toFixed(1)
-        localStorage.setItem(`${this.game.level} score`, this.levelScore)
         this.times[this.game.level] = this.levelScore
         this.game.level++;
         localStorage.setItem("level", this.game.level);
