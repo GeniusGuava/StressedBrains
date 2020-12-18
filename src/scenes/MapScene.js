@@ -227,11 +227,9 @@ export default class MapScene extends Phaser.Scene {
       })
       .setVisible(false);
 
-    /*
     createTextBox(this, 660, 325, {
       wrapWidth: 205,
     }).start(mapText[this.game.level], 50);
-    */
 
   }
 
