@@ -127,7 +127,7 @@ export default class BattleScene extends Phaser.Scene {
       tileWidth: 32,
     });
     const tiles = map.addTilesetImage('letters');
-    const ground = map.createStaticLayer(0, tiles, 0, 0);
+    const ground = map.createLayer(0, tiles, 0, 0);
 
     this.player = new Player(
       this,

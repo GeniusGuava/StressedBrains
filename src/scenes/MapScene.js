@@ -91,9 +91,9 @@ export default class MapScene extends Phaser.Scene {
       key: "map",
     });
     const tileset = map.addTilesetImage("castle", "tiles");
-    const grassLayer = map.createStaticLayer("grass", tileset);
-    const pathLayer = map.createStaticLayer("path", tileset);
-    const gateLayer = map.createStaticLayer("gate", tileset);
+    const grassLayer = map.createLayer("grass", tileset);
+    const pathLayer = map.createLayer("path", tileset);
+    const gateLayer = map.createLayer("gate", tileset);
 
     this.startTime = (this.time.now/1000)
     this.add.text(0, 0, `Times:`)
