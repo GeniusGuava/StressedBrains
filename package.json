@@ -21,7 +21,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "phaser": "^3.50",
+    "phaser": "^3.52.0",
     "phaser3-rex-plugins": "^1.1.32",
     "webpack": "^5.9.0"
   },
