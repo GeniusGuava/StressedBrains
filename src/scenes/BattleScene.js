@@ -38,60 +38,24 @@ export default class BattleScene extends Phaser.Scene {
     this.currentLevel = 0;
   }
 
-  preload() {
+  preload(){
     if (this.currentLevel!=this.game.level){
       this.wins = 0
       this.currentLevel = this.game.level
     }
-
+    console.log(this.anims)
     this.textures.remove('enemy')
     this.anims.remove('enemyAttack')
-
-    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet('enemy', enemySprite[this.game.level], {
-      frameWidth: enemySize[this.game.level].w,
-      frameHeight: enemySize[this.game.level].h,
-    });
-    this.load.spritesheet('sword', weaponSprite[this.game.level], {
-      frameHeight: 32,
-      frameWidth: 32,
-    });
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet(
-      'AriadneAttack',
-      'assets/spriteSheets/battleSprite.png',
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet('warning', 'assets/sprites/warning.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    );
-
     this.load.scenePlugin({
       key: 'rexuiplugin',
       url:
         'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
       sceneKey: 'rexUI',
+    })
+    this.load.spritesheet('enemy', enemySprite[this.game.level], {
+      frameWidth: enemySize[this.game.level].w,
+      frameHeight: enemySize[this.game.level].h,
     });
-
-    this.load.audio('enemy', 'assets/audio/battleSounds/enemy.wav');
-    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
-    this.load.audio('lose', 'assets/audio/battleSounds/loseBattle.wav');
-    this.load.audio('win', 'assets/audio/battleSounds/winBattle.wav');
-    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
     this.load.audio('battleBackground', music[this.game.level])
   }
 
@@ -342,19 +306,8 @@ export default class BattleScene extends Phaser.Scene {
 
   createAnimations() {
     this.anims.create({
-      key: 'enemyIdle',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 1, end: 5 }),
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
       key: 'enemyAttack',
       frames: this.anims.generateFrameNumbers('enemy', { start: 5, end: 9 }),
-      frameRate: 2,
-    });
-    this.anims.create({
-      key: 'enemyDeath',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
       frameRate: 2,
     });
     this.anims.create({

@@ -6,7 +6,7 @@ import Padlock from '../entity/Padlock';
 import { mapText } from '../text/mapText';
 import { helpContent } from '../text/helpText';
 import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
-  music, Direction } from '../MapInfo';
+  music} from '../MapInfo';
 import Controls from '../physics/Controls'
 import VolumeMenu from '../Menus/VolumeMenu'
 
@@ -38,28 +38,13 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
+   if(this.cache.tilemap.entries.map){
     this.cache.tilemap.remove("map");
+   }
+
     this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
 
-    this.load.audio("collide", "assets/audio/worldSounds/jump.wav");
-    this.load.audio("locked", "assets/audio/worldSounds/locked.wav");
     this.load.audio("background", music[this.game.level]);
-
-    this.load.image("tiles", "assets/backgrounds/spriteSheets/Castle2.png");
-    this.load.image("padlock", "assets/sprites/padlock.png");
-    this.load.image(
-      "nextPage",
-      "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png"
-    );
-
-    this.load.spritesheet("key", "assets/spriteSheets/key.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("Ariadne", "assets/spriteSheets/george2.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
 
     this.load.scenePlugin({
       key: "rexuiplugin",

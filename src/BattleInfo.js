@@ -42,14 +42,6 @@ export const enemySize = [
   {w: 32, h: 36}
 ]
 
-export const weaponSprite = [
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-]
-
 export const getLevel = (level) => {
   return textToLevel(battles[level].text)
 }

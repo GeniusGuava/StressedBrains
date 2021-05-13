@@ -30,9 +30,44 @@ export default class TutorialScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet(
+      'AriadneAttack',
+      'assets/spriteSheets/battleSprite.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    )
+    this.load.spritesheet('warning', 'assets/sprites/warning.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    this.load.spritesheet("key", "assets/spriteSheets/key.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    )
+
+    this.load.image("tiles", "assets/backgrounds/spriteSheets/Castle2.png");
+    this.load.image("padlock", "assets/sprites/padlock.png");
+
+
 
     this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
     this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
+
+    this.load.audio('enemy', 'assets/audio/battleSounds/enemy.wav');
+    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
+    this.load.audio('lose', 'assets/audio/battleSounds/loseBattle.wav');
+    this.load.audio('win', 'assets/audio/battleSounds/winBattle.wav');
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav')
+
+    this.load.audio("locked", "assets/audio/worldSounds/locked.wav");
   }
 
   create() {
