@@ -6,7 +6,7 @@ import Padlock from '../entity/Padlock';
 import { mapText } from '../text/mapText';
 import { helpContent } from '../text/helpText';
 import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
-  music } from '../MapInfo';
+  music, Direction } from '../MapInfo';
 import Controls from '../physics/Controls'
 import VolumeMenu from '../Menus/VolumeMenu'
 
@@ -38,15 +38,12 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-    let loadingText = this.add.text(250,260,"Designing labyrinth: ", { fontSize: '32px', fill: '#FFF' })
-    this.load.on('progress', function(value){loadingText.setText('Designing labyrinth:' + (value*100) + '%')})
-    this.load.on('complete', function(){loadingText.destroy()})
-      this.cache.tilemap.remove("map");
+    this.cache.tilemap.remove("map");
     this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
-    this.load.audio("background", music[this.game.level]);
+
     this.load.audio("collide", "assets/audio/worldSounds/jump.wav");
     this.load.audio("locked", "assets/audio/worldSounds/locked.wav");
-
+    this.load.audio("background", music[this.game.level]);
 
     this.load.image("tiles", "assets/backgrounds/spriteSheets/Castle2.png");
     this.load.image("padlock", "assets/sprites/padlock.png");
@@ -69,11 +66,10 @@ export default class MapScene extends Phaser.Scene {
       url:
         "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js",
       sceneKey: "rexUI",
-    })
+    });
   }
   create() {
     this.timer = 0
-
     this.collideSound = this.sound.add('collide');
     this.lockedSound = this.sound.add('locked');
     this.music = this.sound.add('background')
