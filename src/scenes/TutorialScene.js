@@ -14,7 +14,9 @@ export default class TutorialScene extends Phaser.Scene {
   }
 
   preload() {
-
+    let loadingText = this.add.text(250,260,"Designing tutorial: ", { fontSize: '32px', fill: '#FFF' })
+    this.load.on('progress', function(value){loadingText.setText('Designing tutorial:' + (value*100) + '%')})
+    this.load.on('complete', function(){loadingText.destroy()})
     this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -93,7 +95,6 @@ export default class TutorialScene extends Phaser.Scene {
 
   }
   update(time, delta) {
-    // << DO UPDATE LOGIC HERE >>
     this.player.update(time, this.allKeys);
     this.gridPhysics.update(delta);
   }
