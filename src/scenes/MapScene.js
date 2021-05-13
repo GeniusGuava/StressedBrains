@@ -38,6 +38,8 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
+    let loadingText = this.add.text(250,260,"Designing labrynth: ", { fontSize: '32px', fill: '#FFF' })
+    this.load.on('progress', function(value){loadingText.setText('Designing labrynth:' + (value*100) + '%')})
     this.cache.tilemap.remove("map");
     this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
 

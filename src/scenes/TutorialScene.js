@@ -3,11 +3,9 @@ import Enemy from '../entity/Enemy';
 import { GridPhysics } from '../physics/GridPhysics';
 import {textToLevel}  from '../BattleInfo'
 import tutorial from '../Battles/tutorial'
-import { TILE_SIZE, Direction } from '../MapInfo';
 import { helpContent } from '../text/helpText';
 import Controls from '../physics/Controls';
 
-const PUNCTUATION = [",", "'", "!", "?", "."]
 
 export default class TutorialScene extends Phaser.Scene {
   constructor() {

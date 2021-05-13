@@ -39,6 +39,8 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload() {
+    let loadingText = this.add.text(250,260,"Training enemy: ", { fontSize: '32px', fill: '#FFF' })
+    this.load.on('progress', function(value){loadingText.setText('Training Enemy:' + (value*100) + '%')})
     if (this.currentLevel!=this.game.level){
       this.wins = 0
       this.currentLevel = this.game.level
