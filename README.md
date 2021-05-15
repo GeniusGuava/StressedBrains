@@ -2,15 +2,15 @@
 
 ## Our deployed game on Heroku
 
-:video_game: [Our deploy version on Heroku platform: Ariadne's Vim](https://stressed-brains.herokuapp.com/) 
+:video_game: [Our deploy version on Heroku platform: Ariadne's Vim](https://stressed-brains.herokuapp.com/)
 
- :tv: [Our Demo Video in Youtube](https://www.youtube.com/watch?v=atlgoQo8POA) 
+ :tv: [Our Demo Video in Youtube](https://www.youtube.com/watch?v=atlgoQo8POA)
 
 ## Overview
 
 Ariadne's Vim is an old-school RPG-inspired game that gently teaches the player some of the basic control commands in Vim. It includes 20 unique battles over 5 levels that require the player to navigate maps and text documents with a gradually increasing number of controls. Players must acquire keys and avoid deadly monsters to escape a labyrinth and achieve Vim mastery. There is an engaging storyline that slowly introduces players to increasingly complex vim commands. The story is based on Minotaur, the fabulous monster of Crete in Greek mythology with a little twist.
 
-Our Capstone project is a web game that allows the player to learn Vim commands in a fun and simple way. Commands that we introduced include fundamental Vim movements with combat centered around jumping between words. We used Phaser 3 to build this web game. We have learned many advanced processes in Phaser, including how to switch smoothly between many scenes and how to implement a grid-based physics engine. We also developed a backend with MongoDB to allow greater functionality in Heroku.
+Our Capstone project is a web game that allows the player to learn Vim commands in a fun and simple way. Commands that we introduced include fundamental Vim movements with combat centered around jumping between words. We used Phaser 3 to build  web game. We have learned many advanced processes in Phaser, including how to switch smoothly between many scenes and how to implement a grid-based physics engine. We also developed a backend with MongoDB to allow greater functionality in Heroku.
 
 Team Members: Ariel Wang, Avery Schiff, Guoying Zhong and Katelynn Burns
 

@@ -1,13 +1,9 @@
-import 'phaser';
-import Player from '../entity/Player';
-import { GridPhysics } from '../physics/GridPhysics';
-import Key from '../entity/Key';
-import Padlock from '../entity/Padlock';
-import { mapText } from '../text/mapText';
-import { helpContent } from '../text/helpText';
+import Phaser from 'phaser';
+import { Player, Key, Padlock } from '../entity';
+import { GridPhysics, Controls} from '../physics';
+import { mapText, helpContent } from '../text';
 import { tileMaps, padlockLocation, keyLocations, playerStartPosition,
   music} from '../MapInfo';
-import Controls from '../physics/Controls'
 import VolumeMenu from '../Menus/VolumeMenu'
 
 export const TILE_SIZE = 32;
@@ -38,11 +34,7 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-   if(this.cache.tilemap.entries.map){
-    this.cache.tilemap.remove("map");
-   }
-
-    this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
+     this.load.tilemapTiledJSON("map", tileMaps[this.game.level]);
 
     this.load.audio("background", music[this.game.level]);
 
@@ -56,18 +48,17 @@ export default class MapScene extends Phaser.Scene {
   create() {
     this.timer = 0
     this.collideSound = this.sound.add('collide');
-    this.lockedSound = this.sound.add('locked');
     this.music = this.sound.add('background')
 
-    this.volumeMenu = new VolumeMenu(this, this.game,
+    const volumeMenu = new VolumeMenu(this, this.game,
       [
         { sound: this.collideSound, weight: 0.05, },
-        { sound: this.lockedSound, weight: 0.05 },
+        { sound: this.game.lockedSound, weight: 0.05 },
         { sound: this.music, weight: 0.025 },
       ]
     )
-    this.volumeMenu.buildMenu()
-    this.volumeMenu.updateVolume()
+    volumeMenu.buildMenu()
+    volumeMenu.updateVolume()
 
     this.music.play()
 
@@ -78,22 +69,22 @@ export default class MapScene extends Phaser.Scene {
     const grassLayer = map.createLayer("grass", tileset);
     const pathLayer = map.createLayer("path", tileset);
     const gateLayer = map.createLayer("gate", tileset);
-
     this.startTime = (this.time.now/1000)
     this.add.text(0, 0, `Times:`)
-    this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time', {fontSize:'14px'})
-    this.add.text(0, 16, `level 1: ${this.times[0]}`, {fontSize:'14px'})
-    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`, {fontSize:'14px'})
-    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`, {fontSize:'14px'})
-    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`, {fontSize:'14px'})
-    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`, {fontSize:'14px'})
+    this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time', {fontSize:'14px', metrics: this.game.textMetrics})
+    const timerTextMetrics = this.timerText.getTextMetrics()
+    this.add.text(0, 16, `level 1: ${this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`, {fontSize:'14px', metrics: timerTextMetrics})
 
-    this.mapKeys = this.physics.add.group({
+    const mapKeys = this.physics.add.group({
       classType: Key,
     });
 
     keyLocations[this.game.level].map((coords) => {
-      this.mapKeys.create(coords.x, coords.y, "key");
+      mapKeys.create(coords.x, coords.y, "key");
     });
 
     this.player = new Player(
@@ -104,8 +95,6 @@ export default class MapScene extends Phaser.Scene {
     ).setScale(1);
 
     this.gridPhysics = new GridPhysics(this.player, map);
-
-    this.createAnimations();
 
     this.padlock = new Padlock(
       this,
@@ -119,7 +108,7 @@ export default class MapScene extends Phaser.Scene {
     this.controls = new Controls(this, this.collideSound)
     this.allKeys = this.controls.getKeys()
     // invisible triggers
-    this.spawns = this.physics.add.group({
+    const spawns = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
     });
 
@@ -136,14 +125,14 @@ export default class MapScene extends Phaser.Scene {
         x = Phaser.Math.RND.between(0, this.player.beforeBattle.x - 5);
         y = Phaser.Math.RND.between(0, this.player.beforeBattle.y - 5);
       }
-      this.spawns.create(x, y, 32, 32);
+      spawns.create(x, y, 32, 32);
     }
 
-    this.exit = this.physics.add.group({
+    const exit = this.physics.add.group({
       classType: Phaser.GameObjects.Zone,
     });
 
-    this.exit.create(
+    exit.create(
       padlockLocation[this.game.level].x * TILE_SIZE,
       padlockLocation[this.game.level].y * TILE_SIZE,
       32,
@@ -152,7 +141,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       this.player,
-      this.mapKeys,
+      mapKeys,
       this.getKey,
       null,
       this
@@ -160,7 +149,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       this.player,
-      this.spawns,
+      spawns,
       this.onMeetEnemy,
       false,
       this
@@ -168,7 +157,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       this.player,
-      this.exit,
+      exit,
       this.exitLevel,
       null,
       this
@@ -184,27 +173,27 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
-        this.volumeMenu.updateVolume()
+        volumeMenu.updateVolume()
         this.music.resume()
       },
     );
 
     //help button
     let helpVisible = true;
-    this.help = this.add
+    const help = this.add
       .text(750, 20, ":help", { backgroundColor: "#000" })
       .setInteractive()
       .on("pointerdown", () => {
         if (!helpVisible) {
-          this.helpText.setVisible(false);
+          helpText.setVisible(false);
           helpVisible = !helpVisible;
         } else {
-          this.helpText.setVisible(true);
+          helpText.setVisible(true);
           helpVisible = !helpVisible;
         }
       });
 
-    this.helpText = this.add
+     const helpText = this.add
       .text(665, 50, helpContent[this.game.level], {
         wordWrap: { width: 250 },
         fontSize: "12px",
@@ -243,6 +232,7 @@ export default class MapScene extends Phaser.Scene {
       } else {
         this.levelScore = (this.currentTime - this.startTime).toFixed(1)
         this.times[this.game.level] = this.levelScore
+        this.cache.tilemap.remove("map");
         this.game.level++;
         localStorage.setItem("level", this.game.level);
         this.music.destroy();
@@ -252,65 +242,13 @@ export default class MapScene extends Phaser.Scene {
       }
     } else {
       if (!this.lockPlayed) {
-        this.lockedSound.play();
+        this.game.lockedSound.play();
         this.lockPlayed = true;
-        this.lockedSound.on("complete", () =>
+        this.game.lockedSound.on("complete", () =>
           setTimeout(() => (this.lockPlayed = false), 1000)
         );
       }
     }
-  }
-
-  createAnimations() {
-    this.anims.create({
-      key: "left",
-      frames: [
-        { key: "Ariadne", frame: 1 },
-        { key: "Ariadne", frame: 5 },
-        { key: "Ariadne", frame: 9 },
-        { key: "Ariadne", frame: 13 },
-      ],
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "right",
-      frames: [
-        { key: "Ariadne", frame: 3 },
-        { key: "Ariadne", frame: 7 },
-        { key: "Ariadne", frame: 11 },
-        { key: "Ariadne", frame: 15 },
-      ],
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "down",
-      frames: [
-        { key: "Ariadne", frame: 0 },
-        { key: "Ariadne", frame: 4 },
-        { key: "Ariadne", frame: 8 },
-        { key: "Ariadne", frame: 12 },
-      ],
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "up",
-      frames: [
-        { key: "Ariadne", frame: 2 },
-        { key: "Ariadne", frame: 6 },
-        { key: "Ariadne", frame: 10 },
-        { key: "Ariadne", frame: 14 },
-      ],
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "idle",
-      frames: [{ key: "Ariadne", frame: 0 }],
-      frameRate: 2,
-    });
   }
 }
 

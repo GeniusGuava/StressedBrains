@@ -1,13 +1,5 @@
-/** @type {import("../typings/phaser")} */
-
-import TitleScene from './scenes/TitleScene';
-import MainScene from './scenes/MainScene';
-import MapScene from './scenes/MapScene';
-import CreditScene from './scenes/CreditScene';
+import { TitleScene, MainScene, MapScene, CreditScene, BattleScene, TutorialScene } from './scenes';
 import config from './config/config';
-import BattleScene from './scenes/BattleScene';
-import TutorialScene from './scenes/TutorialScene'
-import 'phaser';
 import Phaser from 'phaser';
 
 let titleScene = new TitleScene()

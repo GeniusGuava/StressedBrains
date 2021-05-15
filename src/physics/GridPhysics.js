@@ -4,7 +4,7 @@ import 'phaser';
 
 const Vector2 = Phaser.Math.Vector2
 
-export class GridPhysics {
+export default class GridPhysics {
   constructor(player, map){
     this.player = player
     this.map = map
