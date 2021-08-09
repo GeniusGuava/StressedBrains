@@ -60,7 +60,6 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    console.log('battle')
     this.sound.pauseAll()
     this.music = this.sound.add('battleBackground')
     this.collideSound = this.sound.add('collide')
@@ -127,8 +126,6 @@ export default class BattleScene extends Phaser.Scene {
 
     const controls = new Controls(this, this.game.level)
     this.allKeys = controls.getKeys()
-    console.log(controls)
-    console.log(this.allKeys)
     this.physics.add.overlap(
       this.player,
       this.enemies,

@@ -46,7 +46,6 @@ export default class MapScene extends Phaser.Scene {
     });
   }
   create() {
-    console.log('map')
     this.timer = 0
     this.collideSound = this.sound.add('collide');
     this.music = this.sound.add('background')
@@ -167,7 +166,6 @@ export default class MapScene extends Phaser.Scene {
     this.sys.events.on(
       "wake",
       () => {
-        console.log('map wake')
         if (!this.game.playerAlive) {
           this.player.setPosition(
             playerStartPosition[this.game.level].x * TILE_SIZE + TILE_SIZE / 2,
