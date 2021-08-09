@@ -11,15 +11,12 @@ export default class TutorialScene extends Phaser.Scene {
     this.attacks = 0
   }
 
-  preload() {
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    )
-    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
-  }
+  // preload() {
+
+  // }
 
   create() {
+    this.collideSound = this.sound.add('collide');
     this.text = tutorial.text
     this.physics.world.bounds.y = 64;
     const map = this.make.tilemap({
@@ -36,7 +33,6 @@ export default class TutorialScene extends Phaser.Scene {
       'Ariadne'
     );
     this.player.setFrame(4);
-    this.collideSound = this.sound.add('collide');
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.keyboard = this.input.keyboard;
