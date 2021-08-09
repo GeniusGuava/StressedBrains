@@ -18,6 +18,11 @@ export default class MainScene extends Phaser.Scene {
         frameHeight: 32,
       }
     )
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    )
   }
   create() {
     this.game.playerAlive = true
