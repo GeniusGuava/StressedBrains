@@ -43,8 +43,8 @@ export default class Controls  {
         function: (time, shift) => {
           if (!shift)
             this.scene.gridPhysics.movePlayer(
-              Direction.UP, 
-              time, 
+              Direction.UP,
+              time,
               this.scene.collideSound
             );
         },

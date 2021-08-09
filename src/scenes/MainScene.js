@@ -1,4 +1,4 @@
-import 'phaser'
+import Phaser from 'phaser'
 
 export default class MainScene extends Phaser.Scene {
   constructor(){
@@ -10,6 +10,14 @@ export default class MainScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet(
+      'AriadneAttack',
+      'assets/spriteSheets/battleSprite.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    )
   }
   create() {
     this.game.playerAlive = true
@@ -67,6 +75,14 @@ export default class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'idle',
       frames: [{ key: 'Ariadne', frame: 0 }],
+      frameRate: 2,
+    });
+    this.anims.create({
+      key: 'AriadneAttack',
+      frames: this.anims.generateFrameNumbers('AriadneAttack', {
+        start: 15,
+        end: 17,
+      }),
       frameRate: 2,
     });
   }

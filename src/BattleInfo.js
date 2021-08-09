@@ -1,9 +1,4 @@
-import battle1 from './Battles/battle1'
-import battle2 from './Battles/battle2'
-import battle3 from './Battles/battle3'
-import battle4 from './Battles/battle4'
-import battle5 from './Battles/battle5'
-import converter from './Battles/textNumberConverter'
+import { battle1, battle2, battle3, battle4, battle5, converter } from './Battles'
 
 const battles = [battle1, battle2, battle3, battle4, battle5]
 
@@ -40,14 +35,6 @@ export const enemySize = [
   {w: 70, h: 54},
   {w: 64, h: 64},
   {w: 32, h: 36}
-]
-
-export const weaponSprite = [
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
-  'assets/sprites/sword.png',
 ]
 
 export const getLevel = (level) => {

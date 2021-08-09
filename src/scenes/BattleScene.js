@@ -1,12 +1,8 @@
-import Player from '../entity/Player';
-import Enemy from '../entity/Enemy';
-import Sprite from '../entity/Sprite';
-import { GridPhysics } from '../physics/GridPhysics';
-import { enemySprite, weaponSprite, getLevel, playerStartPosition, getWeapons,
+import { Player, Enemy, Sprite } from '../entity';
+import { GridPhysics, Controls } from '../physics';
+import { enemySprite, getLevel, playerStartPosition, getWeapons,
   getEnemies, enemySize, getText, music } from '../BattleInfo';
-import { battleText } from '../text/battleText';
-import { helpContent } from '../text/helpText';
-import Controls from '../physics/Controls';
+import { battleText, helpContent } from '../text';
 import VolumeMenu from '../Menus/VolumeMenu';
 
 
@@ -15,16 +11,16 @@ class UIScene extends Phaser.Scene {
     super('UIScene');
   }
   create() {
-    this.graphics = this.add.graphics();
-    this.graphics.lineStyle(1, 0xffffff);
-    this.graphics.fillStyle(0x031f4c, 1);
-    this.graphics.strokeRect(2, 150, 90, 100);
-    this.graphics.fillRect(2, 150, 90, 100);
+    const graphics = this.add.graphics();
+    graphics.lineStyle(1, 0xffffff);
+    graphics.fillStyle(0x031f4c, 1);
+    graphics.strokeRect(2, 150, 90, 100);
+    graphics.fillRect(2, 150, 90, 100);
     this.cache.tilemap.remove('map');
-    this.graphics.strokeRect(95, 150, 90, 100);
-    this.graphics.fillRect(95, 150, 90, 100);
-    this.graphics.strokeRect(188, 150, 130, 100);
-    this.graphics.fillRect(188, 150, 130, 100);
+    graphics.strokeRect(95, 150, 90, 100);
+    graphics.fillRect(95, 150, 90, 100);
+    graphics.strokeRect(188, 150, 130, 100);
+    graphics.fillRect(188, 150, 130, 100);
   }
 }
 
@@ -36,87 +32,50 @@ export default class BattleScene extends Phaser.Scene {
     this.collideDelay = 500;
     this.awake = true;
     this.currentLevel = 0;
+
   }
 
-  preload() {
-    if (this.currentLevel!=this.game.level){
+  preload(){
+    if(this.currentLevel!=this.game.level || (this.game.level === 0 && this.wins === 0)){
+      this.load.spritesheet('enemy', enemySprite[this.game.level], {
+        frameWidth: enemySize[this.game.level].w,
+        frameHeight: enemySize[this.game.level].h,
+      });
+      this.load.audio('battleBackground', music[this.game.level])
+    }else if (this.currentLevel!=this.game.level){
       this.wins = 0
       this.currentLevel = this.game.level
+      this.textures.remove('enemy')
+      this.anims.remove('enemyAttack')
+      this.cache.audio.remove('battleBackground')
     }
 
-    this.textures.remove('enemy')
-    this.anims.remove('enemyAttack')
-
-    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet('enemy', enemySprite[this.game.level], {
-      frameWidth: enemySize[this.game.level].w,
-      frameHeight: enemySize[this.game.level].h,
-    });
-    this.load.spritesheet('sword', weaponSprite[this.game.level], {
-      frameHeight: 32,
-      frameWidth: 32,
-    });
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet(
-      'AriadneAttack',
-      'assets/spriteSheets/battleSprite.png',
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet('warning', 'assets/sprites/warning.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.image(
-      'nextPage',
-      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
-    );
 
     this.load.scenePlugin({
       key: 'rexuiplugin',
       url:
         'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
       sceneKey: 'rexUI',
-    });
-
-    this.load.audio('enemy', 'assets/audio/battleSounds/enemy.wav');
-    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
-    this.load.audio('lose', 'assets/audio/battleSounds/loseBattle.wav');
-    this.load.audio('win', 'assets/audio/battleSounds/winBattle.wav');
-    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
-    this.load.audio('battleBackground', music[this.game.level])
+    })
   }
 
   create() {
     this.sound.pauseAll()
-    this.enemySound = this.sound.add('enemy');
-    this.attackSound = this.sound.add('attack');
-    this.loseSound = this.sound.add('lose');
-    this.winSound = this.sound.add('win');
-    this.collideSound = this.sound.add('collide');
     this.music = this.sound.add('battleBackground')
-
-    this.volumeMenu = new VolumeMenu(this, this.game,
+    this.collideSound = this.sound.add('collide')
+    const volumeMenu = new VolumeMenu(this, this.game,
       [
-        {sound: this.enemySound, weight: 0.05},
-        {sound: this.attackSound, weight: 0.05},
-        {sound: this.loseSound, weight: 0.05},
-        {sound: this.winSound, weight: 0.025},
+        {sound: this.game.enemySound, weight: 0.05},
+        {sound: this.game.attackSound, weight: 0.05},
+        {sound: this.game.loseSound, weight: 0.05},
+        {sound: this.game.winSound, weight: 0.025},
         {sound: this.collideSound, weight: 0.05},
         {sound: this.music, weight: 0.025},
       ],
       50)
 
-    this.volumeMenu.buildMenu()
-    this.volumeMenu.updateVolume()
+    volumeMenu.buildMenu()
+    volumeMenu.updateVolume()
 
     this.music.play()
 
@@ -140,12 +99,12 @@ export default class BattleScene extends Phaser.Scene {
     this.player.startPosition = this.player.getPosition();
     this.playerBar = this.makeBar(8, 8, 0x2ecc71);
     this.setValue(this.playerBar, 100);
-    this.add.text(8, 8, 'You', {
+    const youText = this.add.text(8, 8, 'You', {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
       color: 'black',
       fontSize: '3000px',
     });
-
+    const battleTextMetrics = youText.metrics
     this.createAnimations();
     this.createGroups();
     this.enemies.hp = 3;
@@ -155,6 +114,7 @@ export default class BattleScene extends Phaser.Scene {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif,',
       color: 'black',
       fontSize: '3000px',
+      metrics: battleTextMetrics
     });
 
     this.enemySprite = new Sprite(this, 750, 500, 'enemy');
@@ -164,9 +124,8 @@ export default class BattleScene extends Phaser.Scene {
     this.keyboard = this.input.keyboard;
     this.text = getText(this.game.level);
 
-    this.controls = new Controls(this, this.game.level)
-    this.allKeys = this.controls.getKeys()
-
+    const controls = new Controls(this, this.game.level)
+    this.allKeys = controls.getKeys()
     this.physics.add.overlap(
       this.player,
       this.enemies,
@@ -184,19 +143,19 @@ export default class BattleScene extends Phaser.Scene {
 
     //help button
     let helpVisible = true;
-    this.help = this.add
+    const help = this.add
       .text(750, 20, ':help', { backgroundColor: '#000' })
       .setInteractive()
       .on('pointerdown', () => {
         if (!helpVisible) {
-          this.helpText.setVisible(false);
+          helpText.setVisible(false);
           helpVisible = !helpVisible;
         } else {
-          this.helpText.setVisible(true);
+          helpText.setVisible(true);
           helpVisible = !helpVisible;
         }
       });
-    this.helpText = this.add
+    const helpText = this.add
       .text(665, 50, helpContent[this.game.level], { wordWrap: { width: 250 }, fontSize: "12px" })
       .setVisible(false);
 
@@ -213,7 +172,7 @@ export default class BattleScene extends Phaser.Scene {
   onMeetEnemy(player, enemies, x, y) {
     if (!this.isAttacked) {
       this.isAttacked = true;
-      this.enemySound.play();
+      this.game.enemySound.play();
       this.enemySprite.play('enemyAttack');
       this.gridPhysics.stopMoving();
       this.gridPhysics.tileSizePixelsWalked = 0;
@@ -224,7 +183,7 @@ export default class BattleScene extends Phaser.Scene {
       if (this.player.hp <= 1) {
         this.isAttacked = false;
         this.player.resetPosition(this.player.startPosition);
-        this.loseSound.play();
+        this.game.loseSound.play();
         this.game.playerAlive = false;
         this.endBattle();
         this.sys.events.on('wake', this.wake, this);
@@ -247,7 +206,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   playerAttack(player, weapon, x, y) {
-    this.attackSound.play();
+    this.game.attackSound.play();
     this.playerSprite.play('AriadneAttack');
     this.enemies.hp--;
     weapon.setActive(false).setVisible(false);
@@ -259,7 +218,7 @@ export default class BattleScene extends Phaser.Scene {
     if (this.enemies.hp <= 0) {
       if (this.wins >= 3) this.wins = 0;
       else this.wins++;
-      this.winSound.play();
+      this.game.winSound.play();
       this.endBattle();
       this.player.resetPosition(this.player.startPosition);
       this.setValue(this.playerBar, 100);
@@ -291,7 +250,6 @@ export default class BattleScene extends Phaser.Scene {
 
       this.input.keyboard.enabled = true;
       this.game.playerAlive = true;
-      this.cache.audio.remove('battleBackground')
       this.scene.run('UIScene');
       this.scene.restart();
     }
@@ -342,27 +300,8 @@ export default class BattleScene extends Phaser.Scene {
 
   createAnimations() {
     this.anims.create({
-      key: 'enemyIdle',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 1, end: 5 }),
-      frameRate: 2,
-      repeat: -1,
-    });
-    this.anims.create({
       key: 'enemyAttack',
       frames: this.anims.generateFrameNumbers('enemy', { start: 5, end: 9 }),
-      frameRate: 2,
-    });
-    this.anims.create({
-      key: 'enemyDeath',
-      frames: this.anims.generateFrameNumbers('enemy', { start: 11, end: 15 }),
-      frameRate: 2,
-    });
-    this.anims.create({
-      key: 'AriadneAttack',
-      frames: this.anims.generateFrameNumbers('AriadneAttack', {
-        start: 15,
-        end: 17,
-      }),
       frameRate: 2,
     });
   }

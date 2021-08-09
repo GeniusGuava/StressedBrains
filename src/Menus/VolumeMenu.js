@@ -9,11 +9,11 @@ export default class VolumeMenu {
     this.offset = offset
   }
   buildMenu() {
-    this.volumeRect = this.scene.add.rectangle(815, 530+this.offset, 110, 75, COLOR_PRIMARY)
-    this.volumeRect.setStrokeStyle(2, COLOR_LIGHT)
+    const volumeRect = this.scene.add.rectangle(815, 530+this.offset, 110, 75, COLOR_PRIMARY)
+    volumeRect.setStrokeStyle(2, COLOR_LIGHT)
 
-    this.upButton = this.scene.add
-      .text(850, 500+this.offset, "^", 
+    const upButton = this.scene.add
+      .text(850, 500+this.offset, "^",
       {
         fontSize: "16px",
         color: 'white',
@@ -36,7 +36,7 @@ export default class VolumeMenu {
         fontSize: "16px",
         color: 'white',
       })
-    this.downButton = this.scene.add
+    const downButton = this.scene.add
       .text(850, 550+this.offset, "v",
       {
         fontSize: "16px",

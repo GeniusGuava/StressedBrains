@@ -1,4 +1,3 @@
-import "phaser";
 import Phaser from "phaser";
 import config from "../config/config";
 
@@ -97,27 +96,28 @@ export default class CreditScene extends Phaser.Scene {
       .setBounce(1, 1)
       .setCollideWorldBounds(true);
 
-    this.creditsText = this.add.text(0, 0, "StressedBrains", {
+    const creditsText = this.add.text(0, 0, "StressedBrains", {
       fontFamily: "Brush Script MT, cursive",
       fontSize: "55px",
       fill: "#fff",
     });
 
-    this.thanksText = this.add.text(0, 0, "Thanks for playing!", {
+    const thanksText = this.add.text(0, 0, "Thanks for playing!", {
       fontFamily: 'Rockwell',
       fontSize: "30px",
       fill: "#fff",
     });
-
-    this.madeByText = this.add.text(0, 0, ` Created By:\n Avery Schiff\n Ariel Wang\n Katelynn Burns\n Guoying Zhong`,
+    const thanksTextMetrics = thanksText.getTextMetrics()
+    const madeByText = this.add.text(0, 0, ` Created By:\n Avery Schiff\n Ariel Wang\n Katelynn Burns\n Guoying Zhong`,
         {
           fontFamily: 'Rockwell',
           fontSize: "30px",
           fill: "#fff",
+          metrics: thanksTextMetrics
         }
       );
 
-      this.githubText = this.add.text(0, 0, 'Find Us on GitHub!', {fontFamily: 'Rockwell', fontSize: "28px", fill: "#fff"})
+      const githubText = this.add.text(0, 0, 'Find Us on GitHub!', {fontFamily: 'Rockwell', fontSize: "28px", fill: "#fff"})
       .setInteractive()
       .on(
         "pointerdown",
@@ -127,23 +127,23 @@ export default class CreditScene extends Phaser.Scene {
         this
       );
 
-    this.zone = this.add.zone(
+    const zone = this.add.zone(
       config.width / 2,
       config.height / 2,
       config.width,
       config.height
     );
 
-    Phaser.Display.Align.In.Center(this.creditsText, this.zone);
-    Phaser.Display.Align.In.Center(this.madeByText, this.zone);
-    Phaser.Display.Align.In.Center(this.thanksText, this.zone);
-    Phaser.Display.Align.In.Center(this.githubText, this.zone);
+    Phaser.Display.Align.In.Center(creditsText, zone);
+    Phaser.Display.Align.In.Center(madeByText, zone);
+    Phaser.Display.Align.In.Center(thanksText, zone);
+    Phaser.Display.Align.In.Center(githubText, zone);
 
-    this.thanksText.setY(1000);
-    this.madeByText.setY(2000);
-    this.githubText.setY(3000);
-    this.creditsTween = this.tweens.add({
-      targets: this.creditsText,
+    thanksText.setY(1000);
+    madeByText.setY(2000);
+    githubText.setY(3000);
+    const creditsTween = this.tweens.add({
+      targets: creditsText,
       y: -100,
       ease: "Power1",
       duration: 8000,
@@ -153,8 +153,8 @@ export default class CreditScene extends Phaser.Scene {
       },
     });
 
-    this.thanksTween = this.tweens.add({
-      targets: this.thanksText,
+    const thanksTween = this.tweens.add({
+      targets: thanksText,
       y: -100,
       ease: "Power1",
       duration: 20000,
@@ -164,8 +164,8 @@ export default class CreditScene extends Phaser.Scene {
       },
     });
 
-    this.madeByTween = this.tweens.add({
-      targets: this.madeByText,
+    const madeByTween = this.tweens.add({
+      targets: madeByText,
       y: -200,
       ease: "Power1",
       duration: 26000,
@@ -175,8 +175,8 @@ export default class CreditScene extends Phaser.Scene {
       }
     });
 
-    this.githubTween = this.tweens.add({
-        targets: this.githubText,
+    const githubTween = this.tweens.add({
+        targets: githubText,
         y: -150,
         ease: "Power1",
         duration: 40000,

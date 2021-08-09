@@ -1,10 +1,8 @@
-import Player from '../entity/Player';
-import Enemy from '../entity/Enemy';
-import { GridPhysics } from '../physics/GridPhysics';
+import {Player, Enemy} from '../entity';
+import { GridPhysics, Controls } from '../physics';
 import {textToLevel}  from '../BattleInfo'
-import tutorial from '../Battles/tutorial'
-import { helpContent } from '../text/helpText';
-import Controls from '../physics/Controls';
+import { tutorial } from '../Battles'
+import { helpContent } from '../text';
 
 
 export default class TutorialScene extends Phaser.Scene {
@@ -14,24 +12,10 @@ export default class TutorialScene extends Phaser.Scene {
   }
 
   preload() {
-    let loadingText = this.add.text(250,260,"Designing tutorial: ", { fontSize: '32px', fill: '#FFF' })
-    this.load.on('progress', function(value){loadingText.setText('Designing tutorial:' + (value*100) + '%')})
-    this.load.on('complete', function(){loadingText.destroy()})
-    this.load.spritesheet('letters', 'assets/backgrounds/spriteSheets/letters2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-
-    this.load.spritesheet('sword', 'assets/sprites/sword.png', {
-      frameHeight: 32,
-      frameWidth: 32,
-    });
-    this.load.spritesheet('Ariadne', 'assets/spriteSheets/george2.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-
-    this.load.audio('attack', 'assets/audio/battleSounds/attack.wav');
+    this.load.image(
+      'nextPage',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png'
+    )
     this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
   }
 
@@ -52,8 +36,7 @@ export default class TutorialScene extends Phaser.Scene {
       'Ariadne'
     );
     this.player.setFrame(4);
-    this.attackSound = this.sound.add('attack', { volume: 0.25 });
-    this.collideSound = this.sound.add('collide', { volume: 0.25 });
+    this.collideSound = this.sound.add('collide');
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.keyboard = this.input.keyboard;
@@ -77,19 +60,19 @@ export default class TutorialScene extends Phaser.Scene {
       this
     );
     let helpVisible = true;
-    this.help = this.add
+    const help = this.add
       .text(750, 20, ':help', { backgroundColor: '#000' })
       .setInteractive()
       .on('pointerdown', () => {
         if (!helpVisible) {
-          this.helpText.setVisible(false);
+          helpText.setVisible(false);
           helpVisible = !helpVisible;
         } else {
-          this.helpText.setVisible(true);
+          helpText.setVisible(true);
           helpVisible = !helpVisible;
         }
       });
-    this.helpText = this.add
+    const helpText = this.add
       .text(665, 50, helpContent[0], { wordWrap: { width: 250 } })
       .setVisible(false);
 
