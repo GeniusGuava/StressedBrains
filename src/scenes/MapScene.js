@@ -44,6 +44,7 @@ export default class MapScene extends Phaser.Scene {
         "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js",
       sceneKey: "rexUI",
     });
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
   }
   create() {
     this.timer = 0
