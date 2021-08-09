@@ -44,6 +44,7 @@ export default class MapScene extends Phaser.Scene {
         "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js",
       sceneKey: "rexUI",
     });
+    this.load.audio('collide', 'assets/audio/worldSounds/jump.wav');
   }
   create() {
     this.timer = 0
@@ -73,11 +74,11 @@ export default class MapScene extends Phaser.Scene {
     this.add.text(0, 0, `Times:`)
     this.timerText = this.add.text(3*TILE_SIZE, 0, 'Current Time', {fontSize:'14px', metrics: this.game.textMetrics})
     const timerTextMetrics = this.timerText.getTextMetrics()
-    this.add.text(0, 16, `level 1: ${this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
-    this.add.text(4*TILE_SIZE, 16, `level 2: ${this.times[1]}`, {fontSize:'14px', metrics: timerTextMetrics})
-    this.add.text(8*TILE_SIZE, 16, `level 3: ${this.times[2]}`, {fontSize:'14px', metrics: timerTextMetrics})
-    this.add.text(12*TILE_SIZE, 16, `level 4: ${this.times[3]}`, {fontSize:'14px', metrics: timerTextMetrics})
-    this.add.text(16*TILE_SIZE, 16, `level 5: ${this.times[4]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(0, 16, `level 1: ${localStorage.getItem(1) ? localStorage.getItem(1) : this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(4*TILE_SIZE, 16, `level 2: ${localStorage.getItem(2)  ? localStorage.getItem(2) : this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(8*TILE_SIZE, 16, `level 3: ${localStorage.getItem(3) ? localStorage.getItem(3) : this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(12*TILE_SIZE, 16, `level 4: ${localStorage.getItem(4) ? localStorage.getItem(4) : this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
+    this.add.text(16*TILE_SIZE, 16, `level 5: ${localStorage.getItem(5) ? localStorage.getItem(5) : this.times[0]}`, {fontSize:'14px', metrics: timerTextMetrics})
 
     const mapKeys = this.physics.add.group({
       classType: Key,
@@ -235,6 +236,7 @@ export default class MapScene extends Phaser.Scene {
         this.cache.tilemap.remove("map");
         this.game.level++;
         localStorage.setItem("level", this.game.level);
+        localStorage.setItem(`${this.game.level}`, this.levelScore)
         this.music.destroy();
         this.cache.audio.remove("background");
         this.scene.restart();
