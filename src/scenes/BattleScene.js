@@ -32,10 +32,10 @@ export default class BattleScene extends Phaser.Scene {
     this.collideDelay = 500;
     this.awake = true;
     this.currentLevel = 0;
+
   }
 
   preload(){
-    console.log(this.currentLevel)
     if(this.currentLevel!=this.game.level || (this.game.level === 0 && this.wins === 0)){
       this.load.spritesheet('enemy', enemySprite[this.game.level], {
         frameWidth: enemySize[this.game.level].w,
@@ -60,6 +60,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
+    console.log('battle')
     this.sound.pauseAll()
     this.music = this.sound.add('battleBackground')
     this.collideSound = this.sound.add('collide')
@@ -122,11 +123,12 @@ export default class BattleScene extends Phaser.Scene {
 
     this.gridPhysics = new GridPhysics(this.player, map);
     this.keyboard = this.input.keyboard;
-    const text = getText(this.game.level);
+    this.text = getText(this.game.level);
 
     const controls = new Controls(this, this.game.level)
     this.allKeys = controls.getKeys()
-
+    console.log(controls)
+    console.log(this.allKeys)
     this.physics.add.overlap(
       this.player,
       this.enemies,

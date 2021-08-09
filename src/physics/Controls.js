@@ -108,6 +108,7 @@ export default class Controls  {
     }
   }
   getRowAndInd(playerPos, text) {
+    console.log(this.textControlVars)
     const xGrid = (playerPos.x - TILE_SIZE / 2) / TILE_SIZE;
     const yGrid = (playerPos.y - TILE_SIZE / 2) / TILE_SIZE - 2;
     const textRows = text.split('\n');
@@ -116,6 +117,7 @@ export default class Controls  {
   }
 
   jumpToNextWord(player, text, collideSound) {
+    console.log(this.scene)
     const playerPos = player.getPosition();
     let { currentInd, currentRow } = this.getRowAndInd(playerPos, text);
     let currentChar = currentRow[currentInd];

@@ -142,7 +142,7 @@ export default class CreditScene extends Phaser.Scene {
     thanksText.setY(1000);
     madeByText.setY(2000);
     githubText.setY(3000);
-    creditsTween = this.tweens.add({
+    const creditsTween = this.tweens.add({
       targets: creditsText,
       y: -100,
       ease: "Power1",

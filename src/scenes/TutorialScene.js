@@ -20,10 +20,10 @@ export default class TutorialScene extends Phaser.Scene {
   }
 
   create() {
-    const text = tutorial.text
+    this.text = tutorial.text
     this.physics.world.bounds.y = 64;
     const map = this.make.tilemap({
-      data: textToLevel(text),
+      data: textToLevel(this.text),
       tileHeight: 32,
       tileWidth: 32,
     });

@@ -46,19 +46,20 @@ export default class MapScene extends Phaser.Scene {
     });
   }
   create() {
+    console.log('map')
     this.timer = 0
     this.collideSound = this.sound.add('collide');
     this.music = this.sound.add('background')
 
-    const volumeMenu = new VolumeMenu(this, this.game,
+    this.volumeMenu = new VolumeMenu(this, this.game,
       [
         { sound: this.collideSound, weight: 0.05, },
         { sound: this.game.lockedSound, weight: 0.05 },
         { sound: this.music, weight: 0.025 },
       ]
     )
-    volumeMenu.buildMenu()
-    volumeMenu.updateVolume()
+    this.volumeMenu.buildMenu()
+    this.volumeMenu.updateVolume()
 
     this.music.play()
 
@@ -166,6 +167,7 @@ export default class MapScene extends Phaser.Scene {
     this.sys.events.on(
       "wake",
       () => {
+        console.log('map wake')
         if (!this.game.playerAlive) {
           this.player.setPosition(
             playerStartPosition[this.game.level].x * TILE_SIZE + TILE_SIZE / 2,
@@ -173,7 +175,7 @@ export default class MapScene extends Phaser.Scene {
           );
         }
         this.input.keyboard.enabled = true;
-        volumeMenu.updateVolume()
+        this.volumeMenu.updateVolume()
         this.music.resume()
       },
     );
